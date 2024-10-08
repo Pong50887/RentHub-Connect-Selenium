@@ -1,0 +1,10 @@
+
+<h1>{{ room }}</h1>
+<!--rental image-->
+<p>Detail</p>
+<p>Description: </p>
+<p>Features:</p>
+<p>Ideal For:</p>
+<p><b>Cost: {{ room.price }} ฿ / month</b></p>
+
+<a href="{% url 'renthub:payment' room.id %}">Rent</a>

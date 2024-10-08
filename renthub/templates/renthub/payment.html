@@ -1,0 +1,15 @@
+
+<h1>Rental Payment</h1>
+<!--rental image-->
+<h2>Queen size bedroom<br>
+<b>{{ room.price }} ฿</b></h2>
+
+<p>Rental Details<br>
+Room Type: {{ room.type }}<br>
+Monthly Rent: {{ room.price }} ฿<br>
+Room Size: </p>
+
+<!--Insert slip (image upload)-->
+<a href="{% url 'renthub:submit' room.id%}">Send</a>
+
+<!--payment QR code-->

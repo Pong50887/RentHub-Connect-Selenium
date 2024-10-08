@@ -1,0 +1,9 @@
+
+<h1>Welcome to Renthub Connect</h1>
+{% if rooms %}
+    {% for room in rooms %}
+        <a href="{% url 'renthub:rental' room.id %}">{{ room.detail }}</a><br>
+    {% endfor %}
+{% else %}
+    <p>No rooms available at the moment.</p>
+{% endif %}
