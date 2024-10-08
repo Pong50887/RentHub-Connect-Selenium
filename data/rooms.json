@@ -3,10 +3,54 @@
   "model": "renthub.room",
   "pk": 1,
   "fields": {
-    "room_number": 0,
-    "detail": "A-001",
-    "price": "9999.99",
-    "type": "A",
+    "room_number": 101,
+    "detail": "Spacious single room with a view",
+    "price": "5000.00",
+    "type": "Single Room",
+    "availability": true
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 2,
+  "fields": {
+    "room_number": 101,
+    "detail": "Spacious single room with a view",
+    "price": "6000.00",
+    "type": "Double Room",
+    "availability": true
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 3,
+  "fields": {
+    "room_number": 102,
+    "detail": "Spacious single room with a view",
+    "price": "6000.00",
+    "type": "houble Room",
+    "availability": true
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 4,
+  "fields": {
+    "room_number": 103,
+    "detail": "Spacious single room with a view",
+    "price": "6000.00",
+    "type": "Single Room",
+    "availability": true
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 5,
+  "fields": {
+    "room_number": 105,
+    "detail": "Spacious single room with a view",
+    "price": "3000.00",
+    "type": "Double Room",
     "availability": true
   }
 }
