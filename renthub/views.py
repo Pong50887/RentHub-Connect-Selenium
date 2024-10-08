@@ -9,21 +9,34 @@ from django.views.generic import ListView, DetailView
 class HomeView(ListView):
     model = Room
     template_name = "renthub/home.html"
+    context_object_name = "room_type"
+
+    def get_queryset(self):
+        return Room.objects.values_list('type', flat=True).distinct()
+
+
+class RoomTypeView(ListView):
+    model = Room
+    template_name = "renthub/roomtype.html"
     context_object_name = "rooms"
 
     def get_queryset(self):
-        return Room.objects.filter(availability=True)
+        # Get the room type from the URL
+        room_type = self.kwargs['room_type']
+        return Room.objects.filter(type=room_type)
+
 
 class RoomDetailView(DetailView):
     model = Room
     template_name = "renthub/rental.html"
-    context_object_name = "room"
+    context_object_name = "rooms"
 
     def get(self, request, *args, **kwargs):
         room = self.get_object()
         if not room.availability:
             return HttpResponseRedirect(reverse("renthub:home"))
         return super().get(request, *args, **kwargs)
+
 
 class RoomPaymentView(DetailView):
     model = Room
@@ -36,6 +49,7 @@ class RoomPaymentView(DetailView):
             messages.error(request, f"The room {room} is currently unavailable.")
             return HttpResponseRedirect(reverse("renthub:home"))
         return super().get(request, *args, **kwargs)
+
 
 def submit_payment(request, room_id):
     room = Room.objects.get(id=room_id)

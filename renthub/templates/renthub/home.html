@@ -2,11 +2,9 @@
 {% block title %}Welcome to RentHub Connect{% endblock %}
 
 {% block content %}
-{% if rooms %}
-    {% for room in rooms %}
-        <a href="{% url 'renthub:rental' room.id %}">{{ room.detail }}</a><br>
-    {% endfor %}
-{% else %}
+{% for room in room_type %}
+    <li><a href="{% url 'renthub:room_type' room %}">{{ room }}</a></li>
+{% empty %}
     <p>No rooms available at the moment.</p>
-{% endif %}
+{% endfor %}
 {% endblock %}
