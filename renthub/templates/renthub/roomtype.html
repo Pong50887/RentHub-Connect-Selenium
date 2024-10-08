@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to RentHub Connect{% endblock %}
+
+{% block content %}
+<ul>
+  {% for room in rooms %}
+      <li>Room Number: {{ room.room_number }}</li>
+  {% empty %}
+    <li>No rooms available of this type.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
