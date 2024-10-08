@@ -1,5 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to RentHub Connect{% endblock %}
 
-<h1>Welcome to Renthub Connect</h1>
+{% block content %}
 {% if rooms %}
     {% for room in rooms %}
         <a href="{% url 'renthub:rental' room.id %}">{{ room.detail }}</a><br>
@@ -7,3 +9,4 @@
 {% else %}
     <p>No rooms available at the moment.</p>
 {% endif %}
+{% endblock %}
