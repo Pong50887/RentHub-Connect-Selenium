@@ -1,0 +1,13 @@
+[
+{
+  "model": "renthub.room",
+  "pk": 1,
+  "fields": {
+    "room_number": 0,
+    "detail": "A-001",
+    "price": "9999.99",
+    "type": "A",
+    "availability": true
+  }
+}
+]
