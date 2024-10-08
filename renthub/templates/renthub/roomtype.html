@@ -4,7 +4,7 @@
 {% block content %}
 <ul>
   {% for room in rooms %}
-      <li>Room Number: {{ room.room_number }}</li>
+      <li><a href="{% url 'renthub:rental' room.room_number %}">Room Number: {{ room.room_number }}</a></li>
   {% empty %}
     <li>No rooms available of this type.</li>
   {% endfor %}

@@ -1,15 +1,20 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from .models import Room, Rental, Renter
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
 
+from mysite import settings
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+
 
 class HomeView(ListView):
     model = Room
     template_name = "renthub/home.html"
-    context_object_name = "room_type"
+    context_object_name = "room_types"
 
     def get_queryset(self):
         return Room.objects.values_list('type', flat=True).distinct()
@@ -26,16 +31,44 @@ class RoomTypeView(ListView):
         return Room.objects.filter(type=room_type)
 
 
+class RoomListView(ListView):
+    model = Room
+    template_name = "renthub/rental_list.html"
+    context_object_name = "rooms"
+
+    def get_queryset(self):
+        return Room.objects.filter(availability=True)
+
+
 class RoomDetailView(DetailView):
     model = Room
     template_name = "renthub/rental.html"
-    context_object_name = "rooms"
+    context_object_name = "room"
+
+    def get_object(self, queryset=None):
+        room_number = self.kwargs.get("room_number")
+        room = get_object_or_404(Room, room_number=room_number)
+        return room
 
     def get(self, request, *args, **kwargs):
-        room = self.get_object()
+        try:
+            room = self.get_object()
+        except Http404:
+            return HttpResponseRedirect(reverse("renthub:home"))
+
         if not room.availability:
             return HttpResponseRedirect(reverse("renthub:home"))
+
         return super().get(request, *args, **kwargs)
+
+
+class RoomPaymentListView(ListView):
+    model = Room
+    template_name = "renthub/payment_list.html"
+    context_object_name = "rooms"
+
+    def get_queryset(self):
+        return Room.objects.filter(availability=True)
 
 
 class RoomPaymentView(DetailView):
@@ -43,17 +76,33 @@ class RoomPaymentView(DetailView):
     template_name = "renthub/payment.html"
     context_object_name = "room"
 
+    def get_object(self, queryset=None):
+        room_number = self.kwargs.get("room_number")
+        room = get_object_or_404(Room, room_number=room_number)
+        return room
+
     def get(self, request, *args, **kwargs):
-        room = self.get_object()
+        try:
+            room = self.get_object()
+        except Http404:
+            return HttpResponseRedirect(reverse("renthub:home"))
+
         if not room.availability:
             messages.error(request, f"The room {room} is currently unavailable.")
             return HttpResponseRedirect(reverse("renthub:home"))
+
         return super().get(request, *args, **kwargs)
 
 
+@login_required
 def submit_payment(request, room_id):
     room = Room.objects.get(id=room_id)
     user = request.user
+    if not user.is_authenticated:
+        # return redirect('login')
+        # or, so the user comes back here after login...
+        return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+
     # try:
     #     renter = Renter.objects.get(id=user.id)
     #     renter_id = renter.id

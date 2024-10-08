@@ -1,7 +1,8 @@
-
+{% extends 'base.html' %}
+{% block content %}
 <h1>Rental Payment</h1>
 <!--rental image-->
-<h2>Queen size bedroom<br>
+<h2>{{ room.detail }}<br>
 <b>{{ room.price }} ฿</b></h2>
 
 <p>Rental Details<br>
@@ -10,6 +11,7 @@ Monthly Rent: {{ room.price }} ฿<br>
 Room Size: </p>
 
 <!--Insert slip (image upload)-->
-<a href="{% url 'renthub:submit' room.id%}">Send</a>
+<a href="{% url 'renthub:submit' room.room_number%}">Send</a>
 
 <!--payment QR code-->
+{% endblock %}
