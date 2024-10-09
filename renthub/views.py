@@ -62,6 +62,10 @@ class RoomDetailView(DetailView):
             return HttpResponseRedirect(reverse("renthub:home"))
 
         if not room.availability:
+            if Rental.objects.filter(room=room).exits():
+                messages.info(request, "This room is taken.")
+            else:
+                messages.error(request, "This room is currently unavailable.")
             return HttpResponseRedirect(reverse("renthub:home"))
 
         return super().get(request, *args, **kwargs)
@@ -73,7 +77,8 @@ class RoomPaymentListView(LoginRequiredMixin, ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        return Room.objects.filter(availability=True)
+        rentals = Rental.objects.filter(renter__user=self.request.user)
+        return Room.objects.filter(rental__in=rentals)
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -96,7 +101,35 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             messages.error(request, f"The room {room} is currently unavailable.")
             return HttpResponseRedirect(reverse("renthub:home"))
 
+        try:
+            renter = Renter.objects.get(user=request.user)
+        except Renter.DoesNotExist:
+            renter = None
+            messages.warning(request, "You need to register as a renter to proceed with a rental.")
+
+        if Rental.objects.filter(room=room).exclude(renter=renter).exists():
+            messages.error(request, "This room is already taken.")
+            return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room.room_number}))
+
+        rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
+        if rental_exists:
+            messages.info(request, "You already have a rental for this room.")
+
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        room = self.get_object()
+        try:
+            renter = Renter.objects.get(user=user)
+        except Renter.DoesNotExist:
+            renter = None
+
+        context['rental_exists'] = Rental.objects.filter(room=context['room'], renter=renter).exists()
+
+        return context
 
 
 @login_required
@@ -104,21 +137,51 @@ def submit_payment(request, room_number):
     room = Room.objects.get(room_number=room_number)
     user = request.user
     if not user.is_authenticated:
-        # return redirect('login')
-        # or, so the user comes back here after login...
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
-    # rental = Rental(room=)
-
     try:
-        renter = Renter.objects.get(id=user.id)
+        renter = Renter.objects.get(user=user)
     except Renter.DoesNotExist:
         messages.error(request, "You must be a registered renter to rent a room.")
-        return HttpResponseRedirect(reverse("renthub:home"))
+        return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
 
-    if Rental.objects.filter(room=room.id, renter=renter.id).exists():
-        messages.info(request, "You have already rented this room.")
+    rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
+    if rental_exists:
+        messages.info(request, "You already rented this room")
+        return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
+    # month_difference = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
+    # temporary version: if can submit and show in user's payment feature
+    rental_fee = room.price * 1
+    rental = Rental(room=room, renter=renter, rental_fee=rental_fee)
+    rental.save()
+    room.availability = False
+    messages.info(request, "Your renting was successful")
+    # check rental_exists again because it didn't exist before, but is now created
+    rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
+    return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
 
-    return render(request, "renthub/payment.html", {"room": room})
+
+@login_required
+def cancel_rental(request, room_number):
+    room = Room.objects.get(room_number=room_number)
+    user = request.user
+    if not user.is_authenticated:
+        return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+
+    try:
+        renter = Renter.objects.get(user=user)
+    except Renter.DoesNotExist:
+        messages.error(request, "You must be a registered renter to cancel a rental.")
+        return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
+
+    rental = Rental.objects.get(room=room, renter=renter)
+    if rental:
+        rental.delete()
+        room.availability = True
+        messages.info(request, "Your booking cancellation was successful.")
+    else:
+        messages.warning(request, "You do not have an active booking for this room.")
+    return render(request, "renthub/payment.html",
+                  {"room": room, "rental_exists": Rental.objects.filter(room=room, renter=renter).exists()})
 
 
 def renter_signup(request):
@@ -143,4 +206,3 @@ def renter_signup(request):
     else:
         form = RenterSignupForm()
     return render(request, 'registration/signup.html', {'form': form})
-

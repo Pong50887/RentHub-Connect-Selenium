@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>if u registered u see</p>
+{% if rooms %}
+    {% for room in rooms %}
+        <a href="{% url 'renthub:rental' room.room_number %}">Room Number: {{ room.room_number }}</a><br>
+    {% endfor %}
+{% else %}
+        <p>You currently have no payments</p>
+{% endif %}
 {% endblock %}
