@@ -104,6 +104,8 @@ def submit_payment(request, room_number):
         # return redirect('login')
         # or, so the user comes back here after login...
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+    # rental = Rental(room=)
+
 
     # try:
     #     renter = Renter.objects.get(id=user.id)

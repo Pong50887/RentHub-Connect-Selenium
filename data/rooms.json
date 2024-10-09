@@ -1,12 +1,12 @@
 [
 {
   "model": "renthub.room",
-  "pk": 1,
+  "pk": 2,
   "fields": {
     "room_number": 101,
     "detail": "Spacious single room with a view",
-    "price": "5000.00",
-    "type": "Single Room",
+    "price": "6000.00",
+    "type": "Double Room",
     "availability": true
   }
 },
