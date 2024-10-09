@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 {% if room %}
-    <h1>{{ room }}</h1>
-    <!--rental image-->
+    <h1>room: {{ room }}</h1>
+    {% if room.room_type.image %}
+        <br><img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" style="width: 200px; height: auto;">
+    {% endif %}
     <p>Detail</p>
-    <p>Description: </p>
+    <p>Description: {{ room.room_type.description }}</p>
     <p>Features:</p>
-    <p>Ideal For:</p>
+    <ul>
+    {% for feature in room.room_type.features.all %}
+        <li>{{ feature.name }}</li>
+    {% empty %}
+        <li>No features available.</li>
+    {% endfor %}
+    </ul>
+    <p>Ideal For: {{ room.room_type.ideal_for }}</p>
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
 
     <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>

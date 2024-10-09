@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Room, RoomType
+from .models import Room, RoomType, Feature
+
+
+class FeatureInline(admin.TabularInline):
+    model = Feature
+    extra = 1  # Number of empty forms shown by default
 
 
 class RoomAdmin(admin.ModelAdmin):
@@ -7,7 +12,8 @@ class RoomAdmin(admin.ModelAdmin):
 
 
 class RoomTypeAdmin(admin.ModelAdmin):
-    list_display = ('type_name', 'image_tag')
+    inlines = [FeatureInline]
+    list_display = ('type_name', 'description', 'ideal_for', 'image_tag',)
     readonly_fields = ('image_tag',)
 
     def image_tag(self, obj):

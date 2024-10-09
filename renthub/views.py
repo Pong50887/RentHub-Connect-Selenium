@@ -12,16 +12,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from mysite import settings
 from .forms import RenterSignupForm
-from .models import Room, Rental, Renter
+from .models import Room, Rental, Renter, RoomType
 
 
 class HomeView(ListView):
-    model = Room
+    model = RoomType
     template_name = "renthub/home.html"
     context_object_name = "room_types"
 
     def get_queryset(self):
-        return Room.objects.values_list('type', flat=True).distinct()
+        return RoomType.objects.filter(room__isnull=False).distinct()
 
 
 class RoomTypeView(ListView):
@@ -30,9 +30,10 @@ class RoomTypeView(ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
+        pass
         # Get the room type from the URL
         room_type = self.kwargs['room_type']
-        return Room.objects.filter(type=room_type, availability=True)
+        return Room.objects.filter(room_type__type_name=room_type)
 
 
 class RoomListView(ListView):
@@ -107,7 +108,6 @@ def submit_payment(request, room_number):
         # or, so the user comes back here after login...
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
     # rental = Rental(room=)
-
 
     try:
         renter = Renter.objects.get(id=user.id)
