@@ -1,16 +1,18 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from .models import Room, Rental, Renter
+
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
-
-from mysite import settings
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from mysite import settings
+from .forms import RenterSignupForm
+from .models import Room, Rental, Renter
 
 
 class HomeView(ListView):
@@ -30,7 +32,7 @@ class RoomTypeView(ListView):
     def get_queryset(self):
         # Get the room type from the URL
         room_type = self.kwargs['room_type']
-        return Room.objects.filter(type=room_type)
+        return Room.objects.filter(type=room_type, availability=True)
 
 
 class RoomListView(ListView):
@@ -64,7 +66,7 @@ class RoomDetailView(DetailView):
         return super().get(request, *args, **kwargs)
 
 
-class RoomPaymentListView(LoginRequiredMixin,ListView):
+class RoomPaymentListView(LoginRequiredMixin, ListView):
     model = Room
     template_name = "renthub/payment_list.html"
     context_object_name = "rooms"
@@ -73,7 +75,7 @@ class RoomPaymentListView(LoginRequiredMixin,ListView):
         return Room.objects.filter(availability=True)
 
 
-class RoomPaymentView(LoginRequiredMixin,DetailView):
+class RoomPaymentView(LoginRequiredMixin, DetailView):
     model = Room
     template_name = "renthub/payment.html"
     context_object_name = "room"
@@ -107,31 +109,38 @@ def submit_payment(request, room_number):
     # rental = Rental(room=)
 
 
-    # try:
-    #     renter = Renter.objects.get(id=user.id)
-    #     renter_id = renter.id
-    # except Renter.DoesNotExist:
-    #     messages.error(request, "You must be a registered renter to rent a room.")
-    #     return HttpResponseRedirect(reverse("renthub:payment"))
-    #
-    # if Rental.objects.filter(room=room_id, renter=renter_id).exists():
-    #     messages.info(request, "You have already rented this room.")
+    try:
+        renter = Renter.objects.get(id=user.id)
+    except Renter.DoesNotExist:
+        messages.error(request, "You must be a registered renter to rent a room.")
+        return HttpResponseRedirect(reverse("renthub:home"))
+
+    if Rental.objects.filter(room=room.id, renter=renter.id).exists():
+        messages.info(request, "You have already rented this room.")
 
     return render(request, "renthub/payment.html", {"room": room})
 
-def signup(request):
+
+def renter_signup(request):
     """Register a new user."""
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RenterSignupForm(request.POST)
         if form.is_valid():
             form.save()
+
             username = form.cleaned_data.get('username')
             raw_passwd = form.cleaned_data.get('password1')
+            phone_number = form.cleaned_data.get('phone_number')  # Get phone number from form
             user = authenticate(username=username, password=raw_passwd)
+
+            renter = Renter(user=user, phone_number=phone_number)
+            renter.save()
+
             login(request, user)
             return redirect('renthub:home')
         else:
             messages.error(request, "This form is invalid")
     else:
-        form = UserCreationForm()
+        form = RenterSignupForm()
     return render(request, 'registration/signup.html', {'form': form})
+
