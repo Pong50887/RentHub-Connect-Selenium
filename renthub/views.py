@@ -7,8 +7,10 @@ from django.views.generic import ListView, DetailView
 
 from mysite import settings
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class HomeView(ListView):
@@ -62,7 +64,7 @@ class RoomDetailView(DetailView):
         return super().get(request, *args, **kwargs)
 
 
-class RoomPaymentListView(ListView):
+class RoomPaymentListView(LoginRequiredMixin,ListView):
     model = Room
     template_name = "renthub/payment_list.html"
     context_object_name = "rooms"
@@ -71,7 +73,7 @@ class RoomPaymentListView(ListView):
         return Room.objects.filter(availability=True)
 
 
-class RoomPaymentView(DetailView):
+class RoomPaymentView(LoginRequiredMixin,DetailView):
     model = Room
     template_name = "renthub/payment.html"
     context_object_name = "room"
@@ -95,8 +97,8 @@ class RoomPaymentView(DetailView):
 
 
 @login_required
-def submit_payment(request, room_id):
-    room = Room.objects.get(id=room_id)
+def submit_payment(request, room_number):
+    room = Room.objects.get(room_number=room_number)
     user = request.user
     if not user.is_authenticated:
         # return redirect('login')
@@ -114,3 +116,20 @@ def submit_payment(request, room_id):
     #     messages.info(request, "You have already rented this room.")
 
     return render(request, "renthub/payment.html", {"room": room})
+
+def signup(request):
+    """Register a new user."""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_passwd = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_passwd)
+            login(request, user)
+            return redirect('renthub:home')
+        else:
+            messages.error(request, "This form is invalid")
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
