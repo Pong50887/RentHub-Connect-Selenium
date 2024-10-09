@@ -7,19 +7,24 @@
     {% csrf_token %}
     <table>
         <tr valign="top">
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-        <td class="error">{{ form.username.errors }}</td>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+            <td class="error">{{ form.username.errors }}</td>
+        </tr>
+        <tr valign="top">
+            <td>{{ form.phone_number.label_tag }}</td>
+            <td>{{ form.phone_number }}</td>
+            <td class="error">{{ form.phone_number.errors }}</td>
         </tr>
         <tr>
-        <td>{{ form.password1.label_tag }}</td>
-        <td>{{ form.password1 }}</td>
-        <td class="error">{{ form.password1.errors }}</td>
+            <td>{{ form.password1.label_tag }}</td>
+            <td>{{ form.password1 }}</td>
+            <td class="error">{{ form.password1.errors }}</td>
         </tr>
         <tr>
-        <td>Re-enter password:</td>
-        <td>{{ form.password2 }}</td>
-        <td class="error">{{ form.password2.errors }}</td>
+            <td>Re-enter password:</td>
+            <td>{{ form.password2 }}</td>
+            <td class="error">{{ form.password2.errors }}</td>
         </tr>
     </table>
 
