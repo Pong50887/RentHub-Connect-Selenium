@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
 from renthub import views
+
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/renthub/', permanent=False)),
@@ -26,3 +29,6 @@ urlpatterns = [
     path('accounts/', include("django.contrib.auth.urls")),
     path('signup/', views.renter_signup, name='signup'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

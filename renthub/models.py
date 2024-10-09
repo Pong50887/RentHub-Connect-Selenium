@@ -9,6 +9,17 @@ STATUS_CHOICES = [
 ]
 
 
+class RoomType(models.Model):
+    """
+    Represents a type of room with a shared image for each type.
+    """
+    type_name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='room_images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.type_name
+
+
 class Room(models.Model):
     """
     Represents a room available for rent.
@@ -16,8 +27,8 @@ class Room(models.Model):
     room_number = models.IntegerField(default=0)
     detail = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    type = models.CharField(max_length=200)
     availability = models.BooleanField()
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         """Returns the string representation of the room, which is its detail."""
@@ -41,7 +52,7 @@ class Rental(models.Model):
     """
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     renter = models.ForeignKey(Renter, on_delete=models.CASCADE)
-    start_data = models.DateTimeField('date rented', default=timezone.now)
+    start_date = models.DateTimeField('date rented', default=timezone.now)
     end_date = models.DateTimeField('date checkout', default=timezone.now)
     rental_fee = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(
