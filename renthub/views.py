@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView
 
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -77,7 +76,7 @@ class RoomPaymentListView(LoginRequiredMixin, ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        rentals = Rental.objects.filter(renter__user=self.request.user)
+        rentals = Rental.objects.filter(renter__id=self.request.user.id)
         return Room.objects.filter(rental__in=rentals)
 
 
@@ -102,7 +101,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             return HttpResponseRedirect(reverse("renthub:home"))
 
         try:
-            renter = Renter.objects.get(user=request.user)
+            renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             renter = None
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
@@ -120,10 +119,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-        room = self.get_object()
         try:
-            renter = Renter.objects.get(user=user)
+            renter = Renter.objects.get(id=self.request.user.id)
         except Renter.DoesNotExist:
             renter = None
 
@@ -139,7 +136,7 @@ def submit_payment(request, room_number):
     if not user.is_authenticated:
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
     try:
-        renter = Renter.objects.get(user=user)
+        renter = Renter.objects.get(id=user.id)
     except Renter.DoesNotExist:
         messages.error(request, "You must be a registered renter to rent a room.")
         return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
@@ -168,7 +165,7 @@ def cancel_rental(request, room_number):
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
     try:
-        renter = Renter.objects.get(user=user)
+        renter = Renter.objects.get(id=user.id)
     except Renter.DoesNotExist:
         messages.error(request, "You must be a registered renter to cancel a rental.")
         return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
@@ -196,7 +193,7 @@ def renter_signup(request):
             phone_number = form.cleaned_data.get('phone_number')  # Get phone number from form
             user = authenticate(username=username, password=raw_passwd)
 
-            renter = Renter(user=user, phone_number=phone_number)
+            renter = Renter(phone_number=phone_number)
             renter.save()
 
             login(request, user)

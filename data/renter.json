@@ -3,7 +3,6 @@
   "model": "renthub.renter",
   "pk": 1,
   "fields": {
-    "user": 2,
     "phone_number": "1234567890"
   }
 },
@@ -11,7 +10,6 @@
   "model": "renthub.renter",
   "pk": 2,
   "fields": {
-    "user": 3,
     "phone_number": "1241346547"
   }
 }

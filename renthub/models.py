@@ -45,15 +45,14 @@ class Room(models.Model):
         return str(self.room_number)
 
 
-class Renter(models.Model):
+class Renter(User):
     """
     Represents a renter, extending Django's default User model.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 class Rental(models.Model):
