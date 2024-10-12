@@ -22,6 +22,11 @@ class RoomModelTest(TestCase):
         self.assertEqual(self.room.availability, True)
         self.assertEqual(self.room.room_type, self.room_type)
 
+    def test_room_availability(self):
+        """Test room availability filter."""
+        available_rooms = Room.objects.filter(availability=True)
+        self.assertIn(self.room, available_rooms)
+
     def test_string_representation(self):
         """Test the string representation of the Room model."""
         self.assertEqual(str(self.room), '101')
