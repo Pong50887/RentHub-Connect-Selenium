@@ -84,7 +84,7 @@ class Transaction(models.Model):
         default='wait',
     )
 
-    def str(self):
+    def __str__(self):
         """Returns the string representation of the transaction, which is its status."""
         return self.status
 
@@ -102,7 +102,7 @@ class MaintenanceRequest(models.Model):
     )
     date_requested = models.DateTimeField()
 
-    def str(self):
+    def __str__(self):
         """Returns a string representation of the maintenance request."""
         return f'Request by {self.rental.renter} for {self.rental.room}'
 
@@ -115,6 +115,6 @@ class Announcement(models.Model):
     content = models.CharField(max_length=500)
     publish_date = models.DateTimeField()
 
-    def str(self):
+    def __str__(self):
         """Returns the string representation of the announcement, which is its title."""
         return self.title
