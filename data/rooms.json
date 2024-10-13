@@ -1,0 +1,122 @@
+[
+{
+  "model": "renthub.roomtype",
+  "pk": 1,
+  "fields": {
+    "type_name": "Single bed",
+    "description": "The single size bedroom features a spacious layout with a comfortable 10000 x 10000 inch.",
+    "ideal_for": "Individual who doesnt have someone",
+    "image": "room_images/SB-Standees-Spong-3_1200x.webp"
+  }
+},
+{
+  "model": "renthub.roomtype",
+  "pk": 2,
+  "fields": {
+    "type_name": "Double bed",
+    "description": "I think I like it, it like I think I",
+    "ideal_for": "Couple who have money",
+    "image": "room_images/Profile_-_SpongeBob_SquarePants.webp"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 1,
+  "fields": {
+    "room_type": 1,
+    "name": "blah blah blah"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 2,
+  "fields": {
+    "room_type": 1,
+    "name": "hahahahaha"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 3,
+  "fields": {
+    "room_type": 1,
+    "name": "nononono"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 4,
+  "fields": {
+    "room_type": 1,
+    "name": "eieieiei"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 5,
+  "fields": {
+    "room_type": 2,
+    "name": "this is 1 feature"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 6,
+  "fields": {
+    "room_type": 2,
+    "name": "this is 2 feature"
+  }
+},
+{
+  "model": "renthub.feature",
+  "pk": 7,
+  "fields": {
+    "room_type": 2,
+    "name": "this is 3 feature"
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 1,
+  "fields": {
+    "room_number": 101,
+    "detail": "10 x 20",
+    "price": "7000.00",
+    "availability": true,
+    "room_type": 1
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 2,
+  "fields": {
+    "room_number": 102,
+    "detail": "40x50",
+    "price": "4000.00",
+    "availability": true,
+    "room_type": 2
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 3,
+  "fields": {
+    "room_number": 103,
+    "detail": "60x80",
+    "price": "1234.00",
+    "availability": true,
+    "room_type": 2
+  }
+},
+{
+  "model": "renthub.room",
+  "pk": 4,
+  "fields": {
+    "room_number": 104,
+    "detail": "09x23",
+    "price": "1234567.00",
+    "availability": true,
+    "room_type": 1
+  }
+}
+]

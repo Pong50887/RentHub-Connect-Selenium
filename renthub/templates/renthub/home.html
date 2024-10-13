@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to RentHub Connect{% endblock %}
+
+{% block content %}
+{% for room_type in room_types %}
+    <li style="padding-left: 20px;">
+        <a href="{% url 'renthub:room_type' room_type.type_name %}">{{ room_type.type_name }}</a>
+        {% if room_type.image %}
+            <br>
+            <img src="{{ room_type.image.url }}" alt="{{ room_type.type_name }}" style="width: 200px; height: auto;">
+        {% endif %}
+    </li>
+{% empty %}
+    <p>No rooms available at the moment.</p>
+{% endfor %}
+{% endblock %}

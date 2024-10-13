@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Rental Payment</h1>
+{% if room.room_type.image %}
+    <br><img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" style="width: 200px; height: auto;">
+{% endif %}
+<h2>{{ room.room_type.type_name }}</h2>
+<h2>{{ room.price }}</h2>
+
+<p>Rental Details<br>
+Room Type: {{ room.room_type.type_name }}<br>
+Monthly Rent: {{ room.price }} ฿<br>
+Room Size: {{ room.detail }} feet</p>
+
+<!--Insert slip (image upload)-->
+
+{% if rental_exists %}
+    <a href="{% url 'renthub:cancel' room.room_number %}">Cancel Renting</a>
+{% else %}
+    <a href="{% url 'renthub:submit' room.room_number %}">Send</a>
+{% endif %}
+
+<!--payment QR code-->
+{% endblock %}
