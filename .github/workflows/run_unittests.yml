@@ -2,10 +2,11 @@ name: Run unit tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - "**"
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - "**"
 env:
   SECRET_KEY: random-secret-key-for-ci
   DEBUG: True
