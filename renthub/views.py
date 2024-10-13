@@ -191,7 +191,6 @@ def cancel_rental(request, room_number):
                   {"room": room, "rental_exists": Rental.objects.filter(room=room, renter=renter).exists()})
 
 
-# Change this to View class
 def renter_signup(request):
     """Register a new user."""
     if request.method == 'POST':
