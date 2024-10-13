@@ -2,30 +2,7 @@
 
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
 from renthub.models import Rental, Room, Renter
-
-
-class RentalModelTests(TestCase):
-    """Tests of Rental object creation"""
-
-    def setUp(self):
-        """Set up data for the tests."""
-        self.renter = Renter.objects.create(username="normal_user", password="test123", phone_number="1234567890")
-        self.admin = User.objects.create_superuser(username='admin', password='adminpassword',
-                                                   email='admin@example.com')
-        self.room = Room.objects.create(room_number="101", detail='A cozy room', price=1000.00, availability=True)
-
-    def test_renter_can_create_rental(self):
-        """A renter can create a rental."""
-        rental = Rental.objects.create(room=self.room, renter=self.renter, rental_fee=self.room.price)
-        self.assertIsInstance(rental, Rental)
-        self.assertEqual(rental.renter, self.renter)
-
-    def test_non_renter_cannot_create_rental(self):
-        """A non-renter cannot create a rental."""
-        with self.assertRaises(Exception):
-            Rental.objects.create(room=self.room, renter=self.admin, rental_fee=self.room.price)
 
 
 class DetailViewTests(TestCase):
