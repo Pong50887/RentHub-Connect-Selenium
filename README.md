@@ -1,5 +1,7 @@
 # RentHub-Connect
-RentHub-Connect is a application designed to streamline apartment management by integrating booking and payments. 
+[![Run unit tests](https://github.com/Pong50887/RentHub-Connect/actions/workflows/run_unittests.yml/badge.svg)](https://github.com/Pong50887/RentHub-Connect/actions/workflows/run_unittests.yml)
+
+RentHub-Connect is an application designed to streamline apartment management by integrating booking and payments. 
 
 ## Installation
 To be added
