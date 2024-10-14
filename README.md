@@ -17,7 +17,7 @@ All project documents are in the [Project Wiki](../../wiki/Home).
 - [Requirements](../../wiki/Requirements)
 - [Project Development Plan](../../wiki/Project-Development-Plan)
 - [Domain Model](../../wiki/Domain-Model)
-- [Task Board](https://github.com/users/Pong50887/projects/3/views/2)
+- [Task Board](https://github.com/users/Pong50887/projects/3/views/1)
 
 ## Iteration Plans
 - [Iteration 1](../../wiki/Iteration-1-Plan)
