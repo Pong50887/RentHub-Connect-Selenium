@@ -13,6 +13,10 @@ from mysite import settings
 from .forms import RenterSignupForm
 from .models import Room, Rental, Renter, RoomType, Announcement
 
+from promptpay import qrcode
+import os
+import logging
+
 
 class HomeView(ListView):
     model = RoomType
@@ -123,12 +127,16 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        room = self.get_object()
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
         except Renter.DoesNotExist:
             renter = None
 
+        generate_qr_code(room.price, room.room_number)
+
+        context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
         context['rental_exists'] = Rental.objects.filter(room=context['room'], renter=renter).exists()
 
         return context
@@ -221,6 +229,19 @@ class RenterSignupView(View):
             messages.error(request, "This form is invalid")
             return render(request, 'registration/signup.html', {'form': form})
 
+
 class AnnouncementView(DetailView):
     model = Announcement
     template_name = "renthub/announcement.html"
+
+
+def generate_qr_code(price, room_number):
+    """Generate Promptpay QR payment with fixed price."""
+    try:
+        logging.info(f"Generating QR code for room {room_number} with price {price}")
+        payload_with_amount = qrcode.generate_payload("0983923856", price)
+        qrcode.to_file(payload_with_amount, f"media/qr_code_images/{room_number}.png")
+        logging.info(f"QR code generated successfully for room {room_number}.")
+    except Exception as e:
+        logging.error(f"Failed to generate QR code: {e}")
+

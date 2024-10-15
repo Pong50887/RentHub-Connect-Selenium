@@ -20,5 +20,8 @@ Room Size: {{ room.detail }} feet</p>
     <a href="{% url 'renthub:submit' room.room_number %}">Send</a>
 {% endif %}
 
-<!--payment QR code-->
+{% if qr_code_path %}
+    <h3>Scan this QR code to complete the payment: </h3>
+    <img src="/{{ qr_code_path }}" alt="QR Code for payment" style="width: 200px; height: auto;">
+{% endif %}
 {% endblock %}
