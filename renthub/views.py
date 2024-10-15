@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
 from django.contrib import messages
-from django.views.generic import ListView, DetailView
+from django.views.generic import View, ListView, DetailView
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -196,17 +196,21 @@ def cancel_rental(request, room_number):
                   {"room": room, "rental_exists": Rental.objects.filter(room=room, renter=renter).exists()})
 
 
-def renter_signup(request):
+class RenterSignupView(View):
     """Register a new user."""
-    if request.method == 'POST':
+
+    def get(self, request):
+        form = RenterSignupForm()
+        return render(request, 'registration/signup.html', {'form': form})
+
+    def post(self, request):
         form = RenterSignupForm(request.POST)
         if form.is_valid():
             form.save()
-
             username = form.cleaned_data.get('username')
             raw_passwd = form.cleaned_data.get('password1')
-            phone_number = form.cleaned_data.get('phone_number')  # Get phone number from form
-            user = authenticate(username=username, password=raw_passwd)
+            phone_number = form.cleaned_data.get('phone_number')
+            user = authenticate(username=username, password=raw_passwd)  # Authenticate the user
 
             renter = Renter(phone_number=phone_number)
             renter.save()
@@ -215,9 +219,7 @@ def renter_signup(request):
             return redirect('renthub:home')
         else:
             messages.error(request, "This form is invalid")
-    else:
-        form = RenterSignupForm()
-    return render(request, 'registration/signup.html', {'form': form})
+            return render(request, 'registration/signup.html', {'form': form})
 
 class AnnouncementView(DetailView):
     model = Announcement

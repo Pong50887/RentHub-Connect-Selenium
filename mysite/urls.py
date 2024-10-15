@@ -27,7 +27,7 @@ urlpatterns = [
     path("renthub/", include("renthub.urls")),
     path("admin/", admin.site.urls),
     path('accounts/', include("django.contrib.auth.urls")),
-    path('signup/', views.renter_signup, name='signup'),
+    path('signup/', views.RenterSignupView.as_view(), name='signup'),
 ]
 
 if settings.DEBUG:
