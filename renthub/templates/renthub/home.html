@@ -2,6 +2,14 @@
 {% block title %}Welcome to RentHub Connect{% endblock %}
 
 {% block content %}
+{% if announcement %}
+    <h1>Announcements</h1>
+    <ul>
+        {% for announcement in announcement %}
+            <a href="{% url 'renthub:announcement' announcement.id %}">{{ announcement.title }} - {{ announcement.publish_date }}</a><br>
+       {% endfor %}
+    </ul>
+{% endif %}
 {% for room_type in room_types %}
     <li style="padding-left: 20px;">
         <a href="{% url 'renthub:room_type' room_type.type_name %}">{{ room_type.type_name }}</a>

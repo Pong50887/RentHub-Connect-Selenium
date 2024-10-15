@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from mysite import settings
 from .forms import RenterSignupForm
-from .models import Room, Rental, Renter, RoomType
+from .models import Room, Rental, Renter, RoomType, Announcement
 
 
 class HomeView(ListView):
@@ -21,6 +21,11 @@ class HomeView(ListView):
 
     def get_queryset(self):
         return RoomType.objects.filter(room__isnull=False).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['announcement'] = Announcement.objects.all().order_by('-publish_date')
+        return context
 
 
 class RoomTypeView(ListView):
@@ -213,3 +218,7 @@ def renter_signup(request):
     else:
         form = RenterSignupForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+class AnnouncementView(DetailView):
+    model = Announcement
+    template_name = "renthub/announcement.html"

@@ -1,5 +1,6 @@
+from django import forms
 from django.contrib import admin
-from .models import Room, RoomType, Feature
+from .models import Room, RoomType, Announcement, Feature
 
 
 class FeatureInline(admin.TabularInline):
@@ -25,5 +26,23 @@ class RoomTypeAdmin(admin.ModelAdmin):
     image_tag.short_description = 'Room Type Image'
 
 
+class AnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = '__all__'
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'rows': 10,
+                'cols': 80,
+                'style': 'resize: both;'
+            }),
+        }
+
+class AnnouncementAdmin(admin.ModelAdmin):
+    form = AnnouncementForm
+    list_display = ('id', 'title', 'content', 'publish_date')
+
+
 admin.site.register(Room, RoomAdmin)
 admin.site.register(RoomType, RoomTypeAdmin)
+admin.site.register(Announcement, AnnouncementAdmin)
