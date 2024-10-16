@@ -33,6 +33,7 @@ def cancel_rental(request, room_number):
         rental = Rental.objects.get(room=room, renter=renter)
         rental.delete()
         room.availability = True
+        room.save()
         messages.info(request, "Your booking cancellation was successful.")
     except Rental.DoesNotExist:
         messages.warning(request, "You do not have an active booking for this room.")
