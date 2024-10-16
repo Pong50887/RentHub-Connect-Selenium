@@ -39,12 +39,12 @@ class PaymentViewTests(TestCase):
     def test_payment_access_for_authenticated_renter(self):
         """An authenticated renter can access the payment page."""
         self.client.login(username='renter1', password='testpassword')
-        response = self.client.get(f'/renthub/rental/{self.room.room_number}/payment/')
+        response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room.room_number}))
         self.assertEqual(response.status_code, 200)
 
     def test_payment_access_for_unauthenticated_user(self):
         """An unauthenticated user cannot access the payment page."""
-        response = self.client.get(f'/renthub/rental/{self.room.room_number}/payment/')
+        response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room.room_number}))
         self.assertEqual(response.status_code, 302)  # Redirected
 
     def test_payment_access_for_non_owner_renter(self):
@@ -145,7 +145,7 @@ class PaymentCancelTests(TestCase):
         """A renter can cancel their own rental."""
         self.client.force_login(self.renter)
         rental = Rental.objects.create(room=self.room, renter=self.renter, rental_fee=self.room.price)
-        response = self.client.post(reverse('renthub:cancel', args=[self.room.room_number]))
+        response = self.client.post(reverse('renthub:cancel', args=[self.room.room_number]),follow=True)
         self.assertFalse(Rental.objects.filter(id=rental.id).exists())
         self.room.refresh_from_db()
         self.assertTrue(self.room.availability)
@@ -156,6 +156,6 @@ class PaymentCancelTests(TestCase):
         self.client.force_login(self.renter1)
         rental = Rental.objects.create(room=self.room, renter=self.renter1, rental_fee=self.room.price)
         self.client.force_login(self.renter2)
-        response = self.client.post(reverse('renthub:cancel', kwargs={'room_number': self.room.room_number}))
+        response = self.client.post(reverse('renthub:cancel', kwargs={'room_number': self.room.room_number}),follow=True)
         self.assertTrue(Rental.objects.filter(id=rental.id).exists())
         self.assertContains(response, "You do not have an active booking for this room.")
