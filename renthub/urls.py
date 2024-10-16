@@ -13,5 +13,5 @@ urlpatterns = [
     path("rental/<int:room_number>/payment/", views.RoomPaymentView.as_view(), name="payment"),
     path("rental/<int:room_number>/payment/submit/", views.submit_payment, name="submit"),
     path("rental/<int:room_number>/payment/cancel/", views.cancel_rental, name="cancel"),
-    path('announcement/<int:pk>', views.AnnouncementView.as_view(), name='announcement'),
+    path('announcement/<int:pk>', views.AnnouncementView.as_view(), name="announcement"),
 ]
