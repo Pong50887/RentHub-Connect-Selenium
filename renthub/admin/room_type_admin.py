@@ -4,6 +4,9 @@ from .feature_in_line import FeatureInline
 
 
 class RoomTypeAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the RoomType model.
+    """
     inlines = [FeatureInline]
     list_display = ('type_name', 'description', 'ideal_for', 'image_tag',)
     readonly_fields = ('image_tag',)

@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class RenterSignupForm(UserCreationForm):
+    """
+    Form for registering a new renter.
+    """
     phone_number = forms.CharField(max_length=10, required=True, help_text="Phone number:")
 
     class Meta:

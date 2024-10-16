@@ -8,13 +8,17 @@ from ..models import Renter
 
 
 class RenterSignupView(View):
-    """Register a new user."""
+    """
+    Register a new user.
+    """
 
     def get(self, request):
+        """Display the signup form."""
         form = RenterSignupForm()
         return render(request, 'registration/signup.html', {'form': form})
 
     def post(self, request):
+        """Process the submitted signup form."""
         form = RenterSignupForm(request.POST)
         if form.is_valid():
             form.save()

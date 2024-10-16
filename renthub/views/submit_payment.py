@@ -11,6 +11,14 @@ from ..utils import delete_qr_code
 
 @login_required
 def submit_payment(request, room_number):
+    """Handle the submission of a rental payment.
+
+    :param request: The HTTP request object.
+    :param room_number: The room number for which the payment is being submitted.
+
+    :return: Redirects to the rental page or renders the payment template
+                       based on the rental status.
+    """
     user = request.user
     if not user.is_authenticated:
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
@@ -35,8 +43,6 @@ def submit_payment(request, room_number):
     if rental_exists:
         messages.info(request, "You already rented this room")
         return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
-    # month_difference = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
-    # temporary version: if user can submit and show in user's payment feature
     rental_fee = room.price * 1
     rental = Rental(room=room, renter=renter, rental_fee=rental_fee)
     rental.save()
@@ -44,6 +50,5 @@ def submit_payment(request, room_number):
     messages.info(request, "Your renting was successful")
     # Delete the QR code
     delete_qr_code(room_number)
-    # check rental_exists again because it didn't exist before, but is now created
     rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
     return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})

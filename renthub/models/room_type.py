@@ -11,4 +11,5 @@ class RoomType(models.Model):
     image = models.ImageField(upload_to='room_images/', blank=True, null=True)
 
     def __str__(self):
+        """Returns the name of the room type."""
         return self.type_name

@@ -10,16 +10,21 @@ from ..utils import generate_qr_code
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
+    """
+    View for displaying the payment page for a specific room rental.
+    """
     model = Room
     template_name = "renthub/payment.html"
     context_object_name = "room"
 
     def get_object(self, queryset=None):
+        """Retrieve the room object based on the room number provided in the URL."""
         room_number = self.kwargs.get("room_number")
         room = get_object_or_404(Room, room_number=room_number)
         return room
 
     def get(self, request, *args, **kwargs):
+        """Handle GET requests to display the room payment page."""
         try:
             room = self.get_object()
         except Http404:
@@ -46,6 +51,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """Add additional context data to the template."""
         context = super().get_context_data(**kwargs)
         room = self.get_object()
 

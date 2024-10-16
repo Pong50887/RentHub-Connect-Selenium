@@ -8,16 +8,21 @@ from ..models import Room, Rental
 
 
 class RoomDetailView(DetailView):
+    """
+    Display the details of a specific room.
+    """
     model = Room
     template_name = "renthub/rental.html"
     context_object_name = "room"
 
     def get_object(self, queryset=None):
+        """Retrieve the room object based on the room number."""
         room_number = self.kwargs.get("room_number")
         room = get_object_or_404(Room, room_number=room_number)
         return room
 
     def get(self, request, *args, **kwargs):
+        """Handle GET requests for room details."""
         try:
             room = self.get_object()
         except Http404:

@@ -10,6 +10,14 @@ from ..models import Room, Rental, Renter
 
 @login_required
 def cancel_rental(request, room_number):
+    """
+    Handle the cancellation of a rental for the specified room.
+
+    :param request: The HTTP request object.
+    :param room_number: The number of the room to cancel the rental for.
+
+    :return: Redirects to the rental page for the room.
+    """
     room = Room.objects.get(room_number=room_number)
     user = request.user
     if not user.is_authenticated:

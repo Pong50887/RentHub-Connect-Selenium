@@ -9,4 +9,5 @@ class Renter(User):
     phone_number = models.CharField(max_length=10)
 
     def __str__(self):
+        """Returns the username of the renter."""
         return self.username
