@@ -175,6 +175,8 @@ def submit_payment(request, room_number):
     rental.save()
     room.availability = False
     messages.info(request, "Your renting was successful")
+    # Delete the QR code
+    delete_qr_code(room_number)
     # check rental_exists again because it didn't exist before, but is now created
     rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
     return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
@@ -200,8 +202,8 @@ def cancel_rental(request, room_number):
         messages.info(request, "Your booking cancellation was successful.")
     except Rental.DoesNotExist:
         messages.warning(request, "You do not have an active booking for this room.")
-    return render(request, "renthub/payment.html",
-                  {"room": room, "rental_exists": Rental.objects.filter(room=room, renter=renter).exists()})
+
+    return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
 
 
 class RenterSignupView(View):
@@ -235,13 +237,26 @@ class AnnouncementView(DetailView):
     template_name = "renthub/announcement.html"
 
 
+logger = logging.getLogger('renthub')
+
+
 def generate_qr_code(price, room_number):
     """Generate Promptpay QR payment with fixed price."""
     try:
-        logging.info(f"Generating QR code for room {room_number} with price {price}")
+        logger.info(f"Generating QR code for room {room_number} with price {price}")
         payload_with_amount = qrcode.generate_payload("0983923856", price)
         qrcode.to_file(payload_with_amount, f"media/qr_code_images/{room_number}.png")
-        logging.info(f"QR code generated successfully for room {room_number}.")
+        logger.info(f"QR code generated successfully for room {room_number}.")
     except Exception as e:
-        logging.error(f"Failed to generate QR code: {e}")
+        logger.error(f"Failed to generate QR code: {e}")
 
+
+def delete_qr_code(room_number):
+    """Delete the QR code file for a specific room after receipt submission."""
+    qr_code_path = f"media/qr_code_images/{room_number}.png"
+
+    if os.path.exists(qr_code_path):
+        os.remove(qr_code_path)
+        logger.info(f"QR code for room {room_number} deleted successfully.")
+    else:
+        logger.debug(f"QR code for room {room_number} not found.")
