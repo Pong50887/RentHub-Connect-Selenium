@@ -1,27 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Rental Payment</h1>
-{% if room.room_type.image %}
-    <br><img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" style="width: 200px; height: auto;">
-{% endif %}
-<h2>{{ room.room_type.type_name }}</h2>
-<h2>{{ room.price }}</h2>
+<div style="padding-left: 40px;">
 
-<p>Rental Details<br>
-Room Type: {{ room.room_type.type_name }}<br>
-Monthly Rent: {{ room.price }} ฿<br>
-Room Size: {{ room.detail }} feet</p>
+    <h1>Rental Payment</h1>
 
-<!--Insert slip (image upload)-->
+    {% if room.room_type.image %}
+        <br><img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" style="width: 200px; height: auto;">
+    {% endif %}
 
-{% if rental_exists %}
-    <a href="{% url 'renthub:cancel' room.room_number %}">Cancel Renting</a>
-{% else %}
-    <a href="{% url 'renthub:submit' room.room_number %}">Send</a>
-{% endif %}
+    <h2>{{ room.room_type.type_name }}</h2>
+    <h2>{{ room.price }}</h2>
 
-{% if qr_code_path %}
-    <h3>Scan this QR code to complete the payment: </h3>
-    <img src="/{{ qr_code_path }}" alt="QR Code for payment" style="width: 200px; height: auto;">
-{% endif %}
+    <p>Rental Details<br>
+    Room Type: {{ room.room_type.type_name }}<br>
+    Monthly Rent: {{ room.price }} ฿<br>
+    Room Size: {{ room.detail }} feet</p>
+
+    {% if qr_code_path %}
+        <h3>Scan this QR code to complete the payment: </h3>
+        <img src="/{{ qr_code_path }}" alt="QR Code for payment" style="width: 200px; height: auto;">
+    {% endif %}
+
+    <!--Insert slip (image upload)-->
+
+    <div class="payment-actions" style="margin-top: 20px;">
+        {% if rental_exists %}
+            <a href="{% url 'renthub:cancel' room.room_number %}" class="btn btn-danger" style="display: inline-block; margin-right: 10px;">Cancel Renting</a>
+        {% else %}
+            <a href="{% url 'renthub:submit' room.room_number %}" class="btn btn-primary" style="display: inline-block;">Send</a>
+        {% endif %}
+    </div>
+
+</div>
 {% endblock %}
