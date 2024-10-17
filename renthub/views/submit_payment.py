@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -20,8 +20,17 @@ def submit_payment(request, room_number):
     if not user.is_authenticated:
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
-    renter = get_object_or_404(Renter, id=user.id)
-    room = get_object_or_404(Room, room_number=room_number)
+    try:
+        renter = get_object_or_404(Renter, id=user.id)
+    except Http404:
+        messages.error(request, "This renter does not exist.")
+        return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
+
+    try:
+        room = get_object_or_404(Room, room_number=room_number)
+    except Http404:
+        messages.error(request, "This room does not exist.")
+        return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room_number}))
 
     if Rental.objects.filter(room=room).exclude(renter=renter).exists():
         messages.error(request, "This room is already taken.")
