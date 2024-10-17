@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404
+from django.core.files.storage import default_storage
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Rental, Renter
+from ..models import Room, RentalRequest, Renter
 from ..utils import generate_qr_code
 
 
@@ -25,10 +26,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests to display the room payment page."""
-        try:
-            room = self.get_object()
-        except Http404:
-            return HttpResponseRedirect(reverse("renthub:home"))
+        room = self.get_object()
 
         if not room.availability:
             messages.error(request, f"The room {room} is currently unavailable.")
@@ -40,15 +38,40 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             renter = None
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exists():
-            messages.error(request, "This room is already taken.")
-            return HttpResponseRedirect(reverse("renthub:rental", kwargs={'room_number': room.room_number}))
-
-        rental_exists = Rental.objects.filter(room=room, renter=renter).exists()
-        if rental_exists:
-            messages.info(request, "You already have a rental for this room.")
+        rental_request_exists = RentalRequest.objects.filter(room=room, renter=renter).exists()
+        if rental_request_exists:
+            messages.info(request, "You already have a rental request for this room.")
+            return redirect('renthub:rental', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests to upload a payment slip."""
+        room = self.get_object()
+
+        try:
+            renter = Renter.objects.get(id=request.user.id)
+        except Renter.DoesNotExist:
+            messages.error(request, "You need to register as a renter before submitting a payment.")
+            return self.get(request, *args, **kwargs)
+
+        if 'payment_slip' in request.FILES:
+            payment_slip = request.FILES['payment_slip']
+
+            file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
+
+            rental_request, created = RentalRequest.objects.get_or_create(
+                room=room, renter=renter, defaults={'price': room.price}
+            )
+            rental_request.image = file_path
+            rental_request.save()
+
+            messages.success(request, "Payment slip uploaded successfully!")
+            return redirect('renthub:home')
+        else:
+            messages.error(request, "No payment slip uploaded.")
+
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Add additional context data to the template."""
@@ -63,6 +86,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         generate_qr_code(room.price, room.room_number)
 
         context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
-        context['rental_exists'] = Rental.objects.filter(room=context['room'], renter=renter).exists()
+        context['rental_request_exists'] = RentalRequest.objects.filter(room=context['room'], renter=renter).exists()
 
         return context
