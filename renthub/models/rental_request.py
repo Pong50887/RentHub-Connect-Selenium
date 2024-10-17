@@ -11,5 +11,9 @@ class RentalRequest(models.Model):
     renter = models.ForeignKey(Renter, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='room_images/', blank=True, null=True)
+    image = models.ImageField(upload_to='slip_images/', blank=True, null=True)
+
+    def __str__(self):
+        """Returns the short detail of the request."""
+        return f"{self.renter} / {self.room} / {self.price}"
 
