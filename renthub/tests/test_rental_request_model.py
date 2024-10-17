@@ -23,14 +23,16 @@ class RentalRequestModelTest(TestCase):
 
         self.rental_request = RentalRequest.objects.create(renter=self.renter,
                                                            room=self.room,
-                                                           price=self.room.price)
+                                                           price=self.room.price,
+                                                           status="wait")
 
     def test_rental_request_creation(self):
         """Test that the RentalRequest instance can be created successfully."""
         self.assertEqual(str(self.rental_request.renter), 'Pong')
         self.assertEqual(str(self.rental_request.room), "101")
         self.assertEqual(self.rental_request.price, 99.99)
+        self.assertEqual(self.rental_request.status, "wait")
 
     def test_string_representation(self):
         """Test the string representation of the RentalRequest model."""
-        self.assertEqual(str(self.rental_request), "Pong / 101 / 99.99")
+        self.assertEqual(str(self.rental_request), "Pong / 101 / wait")

@@ -23,8 +23,7 @@ class TransactionModelTest(TestCase):
 
         self.rental = Rental.objects.create(room=self.room,
                                             renter=self.renter,
-                                            rental_fee=99.99,
-                                            status="wait")
+                                            rental_fee=99.99)
 
         self.transaction = Transaction.objects.create(detail="This is ...",
                                                       rental=self.rental,
