@@ -13,7 +13,7 @@
        {% endfor %}
     </ul>
 {% endif %}
-<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+<div id="carouselExample" class="carousel">
     <div class="carousel-inner">
         {% if room_types %}
             {% for room_type in room_types %}
@@ -27,8 +27,10 @@
                       <div class="card-body">
                         <h5 class="card-title">{{ room_type.type_name }}</h5>
                         <p class="card-text">{{ room_type.description }}</p>
-                        <a href="{% url 'renthub:room_type' room_type.type_name %}" class="btn btn-primary">All room</a>
-                      </div>
+                        <div class="button-wrapper">
+                            <a href="{% url 'renthub:room_type' room_type.type_name %}" class="btn btn-primary">All room</a>
+                        </div>
+                       </div>
                     </div>
                 </div>
             {% endfor %}
@@ -36,44 +38,39 @@
     </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden"><</span>
+    <span class="visually-hidden">Previous</span>
   </button>
   <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">></span>
+    <span class="visually-hidden">Next</span>
   </button>
 </div>
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
+if(window.matchMedia("(min-width:576px)").matches) {
+    
+    const carouselWidth = $(".carousel-inner")[0].scrollWidth;
+    const cardWidth = $(".carousel-item").width();
+    let scrollPosition = 0;
 
-    const  multipleItemCarousel = document.querySelector('#carouselExampleControls');
-    if(window.matchMedia("(min-width: 576px").matches){
-        const carouselWidth = $('.carousel-inner')[0].scrollWidth;
-        const cardWidth = $('.carousel-item').width();
-        let scrollPosition = 0
 
-        $('.carousel-control-next').on('click', function () {
-            if(scrollPosition < (carouselWidth - (cardWidth * 4))){
-                console.log('next');
-                scrollPosition = scrollPosition + cardWidth;
-                $('.carousel-inner').animate({scrollLeft: scrollPosition},
-                    600);
-            }
-        })
-
-        $('.carousel-control-prev').on('click', function () {
-            if(scrollPosition > 0){
-                console.log('prev');
-                scrollPosition = scrollPosition - cardWidth;
-                $('.carousel-inner').animate({scrollLeft: scrollPosition},
-                    600);
-            }
-        })
-    }
-    else{
-       $(multipleItemCarousel).addClass('slide');
-    }
+    $(".carousel-control-next").on("click", function () {
+        if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
+            console.log('next')
+            scrollPosition += cardWidth;  //update scroll position
+            $(".carousel-inner").animate({scrollLeft: scrollPosition}, 600); //scroll left
+        }
+    });
+    $(".carousel-control-prev").on("click", function () {
+        if (scrollPosition > 0) {
+            console.log('prev')
+            scrollPosition -= cardWidth;
+            $(".carousel-inner").animate({scrollLeft: scrollPosition}, 600);
+        }
+    });
+}
 </script>
 {% endblock %}

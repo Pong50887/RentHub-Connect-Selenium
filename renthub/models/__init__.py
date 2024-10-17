@@ -7,3 +7,4 @@ from .transaction import Transaction
 from .maintenance_request import MaintenanceRequest
 from .announcement import Announcement
 from .rental_request import RentalRequest
+from .notification import Notification
