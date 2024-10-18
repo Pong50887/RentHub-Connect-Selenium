@@ -24,7 +24,7 @@
 
     <div class="rental-status">
     {% if milestones %}
-        <h2>Rental Request Status</h2>
+        <h4 style="text-align: center;">Rental Request Status</h4>
         <div class="milestone-row">
             {% for milestone in milestones %}
                 <div class="milestone">
@@ -34,12 +34,9 @@
                     <div class="milestone-description">
                         <p>{{ milestone.description }}</p>
                     </div>
-                    <div class="milestone-circle">
-                        {% if milestone.status == "Submitted" or milestone.status == "Approved" %}
-                            <p style="color: white;">O</p>
-                        {% elif milestone.status == "Rejected" %}
-                            <p style="color: white;">X</p>
-                        {% endif %}
+                    <div class="milestone-circle"
+                    style= "{% if milestone.symbol == 'x' %}background-color: #D40028;{% endif %}">
+                        <p style="color: white; margin: 0; font-size: 24px;">{{ milestone.symbol }}</p>
                     </div>
                 </div>
             {% endfor %}

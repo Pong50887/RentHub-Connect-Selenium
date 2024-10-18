@@ -29,17 +29,25 @@ def delete_qr_code(room_number):
 def get_rental_progress_data(status):
     """Return milestones information regarding rental request approval status."""
     milestones = [
-        {"step": 1, "description": "Payment Slip", "status": "Pending"},
-        {"step": 2, "description": "Rent Approval", "status": "Pending"},
+        {"step": 1, "description": "Payment Slip", "status": "Pending", "symbol":""},
+        {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol":""},
     ]
 
     if status == "wait":
         milestones[0]["status"] = "Submitted"
+        milestones[0]["symbol"] = "o"
     elif status == "approve":
         milestones[0]["status"] = "Submitted"
+        milestones[0]["symbol"] = "o"
+
         milestones[1]["status"] = "Approved"
+        milestones[1]["symbol"] = "o"
+
     elif status == "reject":
         milestones[0]["status"] = "Submitted"
+        milestones[0]["symbol"] = "o"
+
         milestones[1]["status"] = "Rejected"
+        milestones[1]["symbol"] = "x"
 
     return milestones
