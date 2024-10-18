@@ -106,17 +106,31 @@
                             <a class="nav-link" href="{% url 'login' %}?next={{request.path}}">Login</a>
                         </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <div class="dropdown user-icon">
-                            <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                                &#128100; <!-- User Icon -->
-                            </span>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Notification</a></li>
-                                <li><a class="dropdown-item" href="#">Payment History</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <div class="dropdown user-icon">
+                                <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                    &#128100;
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Notification</a></li>
+                                    <li><a class="dropdown-item" href="#">Payment History</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <div class="dropdown user-icon">
+                                <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                    &#128100;
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item disabled" aria-disabled="true">Notification</a></li>
+                                    <li><a class="dropdown-item disabled" aria-disabled="true">Payment History</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
