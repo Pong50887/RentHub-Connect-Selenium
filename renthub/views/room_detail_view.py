@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import DetailView
 
-from ..models import Room, Rental
+from ..models import Room, Rental, RentalRequest, Renter
+from ..utils import get_rental_progress_data
 
 
 class RoomDetailView(DetailView):
@@ -36,3 +37,19 @@ class RoomDetailView(DetailView):
             return HttpResponseRedirect(reverse("renthub:home"))
 
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """Add extra context data to the template."""
+        context = super().get_context_data(**kwargs)
+        room = self.get_object()
+
+        context['milestones'] = None
+        try:
+            renter = get_object_or_404(Renter, id=self.request.user.id)
+            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+
+            if latest_request:
+                context['milestones'] = get_rental_progress_data(latest_request.status)
+        except Http404:
+            pass
+        return context

@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'renthub/status.css' %}">
+{% endblock %}
 {% block content %}
 {% if room %}
     <h1>room: {{ room }}</h1>
@@ -17,6 +21,22 @@
     </ul>
     <p>Ideal For: {{ room.room_type.ideal_for }}</p>
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
+
+    <div class="rental-status">
+        {% if milestones %}
+        <h2>Rental Request status</h2>
+            {% for milestone in milestones %}
+                <div class="milestone">
+                 <div class="milestone-status">
+                     <h3>{{ milestone.status }}</h3>
+                 </div>
+                 <div class="milestone-description">
+                     <p>{{ milestone.description }}</p>
+                  </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
     <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
 {% else %}

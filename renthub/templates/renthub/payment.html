@@ -1,8 +1,4 @@
 {% extends 'base.html' %}
-{% block extra_css %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'renthub/status.css' %}">
-{% endblock %}
 {% block content %}
 <div style="padding-left: 40px;">
 
@@ -19,21 +15,6 @@
     Room Type: {{ room.room_type.type_name }}<br>
     Monthly Rent: {{ room.price }} ฿<br>
     Room Size: {{ room.detail }} feet</p>
-
-    <div class="rental-status">
-        {% if milestones %}
-            {% for milestone in milestones %}
-                <div class="milestone">
-                 <div class="milestone-status">
-                     <h3>{{ milestone.status }}</h3>
-                 </div>
-                 <div class="milestone-description">
-                     <p>{{ milestone.description }}</p>
-                  </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
 
     {% if qr_code_path %}
         <h3>Scan this QR code to complete the payment: </h3>

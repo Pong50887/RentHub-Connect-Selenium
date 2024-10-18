@@ -1,59 +1,60 @@
 .milestone-container {
-    display: flex; /* Flex for the container */
-    justify-content: center; /* Center the entire milestone line */
-    margin: 20px 0; /* Margin around the container */
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative; /* Position relative to manage the timeline line */
 }
 
-.milestone-line {
-    display: flex; /* Display milestones in a row */
-    align-items: center; /* Center items vertically within the line */
-    position: relative; /* Position relative for circles */
-}
-
-.milestone {
-    background-color: #f9f9f9; /* Light background color for milestones */
-    border: 2px solid #007bff; /* Border color */
-    border-radius: 10px; /* Rounded corners */
-    padding: 15px; /* Padding around the text */
-    width: 150px; /* Fixed width for each milestone box */
-    margin: 0 20px; /* Space between milestone boxes */
-    text-align: center; /* Center align text */
-    position: relative; /* Position relative for the circle above */
-}
-
-.milestone-status {
-    font-size: 1.2em; /* Larger font size for the status */
-    font-weight: bold; /* Bold font for emphasis */
-    color: #333; /* Darker text color */
-}
-
-.milestone-description {
-    font-size: 0.9em; /* Normal font size for the description */
-    color: #555; /* Slightly lighter color for description */
-    margin-top: 5px; /* Space between status and description */
-}
-
-/* Line and circle styles */
-.milestone-line::before {
+/* Add this for the timeline line */
+.milestone-container::before {
     content: '';
     position: absolute;
-    top: 50%; /* Align to the middle */
+    top: 50%; /* Halfway through the container to run through the middle */
     left: 0;
     right: 0;
     height: 4px; /* Thickness of the line */
     background-color: #007bff; /* Line color */
-    z-index: 1; /* Ensure line is behind the circles */
+    z-index: 0; /* Make sure it sits behind the milestones */
 }
 
-.milestone::after {
-    content: '';
+.milestone-line {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.milestone {
+    background-color: #f9f9f9;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 150px;
+    margin: 0 40px; /* Increased margin for spacing between items */
+    text-align: center;
+    position: relative;
+    z-index: 1; /* Ensure milestone boxes are above the line */
+}
+
+/* Circle styling */
+.milestone-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
     position: absolute;
-    top: -15px; /* Position above the milestone */
-    left: 50%; /* Center the circle */
-    transform: translateX(-50%); /* Adjust for centering */
-    width: 20px; /* Diameter of the circle */
-    height: 20px; /* Diameter of the circle */
-    border-radius: 50%; /* Make it circular */
-    background-color: #007bff; /* Circle color */
-    z-index: 2; /* Ensure circles are above the line */
+    top: -15px; /* Adjust so circle stays above the line */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2; /* Circles are above the line */
+}
+
+.milestone-status {
+    margin-top: 30px; /* Create space below the circle */
+}
+
+/* Optional: Style milestone description */
+.milestone-description {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
 }
