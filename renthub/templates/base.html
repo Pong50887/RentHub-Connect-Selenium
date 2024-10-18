@@ -49,6 +49,26 @@
         .room-options h3 {
             text-align: center;
         }
+        .btn-secondary {
+            background: transparent; 
+            border: none; 
+            padding: 3px;
+        }
+        .user-icon .btn {
+            background-color: transparent; /* Make background transparent */
+            color: inherit; /* Inherit color from parent */
+            border: none; /* Remove border */
+        }
+        
+        .user-icon .btn:hover,
+        .user-icon .btn:focus,
+        .user-icon .btn:active {
+            background-color: transparent; /* Prevent background color change */
+            color: inherit; /* Prevent text color change */
+            box-shadow: none; /* Remove any box shadow on focus */
+            outline: none; /* Remove outline on focus */
+        }
+
     </style>
     {% block extra_css %}
     {% endblock %}
@@ -87,15 +107,14 @@
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown button
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                          </ul>
+                        <div class="dropdown user-icon">
+                            <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                &#128100; <!-- User Icon -->
+                            </span>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Notification</a></li>
+                                <li><a class="dropdown-item" href="#">Payment History</a></li>
+                            </ul>
                         </div>
                     </li>
                 </ul>
