@@ -1,0 +1,23 @@
+[
+{
+  "model": "renthub.renter",
+  "pk": 2,
+  "fields": {
+    "phone_number": "0987654321"
+  }
+},
+{
+  "model": "renthub.renter",
+  "pk": 3,
+  "fields": {
+    "phone_number": "0987654312"
+  }
+},
+{
+  "model": "renthub.renter",
+  "pk": 4,
+  "fields": {
+    "phone_number": "0987654231"
+  }
+}
+]
