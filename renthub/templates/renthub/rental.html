@@ -23,19 +23,30 @@
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
 
     <div class="rental-status">
-        {% if milestones %}
-        <h2>Rental Request status</h2>
+    {% if milestones %}
+        <h2>Rental Request Status</h2>
+        <div class="milestone-row">
             {% for milestone in milestones %}
                 <div class="milestone">
-                 <div class="milestone-status">
-                     <h3>{{ milestone.status }}</h3>
-                 </div>
-                 <div class="milestone-description">
-                     <p>{{ milestone.description }}</p>
-                  </div>
+                    <div class="milestone-status">
+                        <h3>{{ milestone.status }}</h3>
+                    </div>
+                    <div class="milestone-description">
+                        <p>{{ milestone.description }}</p>
+                    </div>
+                    <div class="milestone-circle">
+                        {% if milestone.status == "Submitted" or milestone.status == "Approved" %}
+                            <p style="color: white;">O</p>
+                        {% elif milestone.status == "Rejected" %}
+                            <p style="color: white;">X</p>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
-        {% endif %}
+        </div>
+        <!-- Progress Line -->
+        <div class="progress-line"></div>
+    {% endif %}
     </div>
 
     <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>

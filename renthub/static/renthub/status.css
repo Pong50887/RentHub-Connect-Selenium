@@ -1,60 +1,47 @@
-.milestone-container {
+.milestone-row {
     display: flex;
-    justify-content: center;
-    margin: 20px 0;
-    position: relative; /* Position relative to manage the timeline line */
-}
-
-/* Add this for the timeline line */
-.milestone-container::before {
-    content: '';
-    position: absolute;
-    top: 50%; /* Halfway through the container to run through the middle */
-    left: 0;
-    right: 0;
-    height: 4px; /* Thickness of the line */
-    background-color: #007bff; /* Line color */
-    z-index: 0; /* Make sure it sits behind the milestones */
-}
-
-.milestone-line {
-    display: flex;
-    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
     position: relative;
 }
 
 .milestone {
-    background-color: #f9f9f9;
-    border: 2px solid #007bff;
-    border-radius: 10px;
-    padding: 15px;
-    width: 150px;
-    margin: 0 40px; /* Increased margin for spacing between items */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    margin: 0 10px;
     text-align: center;
     position: relative;
-    z-index: 1; /* Ensure milestone boxes are above the line */
 }
 
-/* Circle styling */
+.milestone-status h3 {
+    font-size: 1.2rem;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
 .milestone-circle {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background-color: #007bff;
-    position: absolute;
-    top: -15px; /* Adjust so circle stays above the line */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2; /* Circles are above the line */
+    margin-bottom: 10px;
+    position: relative;
 }
 
-.milestone-status {
-    margin-top: 30px; /* Create space below the circle */
+.progress-line {
+    width: 50%;
+    height: 4px;
+    background-color: #007bff;
+    margin: 0 auto;
+    position: relative;
+    z-index: -1;
+    margin-top: -20px;
 }
 
-/* Optional: Style milestone description */
-.milestone-description {
-    margin-top: 10px;
-    font-size: 14px;
+.milestone-description p {
+    font-size: 1rem;
     color: #666;
 }
