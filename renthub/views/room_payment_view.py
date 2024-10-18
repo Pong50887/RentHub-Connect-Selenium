@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, RentalRequest, Renter
-from ..utils import generate_qr_code
+from ..models import Room, Renter, RentalRequest
+from ..utils import generate_qr_code, get_rental_progress_data
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -87,5 +87,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
         context['rental_request_exists'] = RentalRequest.objects.filter(room=context['room'], renter=renter).exists()
+
+        if context['rental_exists']:
+            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+            if latest_request:
+                context['milestones'] = get_rental_progress_data(latest_request.status)
 
         return context

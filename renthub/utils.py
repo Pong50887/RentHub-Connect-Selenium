@@ -25,3 +25,21 @@ def delete_qr_code(room_number):
         logger.info(f"QR code for room {room_number} deleted successfully.")
     else:
         logger.debug(f"QR code for room {room_number} not found.")
+
+def get_rental_progress_data(status):
+    """Return milestones information regarding rental request approval status."""
+    milestones = [
+        {"step": 1, "description": "Submitted", "status": "pending"},
+        {"step": 2, "description": "Approved/Disapproved", "status": "pending"},
+    ]
+
+    if status == "wait":
+        milestones[0]["status"] = "correct"
+    elif status == "approve":
+        milestones[0]["status"] = "correct"
+        milestones[1]["status"] = "correct"
+    elif status == "reject":
+        milestones[0]["status"] = "correct"
+        milestones[1]["status"] = "incorrect"
+
+    return milestones

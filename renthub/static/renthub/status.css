@@ -1,0 +1,59 @@
+.milestone-container {
+    display: flex; /* Flex for the container */
+    justify-content: center; /* Center the entire milestone line */
+    margin: 20px 0; /* Margin around the container */
+}
+
+.milestone-line {
+    display: flex; /* Display milestones in a row */
+    align-items: center; /* Center items vertically within the line */
+    position: relative; /* Position relative for circles */
+}
+
+.milestone {
+    background-color: #f9f9f9; /* Light background color for milestones */
+    border: 2px solid #007bff; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px; /* Padding around the text */
+    width: 150px; /* Fixed width for each milestone box */
+    margin: 0 20px; /* Space between milestone boxes */
+    text-align: center; /* Center align text */
+    position: relative; /* Position relative for the circle above */
+}
+
+.milestone-status {
+    font-size: 1.2em; /* Larger font size for the status */
+    font-weight: bold; /* Bold font for emphasis */
+    color: #333; /* Darker text color */
+}
+
+.milestone-description {
+    font-size: 0.9em; /* Normal font size for the description */
+    color: #555; /* Slightly lighter color for description */
+    margin-top: 5px; /* Space between status and description */
+}
+
+/* Line and circle styles */
+.milestone-line::before {
+    content: '';
+    position: absolute;
+    top: 50%; /* Align to the middle */
+    left: 0;
+    right: 0;
+    height: 4px; /* Thickness of the line */
+    background-color: #007bff; /* Line color */
+    z-index: 1; /* Ensure line is behind the circles */
+}
+
+.milestone::after {
+    content: '';
+    position: absolute;
+    top: -15px; /* Position above the milestone */
+    left: 50%; /* Center the circle */
+    transform: translateX(-50%); /* Adjust for centering */
+    width: 20px; /* Diameter of the circle */
+    height: 20px; /* Diameter of the circle */
+    border-radius: 50%; /* Make it circular */
+    background-color: #007bff; /* Circle color */
+    z-index: 2; /* Ensure circles are above the line */
+}
