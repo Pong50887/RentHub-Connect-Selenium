@@ -22,13 +22,15 @@ class RenterSignupView(View):
         form = RenterSignupForm(request.POST)
         if form.is_valid():
             form.save()
+            renter = form.save(commit=False)
+
+            phone_number = form.cleaned_data.get('phone_number')
+            renter.phone_number = phone_number
+            renter.save()
+
             username = form.cleaned_data.get('username')
             raw_passwd = form.cleaned_data.get('password1')
-            phone_number = form.cleaned_data.get('phone_number')
-            user = authenticate(username=username, password=raw_passwd)  # Authenticate the user
-
-            renter = Renter(phone_number=phone_number)
-            renter.save()
+            user = authenticate(username=username, password=raw_passwd)
 
             login(request, user)
             return redirect('renthub:home')
