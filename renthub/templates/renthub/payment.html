@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'renthub/status.css' %}">
+{% endblock %}
 {% block content %}
 <div style="padding-left: 40px;">
 
@@ -16,15 +20,45 @@
     Monthly Rent: {{ room.price }} ฿<br>
     Room Size: {{ room.detail }} feet</p>
 
+    <div class="rental-status">
+    {% if milestones %}
+        <h4 style="text-align: center;">Rental Request Status</h4>
+        <div class="milestone-row">
+            {% for milestone in milestones %}
+                <div class="milestone">
+                    <div class="milestone-status">
+                        <h3>{{ milestone.status }}</h3>
+                    </div>
+                    <div class="milestone-description">
+                        <p>{{ milestone.description }}</p>
+                    </div>
+                    <div class="milestone-circle"
+                    style= "{% if milestone.symbol == 'x' %}background-color: #D40028;{% endif %}">
+                        <p style="color: white; margin: 0; font-size: 24px;">{{ milestone.symbol }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Progress Line -->
+        <div class="progress-line"></div>
+    {% endif %}
+    </div>
+
+    {% if not rental_request_exists or latest_request.status == 'rejected' %}
     {% if qr_code_path %}
         <h3>Scan this QR code to complete the payment: </h3>
         <img src="/{{ qr_code_path }}" alt="QR Code for payment" style="width: 200px; height: auto;">
     {% endif %}
+    {% endif %}
+
+
 
     <form method="POST" enctype="multipart/form-data" id="paymentSlipForm">
         {% csrf_token %}
+        {% if not rental_request_exists or latest_request.status == 'rejected' %}
         <label for="myFile">Upload Payment Slip:</label>
         <input type="file" id="myFile" name="payment_slip" required>
+        {% endif %}
         <div class="payment-actions" style="margin-top: 20px;">
             {% if rental_request_exists %}
                 <a href="{% url 'renthub:cancel' room.room_number %}" class="btn btn-danger" style="display: inline-block; margin-right: 10px;">Cancel Renting</a>

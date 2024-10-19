@@ -5,8 +5,6 @@ from django.contrib import messages
 from django.views.generic import DetailView
 
 from ..models import Room, Rental, RentalRequest, Renter
-from ..utils import get_rental_progress_data
-
 
 class RoomDetailView(DetailView):
     """
@@ -43,13 +41,20 @@ class RoomDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         room = self.get_object()
 
-        context['milestones'] = None
         try:
-            renter = get_object_or_404(Renter, id=self.request.user.id)
-            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+            renter = Renter.objects.get(id=self.request.user.id)
+        except Renter.DoesNotExist:
+            renter = None
 
-            if latest_request:
-                context['milestones'] = get_rental_progress_data(latest_request.status)
-        except Http404:
-            pass
+        if renter:
+            try:
+                context["rental"] = Rental.objects.filter(renter=renter, room=room).exists()
+            except Rental.DoesNotExist:
+                pass
+            try:
+                context["rental_request"] = RentalRequest.objects.filter(renter=renter, room=room).exists()
+
+            except RentalRequest.DoesNotExist:
+                pass
+
         return context

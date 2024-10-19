@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
-{% block extra_css %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'renthub/status.css' %}">
-{% endblock %}
+
 {% block content %}
 {% if room %}
     <h1>room: {{ room }}</h1>
@@ -22,31 +19,19 @@
     <p>Ideal For: {{ room.room_type.ideal_for }}</p>
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
 
-    <div class="rental-status">
-    {% if milestones %}
-        <h4 style="text-align: center;">Rental Request Status</h4>
-        <div class="milestone-row">
-            {% for milestone in milestones %}
-                <div class="milestone">
-                    <div class="milestone-status">
-                        <h3>{{ milestone.status }}</h3>
-                    </div>
-                    <div class="milestone-description">
-                        <p>{{ milestone.description }}</p>
-                    </div>
-                    <div class="milestone-circle"
-                    style= "{% if milestone.symbol == 'x' %}background-color: #D40028;{% endif %}">
-                        <p style="color: white; margin: 0; font-size: 24px;">{{ milestone.symbol }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <!-- Progress Line -->
-        <div class="progress-line"></div>
+    {% if room.availability %}
+        {% if rental_request %}
+            <p>You have submitted a rent request.</p>
+        {% else %}
+            <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
+        {% endif %}
+    {% else %}
+        {% if rental %}
+            <p>You have rented this room.</p>
+        {% else %}
+            <p>This room is already taken.</p>
+        {% endif %}
     {% endif %}
-    </div>
-
-    <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
 {% else %}
     <p> This room doesn't exist</p>
 {% endif %}
