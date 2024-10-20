@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Renter, RentalRequest
-from ..utils import generate_qr_code
+from ..models import Room, Renter, RentalRequest, Rental
+from ..utils import generate_qr_code, get_rental_progress_data
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -39,9 +39,9 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        rental_request_exists = RentalRequest.objects.filter(room=room, renter=renter).exists()
-        if rental_request_exists:
-            messages.info(request, "You already have a rental request for this room.")
+        if Rental.objects.filter(room=room).exclude(renter=renter).exists()\
+                or RentalRequest.objects.filter(room=room, status='wait').exclude(renter=renter).exists():
+            messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
@@ -81,6 +81,11 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
+            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+            if latest_request:
+                context['latest_request'] = latest_request
+                context['milestones'] = get_rental_progress_data(latest_request.status)
+
         except Renter.DoesNotExist:
             renter = None
 
