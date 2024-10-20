@@ -3,76 +3,40 @@
   "model": "renthub.roomtype",
   "pk": 1,
   "fields": {
-    "type_name": "Single bed",
-    "description": "The single size bedroom features a spacious layout with a comfortable 10000 x 10000 inch.",
-    "ideal_for": "Individual who doesnt have someone",
-    "image": "room_images/SB-Standees-Spong-3_1200x.webp"
+    "type_name": "Single Bedroom",
+    "description": "Cozy single bedroom with ample natural light, featuring a comfortable bed, modern furnishings, and e",
+    "ideal_for": "Ideal for solo travelers, students, or professionals looking for a quiet and comfortable space to re",
+    "image": "room_images/single_bed.jpg"
   }
 },
 {
   "model": "renthub.roomtype",
   "pk": 2,
   "fields": {
-    "type_name": "Double bed",
-    "description": "I think I like it, it like I think I",
-    "ideal_for": "Couple who have money",
-    "image": "room_images/Profile_-_SpongeBob_SquarePants.webp"
+    "type_name": "Double Bedroom",
+    "description": "Spacious double bedroom with a cozy ambiance, featuring a large bed, stylish decor, and modern ameni",
+    "ideal_for": "Couples, friends, or business travelers seeking a comfortable shared space.",
+    "image": "room_images/Double_bed.jpg"
   }
 },
 {
-  "model": "renthub.feature",
-  "pk": 1,
-  "fields": {
-    "room_type": 1,
-    "name": "blah blah blah"
-  }
-},
-{
-  "model": "renthub.feature",
-  "pk": 2,
-  "fields": {
-    "room_type": 1,
-    "name": "hahahahaha"
-  }
-},
-{
-  "model": "renthub.feature",
+  "model": "renthub.roomtype",
   "pk": 3,
   "fields": {
-    "room_type": 1,
-    "name": "nononono"
+    "type_name": "Queen Size Bedroom",
+    "description": "Elegant queen-size bedroom with a spacious layout, featuring a plush queen bed and upscale amenities",
+    "ideal_for": "Couples, business travelers, or those seeking extra comfort and space.",
+    "image": "room_images/Queen_size_bed.jpg"
   }
 },
 {
-  "model": "renthub.feature",
+  "model": "renthub.roomtype",
   "pk": 4,
   "fields": {
-    "room_type": 1,
-    "name": "eieieiei"
-  }
-},
-{
-  "model": "renthub.feature",
-  "pk": 5,
-  "fields": {
-    "room_type": 2,
-    "name": "this is 1 feature"
-  }
-},
-{
-  "model": "renthub.feature",
-  "pk": 6,
-  "fields": {
-    "room_type": 2,
-    "name": "this is 2 feature"
-  }
-},
-{
-  "model": "renthub.feature",
-  "pk": 7,
-  "fields": {
-    "room_type": 2,
-    "name": "this is 3 feature"
+    "type_name": "King Size Bedroom",
+    "description": "Luxurious king-size bedroom offering maximum comfort, with a large king bed, modern furnishings, and",
+    "ideal_for": "Couples, families, or guests seeking a spacious and premium experience.",
+    "image": "room_images/King_size_bed.jpg"
   }
 },
 {
@@ -80,8 +44,8 @@
   "pk": 1,
   "fields": {
     "room_number": 101,
-    "detail": "10 x 20",
-    "price": "7000.00",
+    "detail": "9x9inch",
+    "price": "3500.00",
     "availability": true,
     "room_type": 1
   }
@@ -91,7 +55,7 @@
   "pk": 2,
   "fields": {
     "room_number": 102,
-    "detail": "40x50",
+    "detail": "11x11inch",
     "price": "4000.00",
     "availability": true,
     "room_type": 2
@@ -102,10 +66,10 @@
   "pk": 3,
   "fields": {
     "room_number": 103,
-    "detail": "60x80",
-    "price": "1234.00",
+    "detail": "13x13inch",
+    "price": "5000.00",
     "availability": true,
-    "room_type": 2
+    "room_type": 3
   }
 },
 {
@@ -113,10 +77,10 @@
   "pk": 4,
   "fields": {
     "room_number": 104,
-    "detail": "09x23",
-    "price": "1234567.00",
+    "detail": "15x15inch",
+    "price": "6000.00",
     "availability": true,
-    "room_type": 1
+    "room_type": 4
   }
 }
 ]

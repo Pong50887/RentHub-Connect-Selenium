@@ -23,11 +23,10 @@ from renthub import views
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/renthub/', permanent=False)),
-    path("renthub/", include("renthub.urls")),
+    path("", include("renthub.urls")),
     path("admin/", admin.site.urls),
     path('accounts/', include("django.contrib.auth.urls")),
-    path('signup/', views.renter_signup, name='signup'),
+    path('signup/', views.RenterSignupView.as_view(), name='signup'),
 ]
 
 if settings.DEBUG:

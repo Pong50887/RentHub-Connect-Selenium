@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 {% if room %}
     <h1>room: {{ room }}</h1>
@@ -18,7 +19,19 @@
     <p>Ideal For: {{ room.room_type.ideal_for }}</p>
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
 
-    <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
+    {% if room.availability %}
+        {% if rental_request and latest_request.status != 'reject' %}
+            <p>You have submitted a rent request.</p>
+        {% else %}
+            <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
+        {% endif %}
+    {% else %}
+        {% if rental %}
+            <p>You have rented this room.</p>
+        {% else %}
+            <p>This room is already taken.</p>
+        {% endif %}
+    {% endif %}
 {% else %}
     <p> This room doesn't exist</p>
 {% endif %}

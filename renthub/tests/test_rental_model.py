@@ -24,8 +24,7 @@ class RentalModelTest(TestCase):
 
         self.rental = Rental.objects.create(room=self.room,
                                             renter=self.renter,
-                                            rental_fee=self.room.price,
-                                            status="wait")
+                                            rental_fee=self.room.price)
 
         self.admin = User.objects.create_user(username="admin",
                                               email="admin@gmail.com",
@@ -36,7 +35,6 @@ class RentalModelTest(TestCase):
         self.assertEqual(str(self.rental.room), "101")
         self.assertEqual(str(self.rental.renter), "Pong")
         self.assertEqual(self.rental.rental_fee, 99.99)
-        self.assertEqual(self.rental.status, "wait")
 
     def test_renter_can_create_rental(self):
         """A renter can create a rental."""

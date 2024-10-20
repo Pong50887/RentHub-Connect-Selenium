@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Your Notifications</h2>
+        <ul class="list-group">
+            {% for notification in notifications %}
+                <li class="list-group-item">
+                    <h5>{{ notification.title }}</h5>
+                    <p>{{ notification.message }}</p>
+                    <small>{{ notification.post_date|date:"d M Y H:i" }}</small>
+                    {% if not notification.is_read %}
+                        <span class="badge bg-danger">New</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item">You have no notifications.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            fetch("{% url 'renthub:mark_notifications_read' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Notifications marked as read');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+{% endblock %}
