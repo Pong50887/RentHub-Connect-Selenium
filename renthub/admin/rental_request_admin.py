@@ -2,7 +2,7 @@ from django.contrib import admin
 
 
 class RentalRequestAdmin(admin.ModelAdmin):
-    list_display = ('room', 'renter', 'price', 'image_tag',)
+    list_display = ('room', 'renter', 'price', 'image_tag', 'status')
     readonly_fields = ('image_tag',)
 
     def image_tag(self, obj):
