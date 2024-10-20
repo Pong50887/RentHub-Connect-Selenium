@@ -5,7 +5,7 @@ from renthub.models import Renter
 class RenterModelTest(TestCase):
     def setUp(self):
         """Set up data for the tests."""
-        self.renter = Renter.objects.create(username="Pong",
+        self.renter = Renter.objects.create_user(username="Pong",
                                             first_name="Pichayoot",
                                             last_name="Tanasinanan",
                                             email="Pongzaza@gmail.com",
