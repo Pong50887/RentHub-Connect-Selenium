@@ -10,6 +10,7 @@ urlpatterns = [
     path('rental/', views.RoomListView.as_view(), name='rental_list'),
     path("rental/<int:room_number>/", views.RoomDetailView.as_view(), name="rental"),
     path("payment/", views.RoomPaymentListView.as_view(), name="payment_list"),
+    path("payment/history", views.RoomPaymentHistoryView.as_view(), name="payment_history"),
     path("rental/<int:room_number>/payment/", views.RoomPaymentView.as_view(), name="payment"),
     path("rental/<int:room_number>/payment/submit/", views.submit_payment, name="submit"),
     path("rental/<int:room_number>/payment/cancel/", views.cancel_rental, name="cancel"),

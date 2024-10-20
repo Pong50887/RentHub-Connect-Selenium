@@ -159,3 +159,7 @@ class PaymentCancelTests(TestCase):
         response = self.client.post(reverse('renthub:cancel', kwargs={'room_number': self.room.room_number}),follow=True)
         self.assertTrue(Rental.objects.filter(id=rental.id).exists())
         self.assertContains(response, "You do not have an active booking for this room.")
+
+#status
+
+#history

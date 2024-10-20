@@ -35,7 +35,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         try:
             renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
-            renter = None
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
