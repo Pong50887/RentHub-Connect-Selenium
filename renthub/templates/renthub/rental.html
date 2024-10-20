@@ -20,7 +20,7 @@
     <p><b>Cost: {{ room.price }} ฿ / month</b></p>
 
     {% if room.availability %}
-        {% if rental_request %}
+        {% if rental_request and latest_request.status != 'reject' %}
             <p>You have submitted a rent request.</p>
         {% else %}
             <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>

@@ -53,7 +53,9 @@ class RoomDetailView(DetailView):
                 pass
             try:
                 context["rental_request"] = RentalRequest.objects.filter(renter=renter, room=room).exists()
-
+                latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+                if latest_request:
+                    context['latest_request'] = latest_request
             except RentalRequest.DoesNotExist:
                 pass
 

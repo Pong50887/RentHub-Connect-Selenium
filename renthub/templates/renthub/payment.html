@@ -44,7 +44,7 @@
     {% endif %}
     </div>
 
-    {% if not rental_request_exists or latest_request.status == 'rejected' %}
+    {% if not rental_request_exists or latest_request.status == 'reject' %}
     {% if qr_code_path %}
         <h3>Scan this QR code to complete the payment: </h3>
         <img src="/{{ qr_code_path }}" alt="QR Code for payment" style="width: 200px; height: auto;">
@@ -55,12 +55,14 @@
 
     <form method="POST" enctype="multipart/form-data" id="paymentSlipForm">
         {% csrf_token %}
-        {% if not rental_request_exists or latest_request.status == 'rejected' %}
+        {% if latest_request.status == 'wait' %}
+        <label for="myFile">Please wait for admin to review your rental request.</label>
+        {% elif not rental_request_exists or latest_request.status == 'reject' %}
         <label for="myFile">Upload Payment Slip:</label>
         <input type="file" id="myFile" name="payment_slip" required>
         {% endif %}
         <div class="payment-actions" style="margin-top: 20px;">
-            {% if rental_request_exists %}
+            {% if rental_request_exists and latest_request.status != 'reject' %}
                 <a href="{% url 'renthub:cancel' room.room_number %}" class="btn btn-danger" style="display: inline-block; margin-right: 10px;">Cancel Renting</a>
             {% else %}
                 <button type="submit" class="btn btn-primary" style="display: inline-block;">Send</button>
