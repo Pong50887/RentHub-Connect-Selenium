@@ -26,6 +26,7 @@ def delete_qr_code(room_number):
     else:
         logger.debug(f"QR code for room {room_number} not found.")
 
+
 def get_rental_progress_data(status):
     """Return milestones information regarding rental request approval status."""
     milestones = [
