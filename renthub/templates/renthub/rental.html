@@ -1,38 +1,95 @@
 {% extends 'base.html' %}
-
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'renthub/rental.css' %}">
+    <style>
+        .custom-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .room-header {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .room-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .room-price {
+            font-size: 2rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .room-detail {
+            font-size: 1.25rem;
+        }
+        .room-image {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .feature-list {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-{% if room %}
-    <h1>room: {{ room }}</h1>
-    {% if room.room_type.image %}
-        <br><img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" style="width: 200px; height: auto;">
-    {% endif %}
-    <p>Detail</p>
-    <p>Description: {{ room.room_type.description }}</p>
-    <p>Features:</p>
-    <ul>
-    {% for feature in room.room_type.features.all %}
-        <li>{{ feature.name }}</li>
-    {% empty %}
-        <li>No features available.</li>
-    {% endfor %}
-    </ul>
-    <p>Ideal For: {{ room.room_type.ideal_for }}</p>
-    <p><b>Cost: {{ room.price }} ฿ / month</b></p>
+<div class="container mt-5">
+    {% if room %}
+        <div class="custom-card">
+            <div class="room-header">
+                <h1>{{ room.room_type.type_name }} - Room {{ room.room_number }}</h1>
+            </div>
+            {% if room.room_type.image %}
+                <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image">
+            {% endif %}
+            <div class="room-details">
+                <div class="room-detail">
+                    <p><strong>Room Size:</strong> {{ room.detail }} feet</p>
 
-    {% if room.availability %}
-        {% if rental_request and latest_request.status != 'reject' %}
-            <p>Please wait for admin to review your rental request.</p>
-        {% else %}
-            <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
-        {% endif %}
+                    {% if room.room_type.description %}
+                        <p class="mb-4"><strong>Description:</strong> {{ room.room_type.description }}</p>
+                    {% endif %}
+
+                    <p><strong>Features:</strong></p>
+                    <ul class="feature-list mb-4">
+                        {% for feature in room.room_type.features.all %}
+                            <li><i class="bi bi-check-circle-fill text-success"></i> {{ feature.name }}</li>
+                        {% empty %}
+                            <li>No features available.</li>
+                        {% endfor %}
+                    </ul>
+
+                    <p class="mb-4"><strong>Ideal For:</strong> {{ room.room_type.ideal_for }}</p>
+                </div>
+                <hr>
+                <p class="room-price">{{ room.price }} ฿ / month</p>
+
+                {% if room.availability %}
+                    {% if rental_request and latest_request.status != 'reject' %}
+                        <p class="alert alert-info">Please wait for admin to review your rental request.</p>
+                    {% else %}
+                        <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">Rent</a>
+                    {% endif %}
+                {% else %}
+                    {% if rental %}
+                        <p class="alert alert-success">You have rented this room.</p>
+                    {% else %}
+                        <p class="alert alert-danger">This room is already taken.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
     {% else %}
-        {% if rental %}
-            <p>You have rented this room.</p>
-        {% else %}
-            <p>This room is already taken.</p>
-        {% endif %}
+        <p class="alert alert-warning">This room doesn't exist.</p>
     {% endif %}
-{% else %}
-    <p> This room doesn't exist</p>
-{% endif %}
+</div>
 {% endblock %}
