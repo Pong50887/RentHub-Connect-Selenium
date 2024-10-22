@@ -29,9 +29,24 @@ class RoomDetailView(DetailView):
 
         if not room.availability:
             if Rental.objects.filter(room=room).exists():
-                messages.info(request, "This room is taken.")
+                messages.info(request, "This room is already taken.")
             else:
                 messages.error(request, "This room is currently unavailable.")
+            return HttpResponseRedirect(reverse("renthub:home"))
+
+        try:
+            renter = Renter.objects.get(id=self.request.user.id)
+        except Renter.DoesNotExist:
+            renter = None
+
+        latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
+        if latest_request:
+            if latest_request.status != 'reject':
+                messages.info(request, "This room is already taken.")
+                return HttpResponseRedirect(reverse("renthub:home"))
+
+        if RentalRequest.objects.filter(room=room).exclude(renter=renter).exists():
+            messages.info(request, "This room is already taken.")
             return HttpResponseRedirect(reverse("renthub:home"))
 
         return super().get(request, *args, **kwargs)

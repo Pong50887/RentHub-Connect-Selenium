@@ -91,6 +91,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         generate_qr_code(room.price, room.room_number)
 
         context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
-        context['rental_request_exists'] = RentalRequest.objects.filter(room=context['room'], renter=renter).exists()
+        context['send_or_cancel'] = True
+
+        if Rental.objects.filter(room=context['room'], renter=renter).exists() or (
+                latest_request and latest_request.status != 'reject'):
+            context['send_or_cancel'] = False
 
         return context

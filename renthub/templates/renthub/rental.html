@@ -21,7 +21,7 @@
 
     {% if room.availability %}
         {% if rental_request and latest_request.status != 'reject' %}
-            <p>You have submitted a rent request.</p>
+            <p>Please wait for admin to review your rental request.</p>
         {% else %}
             <a href="{% url 'renthub:payment' room.room_number %}">Rent</a>
         {% endif %}
