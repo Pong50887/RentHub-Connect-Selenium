@@ -86,7 +86,7 @@
         {% endif %}
     </div>
 
-    {% if not rental_request_exists or latest_request.status == 'reject' %}
+    {% if send_or_cancel %}
         {% if qr_code_path %}
             <h3 class="mb-3 text-center">Scan this QR code to complete the payment</h3>
             <div class="text-center">
@@ -97,16 +97,16 @@
 
     <form method="POST" enctype="multipart/form-data" id="paymentSlipForm" class="mb-4">
         {% csrf_token %}
-        {% if latest_request.status == 'wait' %}
+        {% if latest_request.status == 'Wait' %}
             <div class="alert alert-warning">Please wait for admin to review your rental request.</div>
-        {% elif not rental_request_exists or latest_request.status == 'reject' %}
+        {% elif send_or_cancel %}
             <div class="mb-3">
                 <label for="myFile" class="form-label">Upload Payment Slip:</label>
                 <input type="file" id="myFile" name="payment_slip" class="form-control" required>
             </div>
         {% endif %}
         <div class="payment-actions d-flex justify-content-start">
-            {% if rental_request_exists and latest_request.status != 'reject' %}
+            {% if not send_or_cancel %}
                 <a href="{% url 'renthub:cancel' room.room_number %}" class="btn btn-danger me-2">Cancel Renting</a>
             {% else %}
                 <button type="submit" class="btn btn-primary">Send</button>
