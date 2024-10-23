@@ -31,22 +31,14 @@ def delete_qr_code(room_number):
 class Status(Enum):
     """Status Enum to ensure a consistant status value across all implementation throughout the project."""
 
-    _instance = None
-
     APPROVE = 'Approve'
     REJECT = 'Reject'
     WAIT = 'Wait'
 
-    def __new__(cls, *args, **kwargs):
-        """Override the __new__ method to ensure a singleton instance."""
-        if cls._instance is None:
-            cls._instance = super().__new__(cls, *args, **kwargs)
-        return cls._instance
-
     @classmethod
     def choices(cls):
         """Returns the choices as a list of tuples."""
-        return [(status.value, status.name.capitalize(), status.name.lower()) for status in cls]
+        return [(status.name.lower(), status.value) for status in cls]
 
 
 def get_rental_progress_data(status):
