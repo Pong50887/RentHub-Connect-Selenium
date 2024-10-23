@@ -97,7 +97,7 @@
 
     <form method="POST" enctype="multipart/form-data" id="paymentSlipForm" class="mb-4">
         {% csrf_token %}
-        {% if latest_request.status == 'Wait' %}
+        {% if latest_request.status == 'wait' %}
             <div class="alert alert-warning">Please wait for admin to review your rental request.</div>
         {% elif send_or_cancel %}
             <div class="mb-3">

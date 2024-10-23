@@ -5,6 +5,7 @@ Tests of booking: PaymentView changes related to booking feature.
 from django.test import TestCase
 from django.urls import reverse
 from renthub.models import Rental, Room, Renter, RentalRequest
+from renthub.utils import Status
 
 
 class PaymentViewTests(TestCase):
@@ -23,13 +24,13 @@ class PaymentViewTests(TestCase):
         """A renter can see the QR code if they don't have a Rental for the room."""
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-        self.assertContains(response, 'Scan this QR code to complete the payment:')
+        self.assertContains(response, 'Scan this QR code to complete the payment')
 
     def test_qr_not_visible_if_rental_exists(self):
         """A renter cannot see the QR code if they already have a Rental for the room."""
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room1.room_number}))
-        self.assertNotContains(response, 'Scan this QR code to complete the payment:')
+        self.assertNotContains(response, 'Scan this QR code to complete the payment')
 
     def test_qr_not_visible_if_their_latest_rental_request_status_is_wait(self):
         """A renter cannot see the QR code if they have a RentalRequest for the room and their latest RentalRequest
@@ -37,20 +38,20 @@ class PaymentViewTests(TestCase):
         RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-        self.assertNotContains(response, 'Scan this QR code to complete the payment:')
+        self.assertNotContains(response, 'Scan this QR code to complete the payment')
 
     def test_qr_not_visible_if_their_latest_rental_request_is_approved(self):
         """A renter cannot see the QR code if they have a RentalRequest for the room and their latest RentalRequest
         hasn't been rejected yet. """
-        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.approve)
+        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.approve.value)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-        self.assertNotContains(response, 'Scan this QR code to complete the payment:')
+        self.assertNotContains(response, 'Scan this QR code to complete the payment')
 
     def test_qr_visible_if_their_latest_rental_request_is_rejected(self):
         """A renter cannot see the QR code if they have a RentalRequest for the room and their latest RentalRequest
-        hasn't been rejected yet. """
-        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.reject)
+        has been rejected. """
+        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.reject.value)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-        self.assertContains(response, 'Scan this QR code to complete the payment:')
+        self.assertContains(response, 'Scan this QR code to complete the payment')

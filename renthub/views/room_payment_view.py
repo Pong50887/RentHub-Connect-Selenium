@@ -39,7 +39,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             return redirect('renthub:rental', room_number=room.room_number)
 
         if Rental.objects.filter(room=room).exclude(renter=renter).exists()\
-                or RentalRequest.objects.filter(room=room, status=Status.wait).exclude(renter=renter).exists():
+                or RentalRequest.objects.filter(room=room, status=Status.wait.value).exclude(renter=renter).exists():
             messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
@@ -94,7 +94,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['send_or_cancel'] = True
 
         if Rental.objects.filter(room=context['room'], renter=renter).exists() or (
-                latest_request and latest_request.status != Status.reject):
+                latest_request and latest_request.status != Status.reject.value):
             context['send_or_cancel'] = False
 
         return context

@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.generic import DetailView
 
 from ..models import Room, Rental, RentalRequest, Renter
+from ..utils import Status
 
 class RoomDetailView(DetailView):
     """
@@ -41,7 +42,7 @@ class RoomDetailView(DetailView):
 
         latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
         if latest_request:
-            if latest_request.status != Status.reject:
+            if latest_request.status != Status.reject.value:
                 messages.info(request, "This room is already taken.")
                 return HttpResponseRedirect(reverse("renthub:home"))
 

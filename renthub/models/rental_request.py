@@ -18,7 +18,7 @@ class RentalRequest(models.Model):
     status = models.CharField(
         max_length=10,
         choices=Status.choices(),
-        default=Status.wait,
+        default=Status.wait.value,
     )
 
     def __str__(self):

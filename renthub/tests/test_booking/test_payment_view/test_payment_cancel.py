@@ -43,14 +43,14 @@ class PaymentViewTests(TestCase):
 
     def test_cancel_button_visible_if_rental_request_is_approved(self):
         """The cancel button visibility in case rental request status is 'approve'."""
-        RentalRequest.objects.create(room=self.room2, renter=self.renter2, price=1200.00, status=Status.approve)
+        RentalRequest.objects.create(room=self.room2, renter=self.renter2, price=1200.00, status=Status.approve.value)
         self.client.login(username='renter2', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
         self.assertContains(response, 'Cancel Renting')
 
     def test_cancel_button_not_visible_if_rental_request_is_rejected(self):
         """The cancel button visibility in case rental request status is 'reject'."""
-        RentalRequest.objects.create(room=self.room2, renter=self.renter2, price=1200.00, status=Status.reject)
+        RentalRequest.objects.create(room=self.room2, renter=self.renter2, price=1200.00, status=Status.reject.value)
         self.client.login(username='renter2', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
         self.assertNotContains(response, 'Cancel Renting')

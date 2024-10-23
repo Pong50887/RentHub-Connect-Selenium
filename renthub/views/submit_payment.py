@@ -43,7 +43,7 @@ def submit_payment(request, room_number):
 
     latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
     if latest_request:
-        if latest_request.status != Status.reject:
+        if latest_request.status != Status.reject.value:
             messages.warning(request, "You cannot submit a new rental request until the previous one is rejected.")
             return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
     rental_request = RentalRequest.objects.create(room=room, renter=renter, price=room.price)

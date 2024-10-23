@@ -28,15 +28,15 @@ class TransactionModelTest(TestCase):
         self.transaction = Transaction.objects.create(detail="This is ...",
                                                       rental=self.rental,
                                                       date="2024-10-12 14:30:00+00:00",
-                                                      status=Status.wait)
+                                                      status=Status.wait.value)
 
     def test_transaction_creation(self):
         """Test that the Transaction instance can be created successfully."""
         self.assertEqual(self.transaction.detail, "This is ...")
         self.assertEqual(self.transaction.rental, self.rental)
         self.assertEqual(self.transaction.date, "2024-10-12 14:30:00+00:00")
-        self.assertEqual(self.transaction.status, Status.wait)
+        self.assertEqual(self.transaction.status, Status.wait.value)
 
     def test_string_representation(self):
         """Test the string representation of the Transaction model."""
-        self.assertEqual(str(self.transaction), Status.wait)
+        self.assertEqual(str(self.transaction), Status.wait.value)

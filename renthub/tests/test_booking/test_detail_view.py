@@ -68,7 +68,7 @@ class DetailViewTests(TestCase):
         """Accessing a room in which the renter whose RentalRequest of this room is rejected is allowed to rent
         again."""
         # before submit function is fixed
-        RentalRequest.objects.create(renter=self.renter1, room=self.room, price=self.room.price, status=Status.reject)
+        RentalRequest.objects.create(renter=self.renter1, room=self.room, price=self.room.price, status=Status.reject.value)
 
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:rental', kwargs={'room_number': self.room.room_number}), follow=True)
@@ -76,5 +76,5 @@ class DetailViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         rent_url = reverse('renthub:payment', kwargs={'room_number': self.room.room_number})
-        self.assertContains(response, f'<a href="{rent_url}">Rent</a>', html=True)
+        self.assertContains(response, f'<a href="{rent_url}" class="btn btn-success">Rent</a>', html=True)
 
