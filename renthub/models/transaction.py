@@ -17,10 +17,5 @@ class Transaction(models.Model):
     status = models.CharField(
         max_length=10,
         choices=Status.choices(),
-        default=Status.WAIT,
+        default=Status.wait,
     )
-
-    def save(self, *args, **kwargs):
-        """Override save to normalize the status to lowercase."""
-        self.status = self.status.title()
-        super().save(*args, **kwargs)

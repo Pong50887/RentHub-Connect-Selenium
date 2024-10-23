@@ -41,7 +41,7 @@ class RoomDetailView(DetailView):
 
         latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
         if latest_request:
-            if latest_request.status != Status.REJECT:
+            if latest_request.status != Status.reject:
                 messages.info(request, "This room is already taken.")
                 return HttpResponseRedirect(reverse("renthub:home"))
 

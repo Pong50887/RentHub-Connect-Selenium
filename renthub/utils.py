@@ -31,14 +31,14 @@ def delete_qr_code(room_number):
 class Status(Enum):
     """Status Enum to ensure a consistant status value across all implementation throughout the project."""
 
-    APPROVE = 'Approve'
-    REJECT = 'Reject'
-    WAIT = 'Wait'
+    approve = 'Approve'
+    reject = 'Reject'
+    wait = 'Wait'
 
     @classmethod
     def choices(cls):
         """Returns the choices as a list of tuples."""
-        return [(status.name.lower(), status.value) for status in cls]
+        return [(status.name, status.value) for status in cls]
 
 
 def get_rental_progress_data(status):
@@ -48,17 +48,17 @@ def get_rental_progress_data(status):
         {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol":""},
     ]
 
-    if status == Status.WAIT:
+    if status == Status.wait:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
-    elif status == Status.APPROVE:
+    elif status == Status.approve:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
         milestones[1]["status"] = "Approved"
         milestones[1]["symbol"] = "o"
 
-    elif status == Status.REJECT:
+    elif status == Status.reject:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 

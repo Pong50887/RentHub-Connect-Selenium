@@ -68,7 +68,7 @@ class DetailViewTests(TestCase):
         """Accessing a room in which the renter whose RentalRequest of this room is rejected is allowed to rent
         again."""
         # before submit function is fixed
-        RentalRequest.objects.create(renter=self.renter1, room=self.room, price=self.room.price, status=Status.REJECT)
+        RentalRequest.objects.create(renter=self.renter1, room=self.room, price=self.room.price, status=Status.reject)
 
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:rental', kwargs={'room_number': self.room.room_number}), follow=True)

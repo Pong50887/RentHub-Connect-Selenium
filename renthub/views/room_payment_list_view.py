@@ -16,7 +16,7 @@ class RoomPaymentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Return a queryset of rooms linked to the logged-in user's rentals."""
-        rental_requests = RentalRequest.objects.filter(renter__id=self.request.user.id, status=Status.WAIT)
+        rental_requests = RentalRequest.objects.filter(renter__id=self.request.user.id, status=Status.wait)
         rentals = Rental.objects.filter(renter__id=self.request.user.id)
         rooms_with_rentals = Room.objects.filter(
             rental__in=rentals
