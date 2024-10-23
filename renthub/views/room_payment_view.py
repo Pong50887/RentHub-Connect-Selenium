@@ -7,7 +7,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..models import Room, Renter, RentalRequest, Rental
-from ..utils import generate_qr_code, get_rental_progress_data
+from ..utils import generate_qr_code, get_rental_progress_data, Status
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -39,7 +39,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             return redirect('renthub:rental', room_number=room.room_number)
 
         if Rental.objects.filter(room=room).exclude(renter=renter).exists()\
-                or RentalRequest.objects.filter(room=room, status='wait').exclude(renter=renter).exists():
+                or RentalRequest.objects.filter(room=room, status=Status.WAIT).exclude(renter=renter).exists():
             messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
@@ -94,7 +94,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['send_or_cancel'] = True
 
         if Rental.objects.filter(room=context['room'], renter=renter).exists() or (
-                latest_request and latest_request.status != 'reject'):
+                latest_request and latest_request.status != Status.REJECT):
             context['send_or_cancel'] = False
 
         return context

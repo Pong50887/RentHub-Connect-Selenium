@@ -2,13 +2,7 @@ from django.db import models
 
 from .room import Room
 from .renter import Renter
-
-
-STATUS_CHOICES = [
-        ('approve', 'Approve'),
-        ('reject', 'Reject'),
-        ('wait', 'Wait'),
-]
+from ..utils import Status
 
 
 class RentalRequest(models.Model):
@@ -21,9 +15,14 @@ class RentalRequest(models.Model):
     image = models.ImageField(upload_to='slip_images/', blank=True, null=True)
     status = models.CharField(
         max_length=10,
-        choices=STATUS_CHOICES,
-        default='wait',
+        choices=Status.choices(),
+        default=Status.WAIT,
     )
+
+    def save(self, *args, **kwargs):
+        """Override save to normalize the status to lowercase."""
+        self.status = self.status.title()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """Returns the short detail of the request."""

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from renthub.models import RoomType, Room, Renter, RentalRequest
-
+from renthub.utils import Status
 
 class RentalRequestModelTest(TestCase):
     def setUp(self):
@@ -24,15 +24,15 @@ class RentalRequestModelTest(TestCase):
         self.rental_request = RentalRequest.objects.create(renter=self.renter,
                                                            room=self.room,
                                                            price=self.room.price,
-                                                           status="wait")
+                                                           status=Status.WAIT)
 
     def test_rental_request_creation(self):
         """Test that the RentalRequest instance can be created successfully."""
         self.assertEqual(str(self.rental_request.renter), 'Pong')
         self.assertEqual(str(self.rental_request.room), "101")
         self.assertEqual(self.rental_request.price, 99.99)
-        self.assertEqual(self.rental_request.status, "wait")
+        self.assertEqual(self.rental_request.status, Status.WAIT)
 
     def test_string_representation(self):
         """Test the string representation of the RentalRequest model."""
-        self.assertEqual(str(self.rental_request), "Pong / 101 / wait")
+        self.assertEqual(str(self.rental_request), f"Pong / 101 / {Status.WAIT}")

@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from ..models import Room, Rental, RentalRequest
 from django.db.models import Case, When, Value, CharField, F
 
+from ..utils import Status
+
 class RoomPaymentListView(LoginRequiredMixin, ListView):
     """
     View to list rooms associated with the logged-in renter's rentals.
@@ -14,7 +16,7 @@ class RoomPaymentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Return a queryset of rooms linked to the logged-in user's rentals."""
-        rental_requests = RentalRequest.objects.filter(renter__id=self.request.user.id, status='wait')
+        rental_requests = RentalRequest.objects.filter(renter__id=self.request.user.id, status=Status.WAIT)
         rentals = Rental.objects.filter(renter__id=self.request.user.id)
         rooms_with_rentals = Room.objects.filter(
             rental__in=rentals

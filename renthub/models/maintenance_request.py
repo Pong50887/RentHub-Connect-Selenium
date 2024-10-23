@@ -1,12 +1,7 @@
 from django.db import models
 
 from .rental import Rental
-
-STATUS_CHOICES = [
-        ('approve', 'Approve'),
-        ('reject', 'Reject'),
-        ('wait', 'Wait'),
-]
+from ..utils import Status
 
 
 class MaintenanceRequest(models.Model):
@@ -17,10 +12,15 @@ class MaintenanceRequest(models.Model):
     request_message = models.TextField()
     status = models.CharField(
         max_length=10,
-        choices=STATUS_CHOICES,
-        default='wait',
+        choices=Status.choices(),
+        default=Status.WAIT,
     )
     date_requested = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        """Override save to normalize the status to lowercase."""
+        self.status = self.status.title()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """Returns a string representation of the maintenance request."""

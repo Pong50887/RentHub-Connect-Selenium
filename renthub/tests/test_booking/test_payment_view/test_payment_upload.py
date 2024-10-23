@@ -5,7 +5,7 @@ Tests of booking: PaymentView changes related to booking feature.
 from django.test import TestCase
 from django.urls import reverse
 from renthub.models import Rental, Room, Renter, RentalRequest
-
+from renthub.utils import Status
 
 class PaymentViewTests(TestCase):
     """Tests of PaymentView."""
@@ -41,14 +41,14 @@ class PaymentViewTests(TestCase):
 
     def test_photo_upload_not_visible_if_rental_request_is_approved(self):
         """A renter cannot upload a payment photo if they already have approved RentalRequest for the room."""
-        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status='approve')
+        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.APPROVE)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
         self.assertNotContains(response, 'Upload Payment Slip:')
 
     def test_photo_upload_visible_if_rental_request_is_rejected(self):
         """A renter can upload a payment photo if their latest RentalRequest for the room was rejected."""
-        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status='reject')
+        RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.REJECT)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
         self.assertContains(response, 'Upload Payment Slip:')
