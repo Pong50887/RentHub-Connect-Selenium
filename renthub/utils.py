@@ -35,6 +35,9 @@ class Status(Enum):
     reject = 'reject'
     wait = 'wait'
 
+    def __str__(self):
+        return self.value
+
     @classmethod
     def choices(cls):
         """Returns the choices as a list of tuples."""
@@ -47,17 +50,17 @@ def get_rental_progress_data(status):
         {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol":""},
     ]
 
-    if status == Status.wait.value:
+    if status == Status.wait:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
-    elif status == Status.approve.value:
+    elif status == Status.approve:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
         milestones[1]["status"] = "Approved"
         milestones[1]["symbol"] = "o"
 
-    elif status == Status.reject.value:
+    elif status == Status.reject:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
