@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import DetailView
 
-from ..models import Room, Rental, RentalRequest, Renter
+from ..models import Room, Rental, Renter
 from ..utils import Status
 
 class RoomDetailView(DetailView):
@@ -40,13 +40,13 @@ class RoomDetailView(DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-        if latest_request:
-            if latest_request.status != Status.reject:
+        rental = Rental.objects.filter(renter=renter, room=room)
+        if rental:
+            if rental.status != Status.reject:
                 messages.info(request, "This room is already taken.")
                 return HttpResponseRedirect(reverse("renthub:home"))
 
-        if RentalRequest.objects.filter(room=room).exclude(renter=renter).exists():
+        if Rental.objects.filter(room=room).exclude(renter=renter).exists():
             messages.info(request, "This room is already taken.")
             return HttpResponseRedirect(reverse("renthub:home"))
 
@@ -66,13 +66,6 @@ class RoomDetailView(DetailView):
             try:
                 context["rental"] = Rental.objects.filter(renter=renter, room=room).exists()
             except Rental.DoesNotExist:
-                pass
-            try:
-                context["rental_request"] = RentalRequest.objects.filter(renter=renter, room=room).exists()
-                latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-                if latest_request:
-                    context['latest_request'] = latest_request
-            except RentalRequest.DoesNotExist:
                 pass
 
         return context

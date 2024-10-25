@@ -74,7 +74,7 @@
                 <p class="room-price">{{ room.price }} ฿ / month</p>
 
                 {% if room.availability %}
-                    {% if rental_request and latest_request.status != 'reject' %}
+                    {% if rental %}
                         <p class="alert alert-info">Please wait for admin to review your rental request.</p>
                     {% else %}
                         <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">Rent</a>

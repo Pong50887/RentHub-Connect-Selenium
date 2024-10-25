@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Renter, RentalRequest, Rental
+from ..models import Room, Renter, Rental
 from ..utils import generate_qr_code, get_rental_progress_data, Status
 
 
@@ -38,8 +38,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exists()\
-                or RentalRequest.objects.filter(room=room, status=Status.wait).exclude(renter=renter).exists():
+        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.wait).exists():
             messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
@@ -60,11 +59,11 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
             file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
 
-            rental_request, created = RentalRequest.objects.get_or_create(
+            rental, created = Rental.objects.get_or_create(
                 room=room, renter=renter, defaults={'price': room.price}
             )
-            rental_request.image = file_path
-            rental_request.save()
+            rental.image = file_path
+            rental.save()
 
             messages.success(request, "Payment slip uploaded successfully!")
             return redirect('renthub:home')
@@ -80,10 +79,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
-            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-            if latest_request:
-                context['latest_request'] = latest_request
-                context['milestones'] = get_rental_progress_data(latest_request.status)
+            rental = Rental.objects.filter(renter=renter, room=room).order_by('-id').first()
+            if rental:
+                context['rental'] = rental
+                context['milestones'] = get_rental_progress_data(rental.status)
 
         except Renter.DoesNotExist:
             renter = None
@@ -93,8 +92,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
         context['send_or_cancel'] = True
 
-        if Rental.objects.filter(room=context['room'], renter=renter).exists() or (
-                latest_request and latest_request.status != Status.reject):
+        if Rental.objects.filter(room=context['room'], renter=renter).exclude(status=Status.reject).exists():
             context['send_or_cancel'] = False
 
         return context
