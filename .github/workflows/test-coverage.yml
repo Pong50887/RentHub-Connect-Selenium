@@ -17,6 +17,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      DJANGO_SETTINGS_MODULE: mysite.settings  # Replace with your Django project name
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.11
