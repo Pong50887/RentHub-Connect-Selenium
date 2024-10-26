@@ -7,7 +7,9 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Renter, Rental
+from datetime import datetime
+
+from ..models import Room, Renter, Rental, Transaction
 from ..utils import generate_qr_code, get_rental_progress_data, Status
 
 
@@ -61,6 +63,12 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             )
             rental.image = file_path
             rental.save()
+
+            transaction, created = Transaction.objects.get_or_create(
+                room=room, renter=renter, defaults={'date': datetime.now(), 'price': room.price}
+            )
+            transaction.image = file_path
+            transaction.save()
 
             messages.success(request, "Payment slip uploaded successfully!")
             return redirect('renthub:home')

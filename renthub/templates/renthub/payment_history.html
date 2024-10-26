@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if rooms %}
-    {% for room in rooms %}
-    <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">
-                <a href="{% url 'renthub:payment' room.room_number %}" style="margin-right: 10px;">
-                    Room Number: {{ room.room_number }}
-                </a>
-                <p style="margin: 0;">Status: {{ room.status }}</p>
+<h1>Payment History</h1>
+{% if transactions %}
+    {% for transaction in transactions %}
+    <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
+    <img src="{{ transaction.image.url }}" width="150" height="150" style="margin-right: 15px; border-radius: 4px; object-fit: cover;" alt="Payment Slip Image">
+
+    <div>
+        <h3 style="margin: 0 0 5px; font-size: 1.2em; color: #333;">
+            Room Number: {{ transaction.room.room_number }}
+        </h3>
+        <p style="margin: 0; font-size: 0.95em; color: #555;">
+            <strong>Price:</strong> {{ transaction.price }} <br>
+            <strong>Date:</strong> {{ transaction.date }} <br>
+            <strong>Status:</strong> {{ transaction.status }}
+        </p>
     </div>
+</div>
     {% endfor %}
 {% else %}
-    <p>You currently have not submitted any rental requests</p>
+    <p>You currently have not submitted any rental payment.</p>
 {% endif %}
 {% endblock %}
