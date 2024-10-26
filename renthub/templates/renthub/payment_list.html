@@ -3,10 +3,10 @@
 {% if rooms %}
     {% for room in rooms %}
         <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">
-                <a href="{% url 'renthub:payment' room.room_number %}" style="margin-right: 10px;">
-                    Room Number: {{ room.room_number }}
-                </a>
-                <p style="margin: 0;">Status: {{ room.status }}</p>
+            <a href="{% url 'renthub:payment' room.room_number %}" style="margin-right: 10px;">
+                Room Number: {{ room.room_number }}
+            </a>
+            <p style="margin: 0;">Status: {{ room.status }}</p>
         </div>
     {% endfor %}
 {% else %}

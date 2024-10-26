@@ -72,18 +72,18 @@
                 </div>
                 <hr>
                 <p class="room-price">{{ room.price }} ฿ / month</p>
-
-                {% if room.availability %}
-                    {% if rental %}
+                {% if rental %}
+                    {% if rental.status == "wait" %}
                         <p class="alert alert-info">Please wait for admin to review your rental request.</p>
+                    {% elif rental.status == "approve" %}
+                        <p class="alert alert-success">You have rented this room.</p>
+                    {% endif %}
+                    <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">See rental status.</a>
+                {% else %}
+                    {% if not room.is_available %}
+                        <p class="alert alert-danger">This room is already taken.</p>
                     {% else %}
                         <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">Rent</a>
-                    {% endif %}
-                {% else %}
-                    {% if rental %}
-                        <p class="alert alert-success">You have rented this room.</p>
-                    {% else %}
-                        <p class="alert alert-danger">This room is already taken.</p>
                     {% endif %}
                 {% endif %}
             </div>

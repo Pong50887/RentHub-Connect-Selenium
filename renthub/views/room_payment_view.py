@@ -1,7 +1,8 @@
-from django.http import HttpResponseRedirect
+from datetime import timedelta
+
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
+from django.utils import timezone
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -28,17 +29,13 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         """Handle GET requests to display the room payment page."""
         room = self.get_object()
 
-        if not room.availability:
-            messages.error(request, f"The room {room} is currently unavailable.")
-            return HttpResponseRedirect(reverse("renthub:home"))
-
         try:
             renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.wait).exists():
+        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.reject).exists():
             messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
@@ -79,7 +76,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
-            rental = Rental.objects.filter(renter=renter, room=room).order_by('-id').first()
+            rental = Rental.objects.filter(renter=renter, room=room, start_date__lt=timezone.now() + timedelta(days=30),
+                                           end_date__gt=timezone.now()).order_by('-id').first()
             if rental:
                 context['rental'] = rental
                 context['milestones'] = get_rental_progress_data(rental.status)

@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.contrib import messages
 from django.views.generic import DetailView
+from django.utils import timezone
+from datetime import timedelta
 
 from ..models import Room, Rental, Renter
-from ..utils import Status
+
 
 class RoomDetailView(DetailView):
     """
@@ -28,28 +29,6 @@ class RoomDetailView(DetailView):
         except Http404:
             return HttpResponseRedirect(reverse("renthub:home"))
 
-        if not room.availability:
-            if Rental.objects.filter(room=room).exists():
-                messages.info(request, "This room is already taken.")
-            else:
-                messages.error(request, "This room is currently unavailable.")
-            return HttpResponseRedirect(reverse("renthub:home"))
-
-        try:
-            renter = Renter.objects.get(id=self.request.user.id)
-        except Renter.DoesNotExist:
-            renter = None
-
-        rental = Rental.objects.filter(renter=renter, room=room)
-        if rental:
-            if rental.status != Status.reject:
-                messages.info(request, "This room is already taken.")
-                return HttpResponseRedirect(reverse("renthub:home"))
-
-        if Rental.objects.filter(room=room).exclude(renter=renter).exists():
-            messages.info(request, "This room is already taken.")
-            return HttpResponseRedirect(reverse("renthub:home"))
-
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -63,9 +42,8 @@ class RoomDetailView(DetailView):
             renter = None
 
         if renter:
-            try:
-                context["rental"] = Rental.objects.filter(renter=renter, room=room).exists()
-            except Rental.DoesNotExist:
-                pass
+            context["rental"] = Rental.objects.filter(renter=renter, room=room,
+                                                      start_date__lt=timezone.now() + timedelta(days=30),
+                                                      end_date__gt=timezone.now()).first()
 
         return context
