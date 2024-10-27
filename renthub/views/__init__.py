@@ -1,5 +1,4 @@
 from .announcement_view import AnnouncementView
-from .cancel_rental import cancel_rental
 from .home_view import HomeView
 from .renter_signup_view import RenterSignupView
 from .room_detail_view import RoomDetailView

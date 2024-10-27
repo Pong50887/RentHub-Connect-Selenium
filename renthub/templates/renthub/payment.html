@@ -105,13 +105,13 @@
                 <input type="file" id="myFile" name="payment_slip" class="form-control" required>
             </div>
         {% endif %}
-        <div class="payment-actions d-flex justify-content-start">
-            {% if not send_or_cancel %}
-                <a href="{% url 'renthub:cancel' room.room_number %}" class="btn btn-danger me-2">Cancel Renting</a>
-            {% else %}
-                <button type="submit" class="btn btn-primary">Send</button>
-            {% endif %}
-        </div>
+            <div class="payment-actions d-flex justify-content-start">
+                {% if not send_or_cancel %}
+                    <!-- Add something in the future -->
+                {% else %}
+                    <button type="submit" class="btn btn-primary">Send</button>
+                {% endif %}
+            </div>
     </form>
     <script>
         window.addEventListener('beforeunload', function (e) {
