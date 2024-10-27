@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 
 from ..models import Room, Renter, Rental, Transaction
-from ..utils import generate_qr_code, get_rental_progress_data, Status
+from ..utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -71,6 +71,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             transaction.save()
 
             messages.success(request, "Payment slip uploaded successfully!")
+            delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
             messages.error(request, "No payment slip uploaded.")
@@ -93,12 +94,14 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        generate_qr_code(room.price, room.room_number)
-
-        context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
-        context['send_or_cancel'] = True
-
-        if Rental.objects.filter(room=context['room'], renter=renter).exclude(status=Status.reject).exists():
+        # Check if the room is available
+        if not Rental.objects.filter(room=room).exclude(status=Status.reject).exists():
+            # Generate QR code only if the room is available
+            generate_qr_code(room.price, room.room_number)
+            context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
+            context['send_or_cancel'] = True
+        else:
+            context['qr_code_path'] = None  # No QR code if the room is not available
             context['send_or_cancel'] = False
 
         return context
