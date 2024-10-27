@@ -1,12 +1,11 @@
 """Test of announcement."""
-from django.test import TestCase
+from django.test import TestCase, skip
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.formats import date_format
 
 from renthub.models import Announcement
-import unittest
 
 
 class AnnouncementAdminTest(TestCase):
@@ -91,7 +90,7 @@ class AnnouncementDetailViewTest(TestCase):
         response = self.client.get(url)
         self.assertTemplateUsed(response, 'renthub/announcement.html')
 
-    @unittest.skip("fix later before release")
+    @skip("fix later before release")
     def test_announcement_view_content(self):
         """Test if the announcement details are rendered correctly with Asia/Bangkok timezone."""
         url = reverse('renthub:announcement', kwargs={'pk': self.announcement.pk})
