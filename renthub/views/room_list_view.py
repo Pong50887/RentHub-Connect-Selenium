@@ -13,4 +13,4 @@ class RoomListView(ListView):
 
     def get_queryset(self):
         """Return a queryset of available rooms."""
-        return Room.objects.filter(availability=True)
+        return Room.objects.all()

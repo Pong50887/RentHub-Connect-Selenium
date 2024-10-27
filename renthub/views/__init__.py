@@ -1,5 +1,4 @@
 from .announcement_view import AnnouncementView
-from .cancel_rental import cancel_rental
 from .home_view import HomeView
 from .renter_signup_view import RenterSignupView
 from .room_detail_view import RoomDetailView
@@ -11,3 +10,6 @@ from .room_type_view import RoomTypeView
 from .submit_payment import submit_payment
 from .notification_view import NotificationView
 from .mark_notifications_read_view import MarkNotificationsReadView
+from .delete_qrcode_view import DeleteQRCodeView
+from .contact_us_view import ContactUsView
+from .context_processors import unread_notifications_count

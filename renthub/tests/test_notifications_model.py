@@ -2,14 +2,15 @@ from django.test import TestCase
 from django.utils import timezone
 from ..models import Notification, Renter
 
+
 class NotificationModelTest(TestCase):
 
     def setUp(self):
         self.renter = Renter.objects.create_user(username="Pong",
-                                            first_name="Pichayoot",
-                                            last_name="Tanasinanan",
-                                            email="Pongzaza@gmail.com",
-                                            phone_number='1234567890')
+                                                 first_name="Pichayoot",
+                                                 last_name="Tanasinanan",
+                                                 email="Pongzaza@gmail.com",
+                                                 phone_number='1234567890')
 
     def test_notification_creation(self):
         notification = Notification.objects.create(

@@ -1,6 +1,7 @@
 from promptpay import qrcode
 import os
 import logging
+from enum import Enum
 
 logger = logging.getLogger('renthub')
 
@@ -26,24 +27,41 @@ def delete_qr_code(room_number):
     else:
         logger.debug(f"QR code for room {room_number} not found.")
 
+
+class Status(Enum):
+    """Status Enum to ensure a consistant status value across all implementation throughout the project."""
+
+    approve = 'approve'
+    reject = 'reject'
+    wait = 'wait'
+
+    def __str__(self):
+        return self.value
+
+    @classmethod
+    def choices(cls):
+        """Returns the choices as a list of tuples."""
+        return [(status.name, status.value) for status in cls]
+
+
 def get_rental_progress_data(status):
     """Return milestones information regarding rental request approval status."""
     milestones = [
-        {"step": 1, "description": "Payment Slip", "status": "Pending", "symbol":""},
-        {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol":""},
+        {"step": 1, "description": "Payment Slip", "status": "Pending", "symbol": ""},
+        {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol": ""},
     ]
 
-    if status == "wait":
+    if status == Status.wait:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
-    elif status == "approve":
+    elif status == Status.approve:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
         milestones[1]["status"] = "Approved"
         milestones[1]["symbol"] = "o"
 
-    elif status == "reject":
+    elif status == Status.reject:
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 

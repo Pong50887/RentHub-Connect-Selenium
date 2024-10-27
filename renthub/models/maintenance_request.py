@@ -1,12 +1,7 @@
 from django.db import models
 
 from .rental import Rental
-
-STATUS_CHOICES = [
-        ('approve', 'Approve'),
-        ('reject', 'Reject'),
-        ('wait', 'Wait'),
-]
+from ..utils import Status
 
 
 class MaintenanceRequest(models.Model):
@@ -15,10 +10,11 @@ class MaintenanceRequest(models.Model):
     """
     rental = models.ForeignKey(Rental, on_delete=models.CASCADE)
     request_message = models.TextField()
+    title = models.CharField(max_length=100, null=True)
     status = models.CharField(
         max_length=10,
-        choices=STATUS_CHOICES,
-        default='wait',
+        choices=Status.choices(),
+        default=Status.wait,
     )
     date_requested = models.DateTimeField()
 

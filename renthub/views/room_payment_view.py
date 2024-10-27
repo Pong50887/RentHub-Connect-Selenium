@@ -1,13 +1,16 @@
-from django.http import HttpResponseRedirect
+from datetime import timedelta
+
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
+from django.utils import timezone
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Renter, RentalRequest, Rental
-from ..utils import generate_qr_code, get_rental_progress_data
+from datetime import datetime
+
+from ..models import Room, Renter, Rental, Transaction
+from ..utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -28,18 +31,13 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         """Handle GET requests to display the room payment page."""
         room = self.get_object()
 
-        if not room.availability:
-            messages.error(request, f"The room {room} is currently unavailable.")
-            return HttpResponseRedirect(reverse("renthub:home"))
-
         try:
             renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exists()\
-                or RentalRequest.objects.filter(room=room, status='wait').exclude(renter=renter).exists():
+        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.reject).exists():
             messages.warning(request, "Someone else already rented this room.")
             return redirect('renthub:rental', room_number=room.room_number)
 
@@ -60,13 +58,20 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
             file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
 
-            rental_request, created = RentalRequest.objects.get_or_create(
+            rental, created = Rental.objects.get_or_create(
                 room=room, renter=renter, defaults={'price': room.price}
             )
-            rental_request.image = file_path
-            rental_request.save()
+            rental.image = file_path
+            rental.save()
+
+            transaction, created = Transaction.objects.get_or_create(
+                room=room, renter=renter, defaults={'date': datetime.now(), 'price': room.price}
+            )
+            transaction.image = file_path
+            transaction.save()
 
             messages.success(request, "Payment slip uploaded successfully!")
+            delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
             messages.error(request, "No payment slip uploaded.")
@@ -80,17 +85,23 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
-            latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-            if latest_request:
-                context['latest_request'] = latest_request
-                context['milestones'] = get_rental_progress_data(latest_request.status)
+            rental = Rental.objects.filter(renter=renter, room=room, start_date__lt=timezone.now() + timedelta(days=30),
+                                           end_date__gt=timezone.now()).order_by('-id').first()
+            if rental:
+                context['rental'] = rental
+                context['milestones'] = get_rental_progress_data(rental.status)
 
         except Renter.DoesNotExist:
             renter = None
 
-        generate_qr_code(room.price, room.room_number)
-
-        context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
-        context['rental_request_exists'] = RentalRequest.objects.filter(room=context['room'], renter=renter).exists()
+        # Check if the room is available
+        if not Rental.objects.filter(room=room).exclude(status=Status.reject).exists():
+            # Generate QR code only if the room is available
+            generate_qr_code(room.price, room.room_number)
+            context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
+            context['send_or_cancel'] = True
+        else:
+            context['qr_code_path'] = None  # No QR code if the room is not available
+            context['send_or_cancel'] = False
 
         return context

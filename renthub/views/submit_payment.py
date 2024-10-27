@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.contrib import messages
 from mysite import settings
 
-from ..models import Room, Rental, Renter, RentalRequest
-from ..utils import delete_qr_code
+from ..models import Room, Rental, Renter
+from ..utils import delete_qr_code, Status
+
 
 @login_required
 def submit_payment(request, room_number):
@@ -41,19 +42,16 @@ def submit_payment(request, room_number):
         messages.info(request, "You already rented this room.")
         return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
 
-    latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-    if latest_request:
-        if latest_request.status != 'reject':
+    rental = Rental.objects.filter(renter=renter, room=room).order_by('-id').first()
+    if rental:
+        if rental.status != Status.reject:
             messages.warning(request, "You cannot submit a new rental request until the previous one is rejected.")
             return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
-    rental_request = RentalRequest.objects.create(room=room, renter=renter, price=room.price)
-    messages.success(request, f"Rental request for room {room_number} submitted successfully.")
 
     # Proceed with rental logic
-    rental_fee = room.price * 1  # Adjust if needed
-    rental = Rental.objects.create(room=room, renter=renter, rental_fee=rental_fee)
-    room.availability = False
-    room.save()
+    price = room.price * 1  # Adjust if needed
+    Rental.objects.create(room=room, renter=renter, price=price)
+    messages.success(request, f"Rental for room {room_number} submitted successfully.")
 
     # Delete the QR code
     delete_qr_code(room_number)

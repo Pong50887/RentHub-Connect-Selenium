@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.contrib import messages
 from django.views.generic import DetailView
+from django.utils import timezone
+from datetime import timedelta
 
-from ..models import Room, Rental, RentalRequest, Renter
+from ..models import Room, Rental, Renter
+
 
 class RoomDetailView(DetailView):
     """
@@ -27,13 +29,6 @@ class RoomDetailView(DetailView):
         except Http404:
             return HttpResponseRedirect(reverse("renthub:home"))
 
-        if not room.availability:
-            if Rental.objects.filter(room=room).exists():
-                messages.info(request, "This room is taken.")
-            else:
-                messages.error(request, "This room is currently unavailable.")
-            return HttpResponseRedirect(reverse("renthub:home"))
-
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -47,16 +42,8 @@ class RoomDetailView(DetailView):
             renter = None
 
         if renter:
-            try:
-                context["rental"] = Rental.objects.filter(renter=renter, room=room).exists()
-            except Rental.DoesNotExist:
-                pass
-            try:
-                context["rental_request"] = RentalRequest.objects.filter(renter=renter, room=room).exists()
-                latest_request = RentalRequest.objects.filter(renter=renter, room=room).order_by('-id').first()
-                if latest_request:
-                    context['latest_request'] = latest_request
-            except RentalRequest.DoesNotExist:
-                pass
+            context["rental"] = Rental.objects.filter(renter=renter, room=room,
+                                                      start_date__lt=timezone.now() + timedelta(days=30),
+                                                      end_date__gt=timezone.now()).first()
 
         return context

@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 
-class RentalRequestAdmin(admin.ModelAdmin):
-    list_display = ('room', 'renter', 'price', 'image_tag', 'status')
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('renter', 'room', 'price', 'date', 'image_tag')
     readonly_fields = ('image_tag',)
 
     def image_tag(self, obj):
