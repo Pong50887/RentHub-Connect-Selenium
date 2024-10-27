@@ -27,4 +27,4 @@ class RoomModelTest(TestCase):
 
     def test_string_representation(self):
         """Test the string representation of the Room model."""
-        self.assertEqual(str(self.room), '101')
+        self.assertEqual(str(self.room), 'Room 101 - Test Room')

@@ -31,7 +31,7 @@ class RentalModelTest(TestCase):
 
     def test_rental_creation(self):
         """Test that the Rental instance can be created successfully."""
-        self.assertEqual(str(self.rental.room), "101")
+        self.assertEqual(str(self.rental.room), "Room 101 - Demo Room")
         self.assertEqual(str(self.rental.renter), "Pong")
         self.assertEqual(self.rental.price, 99.99)
 

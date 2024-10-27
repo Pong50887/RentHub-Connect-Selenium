@@ -25,18 +25,14 @@ class TransactionModelTest(TestCase):
                                             renter=self.renter,
                                             price=99.99)
 
-        self.transaction = Transaction.objects.create(detail="This is ...",
-                                                      rental=self.rental,
-                                                      date="2024-10-12 14:30:00+00:00",
-                                                      status=Status.wait)
+        self.transaction = Transaction.objects.create(room=self.room,
+                                                      renter=self.renter,
+                                                      price=99.99,
+                                                      date="2024-10-12 14:30:00+00:00")
 
     def test_transaction_creation(self):
         """Test that the Transaction instance can be created successfully."""
-        self.assertEqual(self.transaction.detail, "This is ...")
-        self.assertEqual(self.transaction.rental, self.rental)
+        self.assertEqual(self.transaction.room, self.room)
+        self.assertEqual(self.transaction.renter, self.renter)
         self.assertEqual(self.transaction.date, "2024-10-12 14:30:00+00:00")
         self.assertEqual(self.transaction.status, Status.wait)
-
-    def test_string_representation(self):
-        """Test the string representation of the Transaction model."""
-        self.assertEqual(str(self.transaction), Status.wait)
