@@ -46,7 +46,6 @@
     "room_number": 101,
     "detail": "9x9inch",
     "price": "3500.00",
-    "availability": true,
     "room_type": 1
   }
 },
@@ -57,7 +56,6 @@
     "room_number": 102,
     "detail": "11x11inch",
     "price": "4000.00",
-    "availability": true,
     "room_type": 2
   }
 },
@@ -68,7 +66,6 @@
     "room_number": 103,
     "detail": "13x13inch",
     "price": "5000.00",
-    "availability": true,
     "room_type": 3
   }
 },
@@ -79,7 +76,6 @@
     "room_number": 104,
     "detail": "15x15inch",
     "price": "6000.00",
-    "availability": true,
     "room_type": 4
   }
 }
