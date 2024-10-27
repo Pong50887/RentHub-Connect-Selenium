@@ -77,4 +77,3 @@ class DetailViewTests(TestCase):
 
         rent_url = reverse('renthub:payment', kwargs={'room_number': self.room.room_number})
         self.assertContains(response, f'<a href="{rent_url}" class="btn btn-success">Rent</a>', html=True)
-

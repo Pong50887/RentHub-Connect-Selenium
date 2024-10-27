@@ -66,6 +66,7 @@ class AnnouncementHomeViewTest(TestCase):
         self.assertContains(response, self.announcement.title)
         self.assertContains(response, second_announcement.title)
 
+
 class AnnouncementDetailViewTest(TestCase):
     """Tests of announcement page."""
 

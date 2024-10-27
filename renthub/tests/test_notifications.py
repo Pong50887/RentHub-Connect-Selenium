@@ -8,7 +8,7 @@ class NotificationViewTest(TestCase):
 
     def setUp(self):
         self.renter = Renter.objects.create_user(username="Pong",
-                                            password='12345')
+                                                 password='12345')
         login_success = self.client.login(username='Pong', password='12345')
         self.assertTrue(login_success)
 

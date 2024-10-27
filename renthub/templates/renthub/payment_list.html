@@ -4,7 +4,7 @@
 <div class="payment-columns" style="display: flex; gap: 20px;">
 
     <div class="column" style="flex: 1; padding: 20px;">
-    <h3>Ongoing Payments</h3>
+    <h3>Ongoing Rentals</h3>
         {% if rooms %}
             {% for room in rooms %}
                 <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">
@@ -20,7 +20,7 @@
     </div>
 
 <div class="column" style="flex: 1; padding: 20px;">
-<h3>Payment History</h3>
+<h3>Rental History</h3>
 {% if transactions %}
     {% for transaction in transactions %}
         <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">

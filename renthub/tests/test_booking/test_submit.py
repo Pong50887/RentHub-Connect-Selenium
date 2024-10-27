@@ -51,4 +51,3 @@ class PaymentSubmitTests(TestCase):
         self.assertEqual(Rental.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You already rented this room")
-

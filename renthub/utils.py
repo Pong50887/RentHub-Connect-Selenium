@@ -43,11 +43,12 @@ class Status(Enum):
         """Returns the choices as a list of tuples."""
         return [(status.name, status.value) for status in cls]
 
+
 def get_rental_progress_data(status):
     """Return milestones information regarding rental request approval status."""
     milestones = [
-        {"step": 1, "description": "Payment Slip", "status": "Pending", "symbol":""},
-        {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol":""},
+        {"step": 1, "description": "Payment Slip", "status": "Pending", "symbol": ""},
+        {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol": ""},
     ]
 
     if status == Status.wait:

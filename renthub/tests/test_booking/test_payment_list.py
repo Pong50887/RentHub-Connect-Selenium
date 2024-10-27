@@ -2,7 +2,8 @@
 
 from django.test import TestCase
 from django.urls import reverse
-from renthub.models import Rental, Room, Renter, RentalRequest
+from renthub.models import Rental, Room, Renter
+
 
 class PaymentListViewTests(TestCase):
     """Tests of PaymentListView."""
@@ -16,7 +17,7 @@ class PaymentListViewTests(TestCase):
         self.room3 = Room.objects.create(room_number=103, detail='A cozy room', price=1000.00, availability=True)
         Rental.objects.create(room=self.room1, renter=self.renter1, rental_fee=self.room1.price)
         Rental.objects.create(room=self.room2, renter=self.renter1, rental_fee=self.room2.price)
-        RentalRequest.objects.create(room=self.room3, renter=self.renter1, price=self.room3.price)
+        # RentalRequest.objects.create(room=self.room3, renter=self.renter1, price=self.room3.price)
 
     def test_no_rental_message_for_renter_without_rentals(self):
         """A renter without any rental sees that their payment list page is empty."""

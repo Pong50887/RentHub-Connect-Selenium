@@ -19,7 +19,7 @@ class PaymentCancelTests(TestCase):
         """A renter can cancel their own rental."""
         self.client.force_login(self.renter)
         rental = Rental.objects.create(room=self.room, renter=self.renter, rental_fee=self.room.price)
-        response = self.client.post(reverse('renthub:cancel', args=[self.room.room_number]),follow=True)
+        response = self.client.post(reverse('renthub:cancel', args=[self.room.room_number]), follow=True)
         self.assertFalse(Rental.objects.filter(id=rental.id).exists())
         self.room.refresh_from_db()
         self.assertTrue(self.room.availability)
@@ -30,6 +30,7 @@ class PaymentCancelTests(TestCase):
         self.client.force_login(self.renter1)
         rental = Rental.objects.create(room=self.room, renter=self.renter1, rental_fee=self.room.price)
         self.client.force_login(self.renter2)
-        response = self.client.post(reverse('renthub:cancel', kwargs={'room_number': self.room.room_number}),follow=True)
+        response = self.client.post(reverse('renthub:cancel', kwargs={'room_number': self.room.room_number}),
+                                    follow=True)
         self.assertTrue(Rental.objects.filter(id=rental.id).exists())
         self.assertContains(response, "You do not have an active booking for this room.")

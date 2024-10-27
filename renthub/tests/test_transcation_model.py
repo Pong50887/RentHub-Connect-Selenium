@@ -2,6 +2,7 @@ from django.test import TestCase
 from renthub.models import RoomType, Room, Renter, Rental, Transaction
 from renthub.utils import Status
 
+
 class TransactionModelTest(TestCase):
     def setUp(self):
         """Set up data for the tests."""

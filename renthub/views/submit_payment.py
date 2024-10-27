@@ -8,6 +8,7 @@ from mysite import settings
 from ..models import Room, Rental, Renter
 from ..utils import delete_qr_code, Status
 
+
 @login_required
 def submit_payment(request, room_number):
     """Handle the submission of a rental payment and create a RentalRequest.

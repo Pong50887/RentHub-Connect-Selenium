@@ -6,10 +6,10 @@ class RenterModelTest(TestCase):
     def setUp(self):
         """Set up data for the tests."""
         self.renter = Renter.objects.create_user(username="Pong",
-                                            first_name="Pichayoot",
-                                            last_name="Tanasinanan",
-                                            email="Pongzaza@gmail.com",
-                                            phone_number='1234567890')
+                                                 first_name="Pichayoot",
+                                                 last_name="Tanasinanan",
+                                                 email="Pongzaza@gmail.com",
+                                                 phone_number='1234567890')
 
     def test_renter_creation(self):
         """Test that the Renter instance can be created successfully."""
