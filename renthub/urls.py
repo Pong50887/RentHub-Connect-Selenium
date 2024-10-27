@@ -17,4 +17,5 @@ urlpatterns = [
     path('announcement/<int:pk>', views.AnnouncementView.as_view(), name="announcement"),
     path('notifications/', views.NotificationView.as_view(), name='notifications'),
     path('notifications/mark-read/', views.MarkNotificationsReadView.as_view(), name='mark_notifications_read'),
+    path("rental/<int:room_number>/payment/delete-qr-code/", views.DeleteQRCodeView.as_view(), name="delete_qr_code"),
 ]

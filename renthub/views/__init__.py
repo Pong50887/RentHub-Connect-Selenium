@@ -11,3 +11,4 @@ from .room_type_view import RoomTypeView
 from .submit_payment import submit_payment
 from .notification_view import NotificationView
 from .mark_notifications_read_view import MarkNotificationsReadView
+from .delete_qrcode_view import DeleteQRCodeView

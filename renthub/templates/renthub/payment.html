@@ -113,5 +113,18 @@
             {% endif %}
         </div>
     </form>
+    <script>
+        window.addEventListener('beforeunload', function (e) {
+            // Send a POST request to delete the QR code
+            fetch("{% url 'renthub:delete_qr_code' room.room_number %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+        });
+    </script>
 </div>
 {% endblock %}
