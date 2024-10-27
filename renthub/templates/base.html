@@ -109,11 +109,23 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <div class="dropdown user-icon">
-                                <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false" onclick="moveDotToNotification()">
                                     &#128100;
+                                    {% if unread_count > 0 %}
+                                        <span id="icon-dot" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{ unread_count }}
+                                        </span>
+                                    {% endif %}
                                 </span>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'renthub:notifications' %}">Notification</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'renthub:notifications' %}">
+                                        Notification
+                                        {% if unread_count > 0 %}
+                                            <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
+                                                {{ unread_count }}
+                                            </span>
+                                        {% endif %}
+                                    </a></li>
                                 </ul>
                             </div>
                         </li>
@@ -147,6 +159,34 @@
     {% endif %}
 
     {% block content %}{% endblock %}
+
+<script>
+    function moveDotToNotification() {
+        const iconDot = document.getElementById('icon-dot');
+        const notificationDot = document.getElementById('notification-dot');
+
+        if (iconDot) {
+            iconDot.classList.add('d-none');
+        }
+
+        if (notificationDot) {
+            notificationDot.classList.remove('d-none');
+        }
+    }
+
+    document.querySelector('.dropdown').addEventListener('hidden.bs.dropdown', function () {
+        const iconDot = document.getElementById('icon-dot');
+        const notificationDot = document.getElementById('notification-dot');
+
+        if (iconDot) {
+            iconDot.classList.remove('d-none');
+        }
+
+        if (notificationDot) {
+            notificationDot.classList.add('d-none');
+        }
+    });
+</script>
 
 </body>
 </html>

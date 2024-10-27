@@ -12,3 +12,4 @@ from .notification_view import NotificationView
 from .mark_notifications_read_view import MarkNotificationsReadView
 from .delete_qrcode_view import DeleteQRCodeView
 from .contact_us_view import ContactUsView
+from .context_processors import unread_notifications_count
