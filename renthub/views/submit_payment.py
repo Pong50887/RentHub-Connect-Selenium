@@ -49,12 +49,9 @@ def submit_payment(request, room_number):
             return render(request, "renthub/payment.html", {"room": room, "rental_exists": rental_exists})
 
     # Proceed with rental logic
-    rental_fee = room.price * 1  # Adjust if needed
-    Rental.objects.create(room=room, renter=renter, rental_fee=rental_fee)
+    price = room.price * 1  # Adjust if needed
+    Rental.objects.create(room=room, renter=renter, price=price)
     messages.success(request, f"Rental for room {room_number} submitted successfully.")
-
-    room.availability = False
-    room.save()
 
     # Delete the QR code
     delete_qr_code(room_number)

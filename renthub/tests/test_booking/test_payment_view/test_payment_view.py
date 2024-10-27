@@ -5,7 +5,7 @@ Tests of booking: PaymentView changes related to booking feature.
 
 from django.test import TestCase
 from django.urls import reverse
-from renthub.models import Rental, Room, Renter, RentalRequest
+from renthub.models import Rental, Room, Renter
 
 
 class PaymentViewTests(TestCase):
@@ -17,9 +17,9 @@ class PaymentViewTests(TestCase):
                                                   phone_number='1234567890')
         self.renter2 = Renter.objects.create_user(username='renter2', password='testpassword',
                                                   phone_number='1234567890')
-        self.room = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00, availability=True)
+        self.room = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
 
-        self.rental = Rental.objects.create(room=self.room, renter=self.renter1, rental_fee=self.room.price)
+        self.rental = Rental.objects.create(room=self.room, renter=self.renter1, price=self.room.price)
 
     def test_payment_access_for_authenticated_renter(self):
         """An authenticated renter can access the payment page."""

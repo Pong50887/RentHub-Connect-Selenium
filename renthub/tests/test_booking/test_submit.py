@@ -11,7 +11,7 @@ class PaymentSubmitTests(TestCase):
     def setUp(self):
         """Set up data for the tests."""
         self.renter = Renter.objects.create(username='regular_user', password='password', phone_number='1234567890')
-        self.room = Room.objects.create(room_number='101', price=5000, availability=True)
+        self.room = Room.objects.create(room_number='101', price=5000)
 
     def test_rental_created_after_payment_submission(self):
         """A rental is created after a successful payment submission."""

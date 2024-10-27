@@ -13,7 +13,6 @@ class TransactionModelTest(TestCase):
         self.room = Room.objects.create(room_number=101,
                                         detail='Test Room',
                                         price=99.99,
-                                        availability=True,
                                         room_type=self.room_type)
 
         self.renter = Renter.objects.create(username="Pong",
@@ -24,7 +23,7 @@ class TransactionModelTest(TestCase):
 
         self.rental = Rental.objects.create(room=self.room,
                                             renter=self.renter,
-                                            rental_fee=99.99)
+                                            price=99.99)
 
         self.transaction = Transaction.objects.create(detail="This is ...",
                                                       rental=self.rental,

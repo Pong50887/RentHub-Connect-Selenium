@@ -15,10 +15,10 @@ class PaymentViewTests(TestCase):
         """Set up data for the tests."""
         self.renter = Renter.objects.create_user(username='renter1', password='testpassword',
                                                  phone_number='1234567890')
-        self.room1 = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00, availability=True)
-        self.room2 = Room.objects.create(room_number=102, detail='A cozy room', price=1000.00, availability=True)
+        self.room1 = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
+        self.room2 = Room.objects.create(room_number=102, detail='A cozy room', price=1000.00)
 
-        self.rental = Rental.objects.create(room=self.room1, renter=self.renter, rental_fee=self.room1.price)
+        self.rental = Rental.objects.create(room=self.room1, renter=self.renter, price=self.room1.price)
 
     def test_photo_upload_base_case(self):
         """A renter can upload a payment photo if they don't have an active Rental for the room."""

@@ -91,13 +91,14 @@ class AnnouncementDetailViewTest(TestCase):
         self.assertTemplateUsed(response, 'renthub/announcement.html')
 
     def test_announcement_view_content(self):
-        """Test if the announcement details are rendered correctly"""
+        """Test if the announcement details are rendered correctly with Asia/Bangkok timezone."""
         url = reverse('renthub:announcement', kwargs={'pk': self.announcement.pk})
         response = self.client.get(url)
 
         self.assertContains(response, self.announcement.title)
         self.assertContains(response, self.announcement.content)
 
-        formatted_publish_date = date_format(self.announcement.publish_date, "N j, Y, P")
+        publish_date_bangkok = timezone.localtime(self.announcement.publish_date, timezone.get_fixed_timezone(7 * 60))
+        formatted_publish_date = date_format(publish_date_bangkok, "N j, Y, P")
 
         self.assertContains(response, formatted_publish_date)
