@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Contact Us</h1>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <ul class="list-unstyled contact-info">
+                <li><strong>Location:</strong> {{ contact.location }}</li>
+                <li><strong>Phone Number:</strong> <a href="tel:{{ contact.phone_number }}">{{ contact.phone_number }}</a></li>
+                <li><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Report Problem Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Report a Problem</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ maintenance_form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

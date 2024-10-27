@@ -92,7 +92,7 @@
                         <a class="nav-link" href="{% url 'renthub:payment_list' %}">My Rentals</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact us</a>
+                        <a class="nav-link" href="{% url 'renthub:contact_us' %}">Contact us</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
