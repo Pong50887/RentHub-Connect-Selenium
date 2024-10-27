@@ -5,9 +5,11 @@ name: Run tests and upload coverage
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - "**"
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - "**"
 
 permissions:
   contents: read
