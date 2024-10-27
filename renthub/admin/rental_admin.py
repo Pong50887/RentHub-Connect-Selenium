@@ -1,6 +1,7 @@
 from django.contrib import admin
 from renthub.models import Transaction, Rental, Notification
 
+
 class RentalAdmin(admin.ModelAdmin):
     list_display = ('room', 'renter', 'price', 'image_tag', 'status')
     readonly_fields = ('image_tag',)
