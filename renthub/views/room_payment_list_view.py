@@ -1,7 +1,7 @@
-from django.views.generic import ListView
+from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from ..models import Room, Rental
+from ..models import Room, Rental, Transaction
 from django.db.models import F
 from django.utils import timezone
 from datetime import timedelta
@@ -9,16 +9,15 @@ from datetime import timedelta
 from ..utils import Status
 
 
-class RoomPaymentListView(LoginRequiredMixin, ListView):
+class RoomPaymentListView(LoginRequiredMixin, TemplateView):
     """
     View to list rooms associated with the logged-in renter's rentals.
     """
-    model = Room
     template_name = "renthub/payment_list.html"
-    context_object_name = "rooms"
 
-    def get_queryset(self):
-        """Return a queryset of rooms linked to the logged-in user's rentals."""
+    def get_context_data(self, **kwargs):
+        """Return the context of data displayed on My Rentals page."""
+        context = super().get_context_data(**kwargs)
         rentals = Rental.objects.filter(renter__id=self.request.user.id,
                                         start_date__lt=timezone.now() + timedelta(days=30),
                                         end_date__gt=timezone.now()).exclude(status=Status.reject)
@@ -28,4 +27,8 @@ class RoomPaymentListView(LoginRequiredMixin, ListView):
             status=F('rental__status')
         )
 
-        return rooms_with_rentals
+        context['rooms'] = rooms_with_rentals
+
+        transactions = Transaction.objects.filter(renter__id=self.request.user.id)
+        context['transactions'] = transactions
+        return context

@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Payment History</h1>
-{% if transactions %}
-    {% for transaction in transactions %}
+<h1>Payment details</h1>
+{% if transaction %}
     <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
     <img src="{{ transaction.image.url }}" width="150" height="150" style="margin-right: 15px; border-radius: 4px; object-fit: cover;" alt="Payment Slip Image">
 
@@ -16,9 +15,8 @@
             <strong>Status:</strong> {{ transaction.status }}
         </p>
     </div>
-</div>
-    {% endfor %}
+    </div>
 {% else %}
-    <p>You currently have not submitted any rental payment.</p>
+    <p>This rental payment does not exist.</p>
 {% endif %}
 {% endblock %}

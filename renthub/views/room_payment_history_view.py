@@ -1,19 +1,13 @@
-from django.views.generic import ListView
+from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..models import Transaction
 
 
-class RoomPaymentHistoryView(LoginRequiredMixin, ListView):
+class RoomPaymentHistoryView(LoginRequiredMixin, DetailView):
     """
-    View to list rooms associated with the logged-in renter's rentals.
+    View to see the rental payments details.
     """
     model = Transaction
     template_name = "renthub/payment_history.html"
-    context_object_name = "transactions"
-
-    def get_queryset(self):
-        """Return a queryset of rooms linked to the logged-in user's rentals."""
-        transactions = Transaction.objects.filter(renter__id=self.request.user.id)
-
-        return transactions
+    context_object_name = "transaction"
