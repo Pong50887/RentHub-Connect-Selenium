@@ -51,17 +51,17 @@ def get_rental_progress_data(status):
         {"step": 2, "description": "Rent Approval", "status": "Pending", "symbol": ""},
     ]
 
-    if status == Status.wait:
+    if status == str(Status.wait):
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
-    elif status == Status.approve:
+    elif status == str(Status.approve):
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
         milestones[1]["status"] = "Approved"
         milestones[1]["symbol"] = "o"
 
-    elif status == Status.reject:
+    elif status == str(Status.reject):
         milestones[0]["status"] = "Submitted"
         milestones[0]["symbol"] = "o"
 
