@@ -2,3 +2,4 @@ Django >= 5.1, <5.2
 pillow
 promptpay
 python-decouple
+python-dateutil

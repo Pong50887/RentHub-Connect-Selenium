@@ -86,7 +86,14 @@
                     {% if not room.is_available %}
                         <p class="alert alert-danger">This room is already taken.</p>
                     {% else %}
-                        <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">Rent</a>
+                        <form method="POST" action="{% url 'renthub:payment' room.room_number %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="number_of_months" class="form-label">Number of Months:</label>
+                                <input type="number" name="number_of_months" id="number_of_months" class="form-control" min="1" required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Rent</button>
+                        </form>
                     {% endif %}
                 {% endif %}
             </div>
