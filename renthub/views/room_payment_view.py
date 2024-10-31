@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
+
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
@@ -119,7 +121,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         if not Rental.objects.filter(room=room).exclude(status=Status.reject).exists():
             # Generate QR code only if the room is available
             generate_qr_code(room.price * number_of_months, room.room_number)
-            context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
+            context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
             context['send_or_cancel'] = True
         else:
             context['qr_code_path'] = None  # No QR code if the room is not available
