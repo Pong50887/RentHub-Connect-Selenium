@@ -3,3 +3,4 @@ pillow
 promptpay
 python-decouple
 python-dateutil
+psycopg2-binary
