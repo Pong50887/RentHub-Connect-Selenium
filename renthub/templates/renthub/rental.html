@@ -110,6 +110,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const occupiedMonths = {{ occupied_months|safe }}; 
+
         flatpickr("#month-picker", {
             plugins: [
                 new monthSelectPlugin({
@@ -119,9 +120,9 @@
                     theme: "light",
                 })
             ],
+            minDate: new Date(),  // Set minimum date to today
             disable: occupiedMonths.map(month => {
                 return new Date(month + '-01');
-                
             }),
         });
     });
