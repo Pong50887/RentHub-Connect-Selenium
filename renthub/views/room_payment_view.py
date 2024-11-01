@@ -39,8 +39,16 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.reject).exists():
-            messages.warning(request, "Someone else already rented this room.")
+        start_date = self.request.GET.get('rental_month')
+
+        number_of_months = self.request.GET.get('number_of_months', 1)
+        try:
+            number_of_months = int(number_of_months)
+        except ValueError:
+            number_of_months = 1
+
+        if not room.is_available(start_date, number_of_months):
+            messages.warning(request, "The room is not available for the selected rental period.")
             return redirect('renthub:rental', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
@@ -60,15 +68,17 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
             file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
 
+            start_date_str = self.request.POST.get('start_date')
             number_of_months = self.request.POST.get('number_of_months', 1)
             try:
                 number_of_months = int(number_of_months)
             except ValueError:
                 number_of_months = 1
-            start_date = timezone.now() + timedelta(days=1)
-            start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+
+            start_date = datetime.strptime(start_date_str, "%Y-%m").replace(hour=7, minute=0, second=0)
             end_date = start_date + relativedelta(months=number_of_months)
-            print(start_date, end_date)
+            end_date = end_date + relativedelta(day=1) - timezone.timedelta(days=1)
+            end_date = end_date.replace(hour=7, minute=0, second=0)
 
             rental, created = Rental.objects.get_or_create(
                 room=room, renter=renter, defaults={'price': room.price*number_of_months,
@@ -108,6 +118,9 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         except Renter.DoesNotExist:
             renter = None
+
+        start_date = self.request.POST.get('rental_month')
+        context['start_date'] = start_date
 
         number_of_months = self.request.POST.get('number_of_months', 1)
         try:

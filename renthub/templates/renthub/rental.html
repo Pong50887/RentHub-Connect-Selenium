@@ -2,6 +2,10 @@
 {% block extra_css %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'renthub/rental.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <style>
         .custom-card {
             background-color: #fff;
@@ -83,18 +87,18 @@
                     {% endif %}
                     <a href="{% url 'renthub:payment' room.room_number %}" class="btn btn-success">See rental status.</a>
                 {% else %}
-                    {% if not room.is_available %}
-                        <p class="alert alert-danger">This room is already taken.</p>
-                    {% else %}
-                        <form method="POST" action="{% url 'renthub:payment' room.room_number %}">
+                        <form method="GET" action="{% url 'renthub:payment' room.room_number %}">
                             {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="month-picker" class="form-label">Select Rental Month</label>
+                                <input type="text" id="month-picker" name="rental_month" class="form-control" placeholder="Select Month" required>
+                            </div>
                             <div class="mb-3">
                                 <label for="number_of_months" class="form-label">Number of Months:</label>
                                 <input type="number" name="number_of_months" id="number_of_months" class="form-control" min="1" required>
                             </div>
                             <button type="submit" class="btn btn-success">Rent</button>
                         </form>
-                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -102,4 +106,24 @@
         <p class="alert alert-warning">This room doesn't exist.</p>
     {% endif %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const occupiedMonths = {{ occupied_months|safe }}; 
+        flatpickr("#month-picker", {
+            plugins: [
+                new monthSelectPlugin({
+                    shorthand: true,
+                    dateFormat: "Y-m",
+                    altFormat: "F Y",
+                    theme: "light",
+                })
+            ],
+            disable: occupiedMonths.map(month => {
+                return new Date(month + '-01');
+                
+            }),
+        });
+    });
+</script>
 {% endblock %}
