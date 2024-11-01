@@ -40,7 +40,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             return redirect('renthub:rental', room_number=room.room_number)
 
         start_date = self.request.GET.get('rental_month')
-
         number_of_months = self.request.GET.get('number_of_months', 1)
         try:
             number_of_months = int(number_of_months)
@@ -107,6 +106,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         """Add additional context data to the template."""
         context = super().get_context_data(**kwargs)
         room = self.get_object()
+        renter = Renter.objects.get(id=self.request.user.id)
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
@@ -119,10 +119,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        start_date = self.request.POST.get('rental_month')
+        start_date = self.request.GET.get('rental_month')
         context['start_date'] = start_date
 
-        number_of_months = self.request.POST.get('number_of_months', 1)
+        number_of_months = self.request.GET.get('number_of_months', 1)
         try:
             number_of_months = int(number_of_months)
         except ValueError:
@@ -131,7 +131,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['total_payment'] = room.price * number_of_months
 
         # Check if the room is available
-        if not Rental.objects.filter(room=room).exclude(status=Status.reject).exists():
+        if not Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).exists():
             # Generate QR code only if the room is available
             generate_qr_code(room.price * number_of_months, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
