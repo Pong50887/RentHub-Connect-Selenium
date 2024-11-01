@@ -46,9 +46,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except ValueError:
             number_of_months = 1
 
-        if not room.is_available(start_date, number_of_months):
-            messages.warning(request, "The room is not available for the selected rental period.")
-            return redirect('renthub:rental', room_number=room.room_number)
+        if start_date:
+            if not room.is_available(start_date, number_of_months):
+                messages.warning(request, "The room is not available for the selected rental period.")
+                return redirect('renthub:rental', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
 
