@@ -12,7 +12,6 @@ urlpatterns = [
     path("payment/", views.RoomPaymentListView.as_view(), name="payment_list"),
     path("payment/history/<int:pk>", views.RoomPaymentHistoryView.as_view(), name="payment_history"),
     path("room/<int:room_number>/payment/", views.RoomPaymentView.as_view(), name="payment"),
-    path("room/<int:room_number>/payment/submit/", views.submit_payment, name="submit"),
     path('announcement/<int:pk>', views.AnnouncementView.as_view(), name="announcement"),
     path('notifications/', views.NotificationView.as_view(), name='notifications'),
     path('notifications/mark-read/', views.MarkNotificationsReadView.as_view(), name='mark_notifications_read'),

@@ -24,6 +24,7 @@ class Rental(models.Model):
     )
 
     def is_ended(self):
+        """Check if the event or rental period has ended."""
         return timezone.now() > self.end_date
 
     def __str__(self):

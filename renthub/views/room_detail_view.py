@@ -26,7 +26,7 @@ class RoomDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         """Handle GET requests for room details."""
         try:
-            room = self.get_object()
+            self.get_object()
         except Http404:
             return HttpResponseRedirect(reverse("renthub:home"))
 
@@ -62,8 +62,8 @@ class RoomDetailView(DetailView):
                 else:
                     current = current + relativedelta(months=1)
                 if current.day > 28:
-                        current = current + relativedelta(day=31)
-                        current = current.replace(day=1)
+                    current = current + relativedelta(day=31)
+                    current = current.replace(day=1)
 
         context["occupied_months"] = occupied_months
 

@@ -46,6 +46,7 @@ def delete_qr_code(room_number):
     except ClientError as e:
         logger.error(f"Failed to delete QR code from S3: {e}")
 
+
 class Status(Enum):
     """Status Enum to ensure a consistant status value across all implementation throughout the project."""
 

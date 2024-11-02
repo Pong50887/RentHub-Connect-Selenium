@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 
 from ..forms import RenterSignupForm
-from ..models import Renter
 
 
 class RenterSignupView(View):
