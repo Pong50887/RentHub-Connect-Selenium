@@ -95,7 +95,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             transaction.image = file_path
             transaction.save()
 
-            messages.success(request, "Payment slip uploaded successfully!")
+            messages.success(request, "Your rental request was submitted successfully!")
             delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
