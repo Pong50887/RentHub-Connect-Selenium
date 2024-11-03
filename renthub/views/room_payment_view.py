@@ -6,7 +6,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 
+from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from ..models import Room, Renter, Rental, Transaction
@@ -32,14 +34,22 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         room = self.get_object()
 
         try:
-            renter = Renter.objects.get(id=request.user.id)
+            Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
             return redirect('renthub:rental', room_number=room.room_number)
 
-        if Rental.objects.filter(room=room).exclude(renter=renter).exclude(status=Status.reject).exists():
-            messages.warning(request, "Someone else already rented this room.")
-            return redirect('renthub:rental', room_number=room.room_number)
+        start_date = self.request.GET.get('rental_month')
+        number_of_months = self.request.GET.get('number_of_months', 1)
+        try:
+            number_of_months = int(number_of_months)
+        except ValueError:
+            number_of_months = 1
+
+        if start_date:
+            if not room.is_available(start_date, number_of_months):
+                messages.warning(request, "The room is not available for the selected rental period.")
+                return redirect('renthub:rental', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
 
@@ -58,8 +68,23 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
             file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
 
+            start_date_str = self.request.POST.get('start_date')
+            number_of_months = self.request.POST.get('number_of_months', 1)
+            try:
+                number_of_months = int(number_of_months)
+            except ValueError:
+                number_of_months = 1
+
+            start_date = datetime.strptime(start_date_str, "%Y-%m").replace(hour=7, minute=0, second=0)
+            end_date = start_date + relativedelta(months=number_of_months)
+            end_date = end_date + relativedelta(day=1) - timezone.timedelta(days=1)
+            end_date = end_date.replace(hour=7, minute=0, second=0)
+
             rental, created = Rental.objects.get_or_create(
-                room=room, renter=renter, defaults={'price': room.price}
+                room=room, renter=renter, defaults={'price': room.price*number_of_months,
+                                                    'start_date': start_date,
+                                                    'end_date': end_date,
+                                                    }
             )
             rental.image = file_path
             rental.save()
@@ -70,7 +95,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             transaction.image = file_path
             transaction.save()
 
-            messages.success(request, "Payment slip uploaded successfully!")
+            messages.success(request, "Your rental request was submitted successfully!")
             delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
@@ -94,14 +119,23 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        # Check if the room is available
-        if not Rental.objects.filter(room=room).exclude(status=Status.reject).exists():
-            # Generate QR code only if the room is available
-            generate_qr_code(room.price, room.room_number)
-            context['qr_code_path'] = f"media/qr_code_images/{room.room_number}.png"
+        start_date = self.request.GET.get('rental_month')
+        context['start_date'] = start_date
+
+        number_of_months = self.request.GET.get('number_of_months', 1)
+        try:
+            number_of_months = int(number_of_months)
+        except ValueError:
+            number_of_months = 1
+        context['number_of_months'] = number_of_months
+        context['total_payment'] = room.price * number_of_months
+
+        if not Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).exists():
+            generate_qr_code(room.price * number_of_months, room.room_number)
+            context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
             context['send_or_cancel'] = True
         else:
-            context['qr_code_path'] = None  # No QR code if the room is not available
+            context['qr_code_path'] = None
             context['send_or_cancel'] = False
 
         return context

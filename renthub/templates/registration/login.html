@@ -1,43 +1,137 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Login {% endblock %}
+{% block title %}{% endblock %}
+{% block footer_display %}none{% endblock %}
 
 {% block content %}
-{% if form.non_field_errors %}
-<div class="error-messages">
-    {% for error in form.non_field_errors %}
-    <div class="error">{{ error }}</div>
-    {% endfor %}
-</div>
-{% endif %}
+<style>
+    body {
+        background-image: url("{% static 'renthub/images/login_bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+    }
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0);
+        pointer-events: none;
+        z-index: -1;
+    }
+    .login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+    .login-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .error-messages {
+        color: #d9534f;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    .custom-form table {
+        width: 100%;
+    }
+    .custom-form td {
+        padding: 5px 5px;
+        vertical-align: middle;
+    }
+    .error {
+        color: #d9534f;
+        font-size: 0.9em;
+    }
+    .custom-form input[type="text"],
+    .custom-form input[type="password"] {
+        width: 100%;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .custom-form button {
+        width: 100%;
+        padding: 10px;
+        color: #fff;
+        background-color: #5cb85c;
+        border: none;
+        border-radius: 4px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .custom-form button:hover {
+        background-color: #4cae4c;
+    }
+    .additional-options {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.9em;
+    }
+    .additional-options a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+    .additional-options a:hover {
+        text-decoration: underline;
+    }
+</style>
 
-<form method="POST" class="custom-form">
-    {% csrf_token %}
-    <table>
-    <tr valign="top">
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-        <td class="error">{{ form.username.errors }} </td>
-    </tr>
-    <tr valign="top">
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-        <td class="error">{{ form.password.errors }} </td>
-    </tr>
-    <tr valign="top">
-        <td>
-        <button type="submit">Login</button>
-        </td>
-        <td>
-        or <a href="{% url 'renthub:home' %}">Browse as visitor</a>
-        </td>
-        <td>&nbsp;</td>
-    </tr>
-    </table>
-    <p> No account? <a href="{% url 'signup' %}">Sign-up</a>
-    </p>
-    <input type="hidden" name="next" value="{{next}}" />
-</form>
+<div class="login-container">
+    <h2>Login to Your Account</h2>
+
+    {% if form.non_field_errors %}
+    <div class="error-messages">
+        {% for error in form.non_field_errors %}
+        <div class="error">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="custom-form">
+        {% csrf_token %}
+        <table>
+            <tr valign="top">
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr valign="top">
+                <td colspan="2" class="error">{{ form.username.errors }}</td>
+            </tr>
+            <tr valign="top">
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+            <tr valign="top">
+                <td colspan="2" class="error">{{ form.password.errors }}</td>
+            </tr>
+            <tr valign="top">
+                <td colspan="2">
+                    <button type="submit">Login</button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="additional-options">
+            <p>No account? <a href="{% url 'signup' %}">Sign-up</a></p>
+            <p>or <a href="{% url 'renthub:home' %}">Browse as visitor</a></p>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
 </div>
 
 {% endblock %}

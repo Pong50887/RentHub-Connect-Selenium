@@ -2,28 +2,42 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4">Contact Us</h1>
-
-    <div class="row mb-5">
+    <h1 class="mb-4 text-center">Contact Us</h1>
+    
+    <div class="row justify-content-center mb-5">
         <div class="col-md-6">
-            <ul class="list-unstyled contact-info">
-                <li><strong>Location:</strong> {{ contact.location }}</li>
-                <li><strong>Phone Number:</strong> <a href="tel:{{ contact.phone_number }}">{{ contact.phone_number }}</a></li>
-                <li><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Report Problem Section -->
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Report a Problem</h3>
+            <h3 class="text-center">Report a Problem</h3>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ maintenance_form.as_p }}
-
-                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="submit" class="btn btn-primary w-100 mt-3">Send</button> <!-- Full-width button for consistency -->
             </form>
+        </div>
+    </div>
+
+    <hr>
+    
+    <div class="row justify-content-center text-center">
+        <div class="col-md-4">
+            <div class="contact-info">
+                <i class="bi bi-geo-alt" style="font-size: 2rem; color: #775344;"></i>
+                <p class="mt-2"><strong>Location</strong></p>
+                <p>{{ contact.location }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="contact-info">
+                <i class="bi bi-telephone" style="font-size: 2rem; color: #775344;"></i>
+                <p class="mt-2"><strong>Phone Number</strong></p>
+                <p><a href="tel:{{ contact.phone_number }}">{{ contact.phone_number }}</a></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="contact-info">
+                <i class="bi bi-envelope" style="font-size: 2rem; color: #775344;"></i>
+                <p class="mt-2"><strong>Email</strong></p>
+                <p><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+            </div>
         </div>
     </div>
 </div>

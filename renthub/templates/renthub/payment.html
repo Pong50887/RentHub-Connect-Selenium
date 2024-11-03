@@ -54,10 +54,11 @@
                 <div class="room-details">
                     <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
                     <hr class="separator-line">
-                    <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month</span></h3>
+                    <h3 class="text-success"><span class="bold-text">{{ total_payment }} ฿ / {{ number_of_months }} month</span></h3>
                     <p><strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
                     <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
                     <strong>Room Size:</strong> {{ room.detail }} feet</p>
+
                 </div>
             </div>
         </div>
@@ -90,7 +91,7 @@
         {% if qr_code_path %}
             <h3 class="mb-3 text-center">Scan this QR code to complete the payment</h3>
             <div class="text-center">
-                <img src="/{{ qr_code_path }}" alt="QR Code for payment" class="img-fluid mb-4" style="max-width: 200px;">
+                <img src="{{ qr_code_path }}" alt="QR Code for payment" class="img-fluid mb-4" style="max-width: 200px;">
             </div>
         {% endif %}
     {% endif %}
@@ -111,6 +112,8 @@
                 {% else %}
                     <button type="submit" class="btn btn-primary">Send</button>
                 {% endif %}
+        <input type="hidden" name="number_of_months" value="{{ number_of_months }}">
+        <input type="hidden" name="start_date" value="{{ start_date }}">      
             </div>
     </form>
     <script>

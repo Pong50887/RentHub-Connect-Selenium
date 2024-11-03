@@ -1,5 +1,5 @@
-from datetime import timedelta
-
+from datetime import timedelta, datetime
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
 from .room_type import RoomType
@@ -16,14 +16,16 @@ class Room(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, null=True, blank=True)
 
-    def is_available(self):
+    def is_available(self, start_date, number_month):
         """
         Checks if the room is available between the given start and end dates.
         """
+        start_date = datetime.strptime(start_date, "%Y-%m").date()
+        end_time = start_date + relativedelta(months=number_month)
         overlapping_rentals = Rental.objects.filter(
             room=self,
-            start_date__lt=timezone.now() + timedelta(days=30),
-            end_date__gt=timezone.now(),
+            start_date__lt=end_time,
+            end_date__gt=start_date,
             status__in=[Status.wait, Status.approve]
         )
         return not overlapping_rentals.exists()

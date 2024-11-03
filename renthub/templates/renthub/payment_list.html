@@ -1,38 +1,138 @@
 {% extends 'base.html' %}
+
+{% block extra_css %}
+    <style>
+        .custom-card {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #fff;
+            max-width: 900px;
+            margin: 20px auto;
+            gap: 20px;
+            overflow: hidden;
+        }
+        .room-image {
+            width: 200px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-right: 20px;
+        }
+        .room-details {
+            flex-grow: 1;
+        }
+        .room-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .room-info {
+            font-size: 1rem;
+            color: #666;
+        }
+        .room-status {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        .view-detail-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .view-detail-btn:hover {
+            background-color: #0056b3;
+        }
+        .column-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .payment-columns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .separator-line {
+            border: none;
+            border-top: 2px solid #000; 
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+        .column {
+            padding: 10px;
+            max-width: 900px;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
+<div class="container mt-5">
 
-<div class="payment-columns" style="display: flex; gap: 20px;">
-
-    <div class="column" style="flex: 1; padding: 20px;">
-    <h3>Ongoing Rentals</h3>
-        {% if rooms %}
-            {% for room in rooms %}
-                <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">
-                    <a href="{% url 'renthub:payment' room.room_number %}" style="margin-right: 10px;">
-                    Room Number: {{ room.room_number }}
-                    </a>
-                    <p style="margin: 0;">Status: {{ room.status }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>You currently have no payments.</p>
-        {% endif %}
-    </div>
-
-<div class="column" style="flex: 1; padding: 20px;">
-<h3>Rental History</h3>
-{% if transactions %}
-    {% for transaction in transactions %}
-        <div class="room-item" style="display: flex; align-items: center; margin-bottom: 10px;">
-            <a href="{% url 'renthub:payment_history' transaction.id %}" style="margin-right: 10px;">
-                Room Number: {{ transaction.room.room_number }}
-            </a>
-            <p style="margin: 0;">Status: {{ transaction.status }}</p>
+    <!-- Ongoing Rentals Section -->
+    <div class="payment-columns">
+        <div class="column">
+            <h3 class="column-title">Ongoing Rentals</h3>
+            {% if rooms %}
+                {% for room in rooms %}
+                    <div class="custom-card">
+                        {% if room.room_type.image %}
+                            <img src="{{ room.room_type.image.url }}" alt="Room {{ room.room_number }}" class="room-image">
+                        {% endif %}
+                        <div class="room-details">
+                            <p class="room-number">Room {{ room.room_number }}</p>
+                            <p class="room-info">Monthly Rent: {{ room.price }} ฿</p>
+                            <p class="room-info">Room Size: {{ room.detail }} feet</p>
+                            <p class="room-status">Status: {{ room.status }}</p>
+                        </div>
+                        <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You currently have no ongoing rentals.</p>
+            {% endif %}
         </div>
-    {% endfor %}
-{% else %}
-    <p>You currently have no payments.</p>
-{% endif %}
     </div>
+
+    <!-- Separator Line Between Sections -->
+    <hr class="separator-line">
+
+    <!-- Rental History Section -->
+    <div class="payment-columns">
+        <div class="column">
+            <h3 class="column-title">Rental History</h3>
+            {% if transactions %}
+                {% for transaction in transactions %}
+                    <div class="custom-card">
+                        {% if transaction.room.room_type.image %}
+                            <img src="{{ transaction.room.room_type.image.url }}" alt="Room {{ transaction.room.room_number }}" class="room-image">
+                        {% endif %}
+                        <div class="room-details">
+                            <p class="room-number">Room {{ transaction.room.room_number }}</p>
+                            <p class="room-info">Transaction ID: {{ transaction.id }}</p>
+                            <p class="room-info">Date: {{ transaction.date }}</p>
+                            <p class="room-status">Status: {{ transaction.status }}</p>
+                        </div>
+                        <a href="{% url 'renthub:payment_history' transaction.id %}" class="view-detail-btn">View Details</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You currently have no rental history.</p>
+            {% endif %}
+        </div>
     </div>
+
+</div>
 {% endblock %}

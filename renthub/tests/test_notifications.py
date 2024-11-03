@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -11,20 +13,21 @@ class NotificationViewTest(TestCase):
                                                  password='12345')
         login_success = self.client.login(username='Pong', password='12345')
         self.assertTrue(login_success)
+        old_notification_date = timezone.now() - timedelta(days=1)
 
-        Notification.objects.create(
-            renter=self.renter,
-            title='Old Notification',
-            message='This is an old notification',
-            post_date=timezone.now(),
-            is_read=True
-        )
         Notification.objects.create(
             renter=self.renter,
             title='New Notification',
             message='This is a new notification',
             post_date=timezone.now(),
             is_read=False
+        )
+        Notification.objects.create(
+            renter=self.renter,
+            title='Old Notification',
+            message='This is an old notification',
+            post_date=old_notification_date,
+            is_read=True
         )
 
     def test_notification_list_view(self):
@@ -40,6 +43,7 @@ class NotificationViewTest(TestCase):
 
         # Check the order of notifications
         notifications = response.context['notifications']
+        print(notifications)
         self.assertEqual(notifications[0].title, 'New Notification')  # New should appear first
         self.assertEqual(notifications[1].title, 'Old Notification')
 

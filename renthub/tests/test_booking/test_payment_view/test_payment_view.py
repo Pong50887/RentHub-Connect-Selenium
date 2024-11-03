@@ -38,5 +38,4 @@ class PaymentViewTests(TestCase):
         self.client.login(username='renter2', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room.room_number}))
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('renthub:rental', kwargs={'room_number': self.room.room_number}))
+        self.assertEqual(response.status_code, 200)

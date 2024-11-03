@@ -7,7 +7,6 @@ from .room_payment_list_view import RoomPaymentListView
 from .room_payment_history_view import RoomPaymentHistoryView
 from .room_payment_view import RoomPaymentView
 from .room_type_view import RoomTypeView
-from .submit_payment import submit_payment
 from .notification_view import NotificationView
 from .mark_notifications_read_view import MarkNotificationsReadView
 from .delete_qrcode_view import DeleteQRCodeView

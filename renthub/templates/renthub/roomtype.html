@@ -1,12 +1,61 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to RentHub Connect{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'renthub/status.css' %}">
+    <style>
+        .custom-card {
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .room-image {
+            border-radius: 15px;
+            margin-right: 30px;
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .room-details {
+            flex-grow: 1;
+        }
+        .room-details h2 {
+            font-size: 1.75rem; 
+        }
+        .room-price {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-<ul>
-  {% for room in rooms %}
-      <li><a href="{% url 'renthub:rental' room.room_number %}">Room Number: {{ room.room_number }}</a></li>
-  {% empty %}
-    <li>No rooms available of this type.</li>
-  {% endfor %}
-</ul>
+<div class="container mt-5">
+    <h1 class="mb-4">Rooms of Type: {{ room_type.type_name }}</h1>
+
+    {% if rooms %}
+        {% for room in rooms %}
+            <div class="custom-card">
+                {% if room.room_type.image %}
+                    <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="room-image">
+                {% endif %}
+                <div class="room-details">
+                    <h2>Room Number: {{ room.room_number }}</h2>
+                    <p class="room-price">{{ room.price }} ฿ / month</p>
+                    <p><strong>Room Size:</strong> {{ room.detail }} feet</p>
+                    <a href="{% url 'renthub:rental' room.room_number %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="alert alert-warning text-center">No rooms available of this type.</p>
+    {% endif %}
+</div>
 {% endblock %}

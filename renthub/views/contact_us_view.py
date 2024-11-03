@@ -8,19 +8,25 @@ from ..admin import MaintenanceRequestForm
 
 
 class ContactUsView(LoginRequiredMixin, DetailView):
+    """
+    View for displaying and submitting maintenance requests to admin.
+    """
     model = PropertyOwner
     template_name = 'renthub/contact_us.html'
     context_object_name = 'contact'
 
     def get_object(self, **kwargs):
+        """Retrieves the first instance of the PropertyOwner model."""
         return PropertyOwner.objects.first()
 
     def get_context_data(self, **kwargs):
+        """Adds the maintenance request form to the context data."""
         context = super().get_context_data(**kwargs)
         context['maintenance_form'] = MaintenanceRequestForm()
         return context
 
     def post(self, request, *args, **kwargs):
+        """Handles POST requests for submitting a maintenance request."""
         form = MaintenanceRequestForm(request.POST)
         if form.is_valid():
             rental = Rental.objects.filter(renter=request.user.id).first()
