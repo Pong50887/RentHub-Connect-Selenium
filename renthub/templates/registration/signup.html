@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}{% endblock %}
+{% block footer_display %}none{% endblock %}
 
 {% block content %}
 <style>
@@ -143,7 +144,7 @@
         <button type="submit">Sign Up</button>
 
         <div class="additional-options">
-            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            <p>Already have an account? <a href="{% url 'login' %}?next={% url 'renthub:home' %}">Login</a></p>
             <p>or <a href="{% url 'renthub:home' %}">Browse as a visitor</a></p>
         </div>
     </form>

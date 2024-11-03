@@ -1,57 +1,76 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to RentHub Connect{% endblock %}
+{% block title %}{% endblock %}
 {% block extra_css %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'renthub/home.css' %}">
 {% endblock %}
 {% block content %}
-{% if announcement %}
-    <h1>Announcements</h1>
-    <ul>
-        {% for announcement in announcement %}
-            <a href="{% url 'renthub:announcement' announcement.id %}">{{ announcement.title }} - {{ announcement.publish_date }}</a><br>
-       {% endfor %}
-    </ul>
-{% endif %}
-<div id="carouselExample" class="carousel">
-    <div class="carousel-inner">
-        {% if room_types %}
-            {% for room_type in room_types %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <div class="card">
-                      {% if room_type.image %}
-                          <div class="img-wrapper">
-                            <img src="{{ room_type.image.url }}" alt="{{ room_type.type_name }}" >
-                          </div>
-                      {% endif %}
-                      <div class="card-body">
-                        <h5 class="card-title">{{ room_type.type_name }}</h5>
-                        <p class="card-text">{{ room_type.description }}</p>
-                        <div class="button-wrapper">
-                            <a href="{% url 'renthub:room_type' room_type.type_name %}" class="btn btn-primary">All room</a>
-                        </div>
-                       </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
+<div class="hero bg-light text-center py-5">
+    <div class="container">
+        <h1 class="display-4">Welcome to RentHub Connect</h1>
+        <p class="lead">Your one-stop solution for finding the perfect room.</p>
     </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>
+
+<div class="container mb-5">
+    <div id="carouselExample" class="carousel">
+        <div class="carousel-inner">
+            {% if room_types %}
+                {% for room_type in room_types %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="card">
+                          {% if room_type.image %}
+                              <div class="img-wrapper">
+                                <img src="{{ room_type.image.url }}" alt="{{ room_type.type_name }}" >
+                              </div>
+                          {% endif %}
+                          <div class="card-body">
+                            <h5 class="card-title">{{ room_type.type_name }}</h5>
+                            <p class="card-text">{{ room_type.description }}</p>
+                            <div class="button-wrapper">
+                                <a href="{% url 'renthub:room_type' room_type.type_name %}" class="btn btn-primary">All room</a>
+                            </div>
+                           </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+</div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="container mb-5">
+    {% if announcement %}
+        <h1>Recent Announcements</h1>
+        <div class="list-group">
+            {% for announcement in announcement|slice:":3" %}
+                <a href="{% url 'renthub:announcement' announcement.id %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ announcement.title }}</h5>
+                    <small class="text-muted">Published on {{ announcement.publish_date }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No announcements at this time.</p>
+    {% endif %}
+</div>
+{% endif %}
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 <script>
 if(window.matchMedia("(min-width:576px)").matches) {
-    
+
     const carouselWidth = $(".carousel-inner")[0].scrollWidth;
     const cardWidth = $(".carousel-item").width();
     let scrollPosition = 0;
