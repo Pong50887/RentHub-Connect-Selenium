@@ -8,6 +8,7 @@ class PropertyOwner(User):
     """
     location = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20)
+    is_superuser = True
 
     class Meta:
         verbose_name = "Property Owner"
