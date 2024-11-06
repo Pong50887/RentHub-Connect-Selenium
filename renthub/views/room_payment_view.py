@@ -34,22 +34,26 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         room = self.get_object()
 
         try:
-            Renter.objects.get(id=request.user.id)
+            renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
-            return redirect('renthub:rental', room_number=room.room_number)
+            return redirect('renthub:room', room_number=room.room_number)
 
-        start_date = self.request.GET.get('rental_month')
-        number_of_months = self.request.GET.get('number_of_months', 1)
-        try:
-            number_of_months = int(number_of_months)
-        except ValueError:
-            number_of_months = 1
+        start_date_str = self.request.GET.get('start_month')
+        end_date_str = self.request.GET.get('end_month')
 
-        if start_date:
-            if not room.is_available(start_date, number_of_months):
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m')
+            end_date = datetime.strptime(end_date_str, '%Y-%m')
+            number_of_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
+
+            if not room.is_available(start_date_str, number_of_months):
                 messages.warning(request, "The room is not available for the selected rental period.")
-                return redirect('renthub:rental', room_number=room.room_number)
+                return redirect('renthub:room', room_number=room.room_number)
+
+        elif not Rental.objects.filter(room=room, renter=request.user).exists():
+            messages.warning(request, "Please choose a start and end date.")
+            return redirect('renthub:room', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
 
@@ -119,14 +123,17 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        start_date = self.request.GET.get('rental_month')
-        context['start_date'] = start_date
+        start_date_str = self.request.GET.get('start_month')
+        end_date_str = self.request.GET.get('end_month')
+        context['start_date'] = start_date_str
 
-        number_of_months = self.request.GET.get('number_of_months', 1)
-        try:
-            number_of_months = int(number_of_months)
-        except ValueError:
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m')
+            end_date = datetime.strptime(end_date_str, '%Y-%m')
+            number_of_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
+        else:
             number_of_months = 1
+
         context['number_of_months'] = number_of_months
         context['total_payment'] = room.price * number_of_months
 
