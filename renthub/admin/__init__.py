@@ -6,7 +6,6 @@ from .feature_in_line import FeatureInline
 from .room_admin import RoomAdmin
 from .room_type_admin import RoomTypeAdmin
 from .announcement_admin import AnnouncementAdmin
-from .announcement_form import AnnouncementForm
 from .notification_admin import NotificationAdmin
 from .rental_admin import RentalAdmin
 from .transaction_admin import TransactionAdmin
