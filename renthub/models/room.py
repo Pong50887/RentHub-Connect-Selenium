@@ -1,7 +1,6 @@
-from datetime import timedelta, datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.utils import timezone
 from .room_type import RoomType
 from .rental import Rental
 from ..utils import Status

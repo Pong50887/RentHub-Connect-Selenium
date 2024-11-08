@@ -97,7 +97,11 @@
                             <p class="room-info">Room Size: {{ room.detail }} feet</p>
                             <p class="room-status">Status: {{ room.status }}</p>
                         </div>
-                        <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
+                        {% if not room.is_paid %}
+                            <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn" >Pay Month Rental</a>
+                        {% else %}
+                            <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}
