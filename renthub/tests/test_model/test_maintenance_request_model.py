@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone
 from datetime import timedelta
-from ..models import MaintenanceRequest, Rental, Room, Renter, RoomType
-from ..utils import Status
+from ...models import MaintenanceRequest, Rental, Room, Renter, RoomType
+from ...utils import Status
 
 
 class MaintenanceRequestModelTest(TestCase):

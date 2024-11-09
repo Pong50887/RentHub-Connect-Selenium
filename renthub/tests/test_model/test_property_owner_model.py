@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import PropertyOwner
+from ...models import PropertyOwner
 
 
 class PropertyOwnerModelTest(TestCase):
