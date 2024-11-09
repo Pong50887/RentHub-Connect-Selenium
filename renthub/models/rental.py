@@ -6,6 +6,7 @@ from .renter import Renter
 from ..utils import Status
 from .notification import Notification
 
+
 class Rental(models.Model):
     """
     Represents a rental agreement between a renter and a room.
