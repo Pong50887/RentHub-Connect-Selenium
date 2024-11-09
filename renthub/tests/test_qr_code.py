@@ -1,7 +1,7 @@
 import os
 import django
 from django.test import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, call
 from ..utils import generate_qr_code, delete_qr_code
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
@@ -44,4 +44,6 @@ class QRCodeUtilityTest(TestCase):
         self.assertTrue(os.path.exists(self.qr_code_path))
         delete_qr_code(self.room_number)
         self.assertFalse(os.path.exists(self.qr_code_path))
-        self.mock_logger.info.assert_called_once_with(f"QR code for room {self.room_number} deleted successfully.")
+        self.mock_logger.info.assert_has_calls([
+            call(f"QR code for room {self.room_number} deleted successfully."),
+            call(f"QR code for room {self.room_number} deleted from S3 successfully.")])

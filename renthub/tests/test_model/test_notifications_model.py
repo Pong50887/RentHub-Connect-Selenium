@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
-from ..models import Notification, Renter
+from renthub.models import Notification, Renter
 
 
 class NotificationModelTest(TestCase):

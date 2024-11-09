@@ -18,41 +18,28 @@ class PaymentViewTests(TestCase):
         self.room1 = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
         self.room2 = Room.objects.create(room_number=102, detail='A cozy room', price=1000.00)
 
-        self.rental = Rental.objects.create(room=self.room1, renter=self.renter, price=self.room1.price)
-
     def test_photo_upload_base_case(self):
         """A renter can upload a payment photo if they don't have an active Rental for the room."""
         self.client.login(username='renter1', password='testpassword')
-        response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
+
+        start_date_str = '2024-01'
+        end_date_str = '2024-12'
+        url = reverse('renthub:payment', kwargs={'room_number': self.room2.room_number})
+        url_with_params = f"{url}?start_month={start_date_str}&end_month={end_date_str}"
+
+        response = self.client.get(url_with_params)
         self.assertContains(response, 'Upload Payment Slip:')
 
     def test_photo_upload_not_visible_if_rental_exists(self):
         """A renter cannot upload a payment photo if they already have an active Rental for the room."""
+        Rental.objects.create(room=self.room1, renter=self.renter, price=self.room1.price)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room1.room_number}))
         self.assertNotContains(response, 'Upload Payment Slip:')
 
-    def test_photo_upload_not_visible_if_rental_request_status_is_wait(self):
-        pass
-    #     """A renter cannot upload a payment photo if they already have a RentalRequest for the room that's waiting
-    #     for admin approval. """
-    #     RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00)
-    #     self.client.login(username='renter1', password='testpassword')
-    #     response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-    #     self.assertNotContains(response, 'Upload Payment Slip:')
-
-    def test_photo_upload_not_visible_if_rental_request_is_approved(self):
-        pass
-    #     """A renter cannot upload a payment photo if they already have approved RentalRequest for the room."""
-    #     RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.approve)
-    #     self.client.login(username='renter1', password='testpassword')
-    #     response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-    #     self.assertNotContains(response, 'Upload Payment Slip:')
-
-    def test_photo_upload_visible_if_rental_request_is_rejected(self):
-        pass
-    #     """A renter can upload a payment photo if their latest RentalRequest for the room was rejected."""
-    #     RentalRequest.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.reject)
-    #     self.client.login(username='renter1', password='testpassword')
-    #     response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
-    #     self.assertContains(response, 'Upload Payment Slip:')
+    def test_photo_upload_visible_if_rental_is_rejected(self):
+        """A renter can upload a payment photo if their latest RentalRequest for the room was rejected."""
+        Rental.objects.create(room=self.room2, renter=self.renter, price=1200.00, status=Status.reject)
+        self.client.login(username='renter1', password='testpassword')
+        response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room2.room_number}))
+        self.assertContains(response, 'Upload Payment Slip:')
