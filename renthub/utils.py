@@ -4,11 +4,12 @@ import logging
 from enum import Enum
 
 from django.conf import settings
+from mysite.settings import get_s3_client
 import boto3
 from botocore.exceptions import ClientError
 
 logger = logging.getLogger('renthub')
-s3_client = boto3.client('s3')
+s3_client = get_s3_client()
 BUCKET_NAME = settings.AWS_STORAGE_BUCKET_NAME
 
 

@@ -1,7 +1,7 @@
 import os
 import django
 from django.test import TestCase
-from unittest.mock import patch, call
+from unittest.mock import patch, call, MagicMock
 from ..utils import generate_qr_code, delete_qr_code
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
@@ -42,8 +42,14 @@ class QRCodeUtilityTest(TestCase):
         with open(self.qr_code_path, 'w') as f:
             f.write("This is a mock QR code file.")
         self.assertTrue(os.path.exists(self.qr_code_path))
+
+        with patch('renthub.utils.boto3.client') as mock_boto_client:
+            mock_s3 = MagicMock()
+            mock_boto_client.return_value = mock_s3
+
         delete_qr_code(self.room_number)
         self.assertFalse(os.path.exists(self.qr_code_path))
+
         self.mock_logger.info.assert_has_calls([
             call(f"QR code for room {self.room_number} deleted successfully."),
             call(f"QR code for room {self.room_number} deleted from S3 successfully.")])
