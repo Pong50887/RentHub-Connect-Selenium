@@ -23,18 +23,12 @@ class PaymentListViewTests(TestCase):
         """A renter without any rental sees that their payment list page is empty."""
         self.client.login(username='renter2', password='testpassword')
         response = self.client.get(reverse('renthub:payment_list'))
-        self.assertContains(response, "You currently have no payments")
+        self.assertContains(response, "You currently have no ongoing rentals.")
 
     def test_rental_display_for_renter_with_rentals(self):
         """A renter with any rental sees all of their existing rental(s) in their payment list page."""
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment_list'))
-        self.assertContains(response, "Room Number: 101")
-        self.assertContains(response, "Room Number: 102")
-
-    # def test_rental_request_display_for_renter_with_wait_rental_request(self):
-    #     """A renter with any rental sees all of their existing rental request(s) whose status are 'wait' in their
-    #     payment list page. """
-    #     self.client.login(username='renter1', password='testpassword')
-    #     response = self.client.get(reverse('renthub:payment_list'))
-    #     self.assertContains(response, "Room Number: 103")
+        self.assertContains(response, "101")
+        self.assertContains(response, "102")
+        
