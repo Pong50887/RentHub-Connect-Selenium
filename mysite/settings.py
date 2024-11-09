@@ -10,10 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import os
 from pathlib import Path
 from decouple import config, Csv
-import boto3
 import sys
 
 
@@ -198,11 +196,3 @@ AWS_S3_VERIFY = True
 MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-def get_s3_client():
-    """Get S3 client for authentication to access S3 storage."""
-    return boto3.client(
-        's3',
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        region_name=AWS_S3_REGION_NAME
-    )
