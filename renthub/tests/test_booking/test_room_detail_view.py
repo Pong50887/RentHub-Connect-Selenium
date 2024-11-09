@@ -31,10 +31,11 @@ class RoomDetailViewTests(TestCase):
                                    follow=True)
         self.assertContains(response, "Rent")
 
-    @unittest.skip("redirect and disallow another renter to make a rental")
+    @unittest.skip("1. cannot rent the same room within the same time period. "
+                   "2. can rent the same room with non-overlapping time period.")
     def test_renter_cannot_rent_room_occupied_by_another_renter_message(self):
         """Another renter cannot rent a room associated with an existing rental belonging to another
-        renter. """
+        renter within the same time range."""
         # before admin approve feature
         Rental.objects.create(renter=self.renter1, room=self.room, price=self.room.price)
         self.room.save()
