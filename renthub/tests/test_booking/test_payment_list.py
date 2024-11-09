@@ -31,3 +31,4 @@ class PaymentListViewTests(TestCase):
         response = self.client.get(reverse('renthub:payment_list'))
         self.assertContains(response, "101")
         self.assertContains(response, "102")
+        
