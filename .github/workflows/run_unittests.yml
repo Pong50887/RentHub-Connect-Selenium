@@ -41,7 +41,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Set up environment variables
+    - name: AWS_S3_REGION_NAME
       run: |
         echo "AWS_S3_REGION_NAME=${{ secrets.AWS_S3_REGION_NAME }}"
 
