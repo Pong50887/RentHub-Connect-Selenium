@@ -25,7 +25,7 @@
     const incomeDoughnutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Income Collected', 'Remaining Income'],
+            labels: ['Collected Income', 'Pending Income'],
             datasets: [{
                 label: 'Income Percentage',
                 data: [{{ income_percentage }}, 100 - {{ income_percentage }}], 
