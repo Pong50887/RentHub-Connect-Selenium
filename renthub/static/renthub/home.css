@@ -22,7 +22,7 @@ img{
     padding: 1em;
 }
 .card{
-    height: 30em;
+    height: 41em;
     margin: 0 .8em;
     box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
     border: none;
@@ -38,9 +38,9 @@ img{
 }
 
 .button-wrapper {
-    position: absolute; /* Position it absolutely */
-    bottom: 17px; /* Adjust as needed */
-    left: 20px; /* Adjust as needed */
+    position: absolute;
+    bottom: 17px;
+    left: 20px;
 }
 .img-wrapper {
     width: 465px;

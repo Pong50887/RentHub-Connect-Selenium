@@ -94,11 +94,37 @@
                         <a class="nav-link" href="{% url 'renthub:contact_us' %}">Contact Us</a>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <form action="{% url 'logout' %}" method="POST" class="form-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-link nav-link">Logout</button>
-                            </form>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="usernameDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
+                                    Notification
+                                    {% if unread_count > 0 %}
+                                        <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
+                                            {{ unread_count }}
+                                        </span>
+                                    {% endif %}
+                                    </a>
+                                    {% if user.is_superuser %}
+                                        <a class="dropdown-item" href="{% url 'renthub:dashboard' %}">
+                                            Income Dashboard
+                                        </a>
+                                    {% endif %}
+                                    {% if user.is_authenticated %}
+                                        <li>
+                                            <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item">
+                                                    Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    {% endif %}
+                                </li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -107,6 +133,7 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="nav-item">
+
                             <div class="dropdown user-icon">
                                 <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false" onclick="moveDotToNotification()">
                                     &#128100;
@@ -126,10 +153,20 @@
                                             </span>
                                         {% endif %}
                                         </a>
-                                        {% if user.is_superuser %} 
+                                        {% if user.is_superuser %}
                                             <a class="dropdown-item" href="{% url 'renthub:dashboard' %}">
                                                 Income Dashboard
                                             </a>
+                                        {% endif %}
+                                        {% if user.is_authenticated %}
+                                            <li>
+                                                <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item">
+                                                        Logout
+                                                    </button>
+                                                </form>
+                                            </li>
                                         {% endif %}
                                     </li>
                                 </ul>
@@ -153,7 +190,7 @@
     </nav>
 
     {% block title %} {% endblock %}
-    
+
     {% if messages %}
         <div class="container">
             <ul class="alert alert-info">
