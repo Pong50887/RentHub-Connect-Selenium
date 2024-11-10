@@ -13,3 +13,4 @@ from .delete_qrcode_view import DeleteQRCodeView
 from .contact_us_view import ContactUsView
 from .context_processors import unread_notifications_count
 from .dashboard_view import DashboardView
+from .room_overview_view import RoomOverviewView
