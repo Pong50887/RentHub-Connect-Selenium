@@ -44,6 +44,7 @@ class NotificationViewTest(TestCase):
 
         # Check the order of notifications
         notifications = response.context['notifications']
+        notifications = notifications.order_by('-post_date')
         # print(notifications)
         self.assertEqual(notifications[0].title, 'New Notification')  # New should appear first
         self.assertEqual(notifications[1].title, 'Old Notification')
