@@ -44,10 +44,7 @@ jobs:
     - name: Run migrations
       run: |
           python manage.py migrate
-    - name: Drop and recreate test database (if exists)
-      run: |
-          sudo -u postgres psql -c "DROP DATABASE IF EXISTS test_${{ secrets.PGDATABASE }};"
-          sudo -u postgres psql -c "CREATE DATABASE test_${{ secrets.PGDATABASE }};"
+
     - name: Run tests
       run: |
         pytest --ds=mysite.settings --cov=. --cov-report=xml
