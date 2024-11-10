@@ -60,7 +60,7 @@
             {% endif %}
             <div class="room-details">
                 <div class="room-detail">
-                    <p><strong>Room Size:</strong> {{ room.detail }} feet</p>
+                    <p><strong>Room Size:</strong> {{ room.detail }} </p>
 
                     {% if room.room_type.description %}
                         <p class="mb-3"><strong>Description:</strong> {{ room.room_type.description }}</p>
@@ -90,12 +90,12 @@
                         <form method="GET" action="{% url 'renthub:payment' room.room_number %}">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="month-picker" class="form-label">Select Rental Month</label>
-                                <input type="text" id="month-picker" name="rental_month" class="form-control" placeholder="Select Month" required>
+                                <label for="month-picker" class="form-label">Start Month</label>
+                                <input type="text" id="month-picker" name="start_month" class="form-control" placeholder="Select Start Month" required>
                             </div>
                             <div class="mb-3">
-                                <label for="number_of_months" class="form-label">Number of Months:</label>
-                                <input type="number" name="number_of_months" id="number_of_months" class="form-control" min="1" required>
+                                <label for="end-month-picker" class="form-label">End Month</label>
+                                <input type="text" id="end-month-picker" name="end_month" class="form-control" placeholder="Select End Month" required>
                             </div>
                             <button type="submit" class="btn btn-success">Rent</button>
                         </form>
@@ -121,6 +121,22 @@
                 })
             ],
             minDate: new Date(),  // Set minimum date to today
+            maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
+            disable: occupiedMonths.map(month => {
+                return new Date(month + '-01');
+            }),
+        });
+        flatpickr("#end-month-picker", {
+            plugins: [
+                new monthSelectPlugin({
+                    shorthand: true,
+                    dateFormat: "Y-m",
+                    altFormat: "F Y",
+                    theme: "light",
+                })
+            ],
+            minDate: new Date(),  // Set minimum date to today
+            maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
             disable: occupiedMonths.map(month => {
                 return new Date(month + '-01');
             }),

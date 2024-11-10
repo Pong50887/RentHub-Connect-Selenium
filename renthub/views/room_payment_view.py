@@ -11,7 +11,7 @@ from django.conf import settings
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
-from ..models import Room, Renter, Rental, Transaction
+from ..models import Room, Renter, Rental, Transaction, RentalPayment
 from ..utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status
 
 
@@ -37,19 +37,23 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.warning(request, "You need to register as a renter to proceed with a rental.")
-            return redirect('renthub:rental', room_number=room.room_number)
+            return redirect('renthub:room', room_number=room.room_number)
 
-        start_date = self.request.GET.get('rental_month')
-        number_of_months = self.request.GET.get('number_of_months', 1)
-        try:
-            number_of_months = int(number_of_months)
-        except ValueError:
-            number_of_months = 1
+        start_date_str = self.request.GET.get('start_month')
+        end_date_str = self.request.GET.get('end_month')
 
-        if start_date:
-            if not room.is_available(start_date, number_of_months):
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m')
+            end_date = datetime.strptime(end_date_str, '%Y-%m')
+            number_of_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
+
+            if not room.is_available(start_date_str, number_of_months):
                 messages.warning(request, "The room is not available for the selected rental period.")
-                return redirect('renthub:rental', room_number=room.room_number)
+                return redirect('renthub:room', room_number=room.room_number)
+
+        elif not Rental.objects.filter(room=room, renter=request.user).exists():
+            messages.warning(request, "Please choose a start and end date.")
+            return redirect('renthub:room', room_number=room.room_number)
 
         return super().get(request, *args, **kwargs)
 
@@ -68,33 +72,52 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
             file_path = default_storage.save(f'slip_images/{room.room_number}_{renter.id}.png', payment_slip)
 
-            start_date_str = self.request.POST.get('start_date')
-            number_of_months = self.request.POST.get('number_of_months', 1)
-            try:
-                number_of_months = int(number_of_months)
-            except ValueError:
-                number_of_months = 1
+            rental = Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).first()
 
-            start_date = datetime.strptime(start_date_str, "%Y-%m").replace(hour=7, minute=0, second=0)
-            end_date = start_date + relativedelta(months=number_of_months)
-            end_date = end_date + relativedelta(day=1) - timezone.timedelta(days=1)
-            end_date = end_date.replace(hour=7, minute=0, second=0)
+            if not rental:
+                start_date_str = self.request.POST.get('start_date')
+                number_of_months = self.request.POST.get('number_of_months', 1)
+                try:
+                    number_of_months = int(number_of_months)
+                except ValueError:
+                    number_of_months = 1
 
-            rental, created = Rental.objects.get_or_create(
-                room=room, renter=renter, defaults={'price': room.price*number_of_months,
-                                                    'start_date': start_date,
-                                                    'end_date': end_date,
-                                                    }
-            )
-            rental.image = file_path
-            rental.save()
+                start_date = datetime.strptime(start_date_str, "%Y-%m").replace(hour=7, minute=0, second=0)
+                end_date = start_date + relativedelta(months=number_of_months)
+                end_date = end_date + relativedelta(day=1) - timezone.timedelta(days=1)
+                end_date = end_date.replace(hour=7, minute=0, second=0)
 
-            transaction, created = Transaction.objects.get_or_create(
-                room=room, renter=renter, defaults={'date': datetime.now(), 'price': room.price}
+                rental, created = Rental.objects.get_or_create(
+                    room=room, renter=renter, defaults={'price': room.price,
+                                                        'start_date': start_date,
+                                                        'end_date': end_date,
+                                                        'last_checked_month': start_date.date(),
+                                                        }
+                )
+                rental.image = file_path
+                rental.save()
+
+            else:
+                rental.status = Status.wait
+                rental.save()
+                rental_payment = RentalPayment.objects.create(
+                    room=room,
+                    renter=renter,
+                    price=room.price,
+                    image=file_path,
+                    status=Status.wait,
+                )
+                rental_payment.save()
+
+            transaction = Transaction.objects.create(
+                room=room,
+                renter=renter,
+                price=room.price,
+                date=datetime.now(),
+                image=file_path
             )
             transaction.image = file_path
             transaction.save()
-
             messages.success(request, "Your rental request was submitted successfully!")
             delete_qr_code(room.room_number)
             return redirect('renthub:home')
@@ -119,23 +142,33 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         except Renter.DoesNotExist:
             renter = None
 
-        start_date = self.request.GET.get('rental_month')
-        context['start_date'] = start_date
+        start_date_str = self.request.GET.get('start_month')
+        end_date_str = self.request.GET.get('end_month')
+        context['start_date'] = start_date_str
 
-        number_of_months = self.request.GET.get('number_of_months', 1)
-        try:
-            number_of_months = int(number_of_months)
-        except ValueError:
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m')
+            end_date = datetime.strptime(end_date_str, '%Y-%m')
+            number_of_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
+        else:
             number_of_months = 1
-        context['number_of_months'] = number_of_months
-        context['total_payment'] = room.price * number_of_months
 
-        if not Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).exists():
-            generate_qr_code(room.price * number_of_months, room.room_number)
+        context['number_of_months'] = number_of_months
+
+        rental = Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).first()
+
+        if not rental:
+            generate_qr_code(room.price, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
             context['send_or_cancel'] = True
         else:
-            context['qr_code_path'] = None
-            context['send_or_cancel'] = False
+            if not rental.is_paid:
+                generate_qr_code(room.price, room.room_number)
+                context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
+                context['send_or_cancel'] = True
+            else:
+                context['qr_code_path'] = None
+                context['send_or_cancel'] = False
+
 
         return context

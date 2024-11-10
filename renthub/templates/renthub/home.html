@@ -47,7 +47,6 @@
 </div>
 </div>
 
-{% if user.is_authenticated %}
 <div class="container mb-5">
     {% if announcement %}
         <h1>Recent Announcements</h1>
@@ -63,7 +62,6 @@
         <p>No announcements at this time.</p>
     {% endif %}
 </div>
-{% endif %}
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -77,7 +75,7 @@ if(window.matchMedia("(min-width:576px)").matches) {
 
 
     $(".carousel-control-next").on("click", function () {
-        if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
+        if (scrollPosition < (carouselWidth - cardWidth * 3)) { //check if you can go any further
             console.log('next')
             scrollPosition += cardWidth;  //update scroll position
             $(".carousel-inner").animate({scrollLeft: scrollPosition}, 600); //scroll left

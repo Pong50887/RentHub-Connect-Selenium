@@ -1,0 +1,45 @@
+.doughnut-chart {
+    width: 150px;
+    height: 150px;
+}
+
+.dashboard {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.income-summary {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.amount {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.income-summary .d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.income-summary h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.chartjs-tooltip {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: #fff !important;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}

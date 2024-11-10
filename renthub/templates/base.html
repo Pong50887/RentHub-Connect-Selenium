@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RentHub Connect</title>
     {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -12,6 +13,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-color: whitesmoke;
@@ -84,20 +90,49 @@
                         <a class="nav-link" href="{% url 'renthub:home' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'renthub:rental_list' %}">Rooms</a>
+                        <a class="nav-link" href="{% url 'renthub:room_list' %}">Rooms</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'renthub:payment_list' %}">My Rentals</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'renthub:contact_us' %}">Contact us</a>
+                        <a class="nav-link" href="{% url 'renthub:contact_us' %}">Contact Us</a>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <form action="{% url 'logout' %}" method="POST" class="form-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-link nav-link">Logout</button>
-                            </form>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="usernameDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
+                                    Notification
+                                    {% if unread_count > 0 %}
+                                        <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
+                                            {{ unread_count }}
+                                        </span>
+                                    {% endif %}
+                                    </a>
+                                    {% if user.is_superuser %}
+                                        <a class="dropdown-item" href="{% url 'renthub:dashboard' %}">
+                                            Income Dashboard
+                                        </a>
+                                        <a class="dropdown-item" href="{% url 'renthub:room_overview' %}">
+                                            Room Overview
+                                        </a>
+                                    {% endif %}
+                                    {% if user.is_authenticated %}
+                                        <li>
+                                            <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item">
+                                                    Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    {% endif %}
+                                </li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -106,6 +141,7 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="nav-item">
+
                             <div class="dropdown user-icon">
                                 <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false" onclick="moveDotToNotification()">
                                     &#128100;
@@ -116,14 +152,34 @@
                                     {% endif %}
                                 </span>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'renthub:notifications' %}">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
                                         Notification
                                         {% if unread_count > 0 %}
                                             <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
                                                 {{ unread_count }}
                                             </span>
                                         {% endif %}
-                                    </a></li>
+                                        </a>
+                                        {% if user.is_superuser %}
+                                            <a class="dropdown-item" href="{% url 'renthub:dashboard' %}">
+                                                Income Dashboard
+                                            </a>
+                                            <a class="dropdown-item" href="{% url 'renthub:room_overview' %}">
+                                                Room Overview
+                                            </a>
+                                        {% endif %}
+                                        {% if user.is_authenticated %}
+                                            <li>
+                                                <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item">
+                                                        Logout
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        {% endif %}
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -145,7 +201,7 @@
     </nav>
 
     {% block title %} {% endblock %}
-    
+
     {% if messages %}
         <div class="container">
             <ul class="alert alert-info">

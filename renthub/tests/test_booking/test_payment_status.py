@@ -10,6 +10,7 @@ class PaymentStatusTests(TestCase):
 
     def setUp(self):
         """Set up data for the tests."""
+        pass
 
 # ** change according to actions
 # submited

@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import os
 from pathlib import Path
 from decouple import config, Csv
 import sys
@@ -67,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'renthub.views.context_processors.unread_notifications_count',
+                'renthub.views.context_processors.check_monthly_payment_due',
             ],
         },
     },
@@ -175,7 +175,7 @@ LOGGING = {
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
@@ -195,3 +195,4 @@ AWS_S3_VERIFY = True
 # Media files
 MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

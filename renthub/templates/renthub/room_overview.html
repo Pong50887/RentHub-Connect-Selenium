@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+
+{% block content %}
+
+<div class="container text-center mt-4 mb-3">
+    <h1 class="display-4">Room Overview</h1>
+    <hr class="w-100 mx-auto">
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for room in rooms %}
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Room {{ room.room_number }}</h5>
+                        <p class="card-text">
+                            {% if room.is_available %}
+                                <span class="badge bg-success">Available</span>
+                            {% else %}
+                                <span class="badge bg-danger">Occupied</span>
+                                <small class="text-muted d-block mt-1">by {{ room.renter_name }}</small>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:6 %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

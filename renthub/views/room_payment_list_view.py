@@ -18,13 +18,13 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Return the context of data displayed on My Rentals page."""
         context = super().get_context_data(**kwargs)
-        rentals = Rental.objects.filter(renter__id=self.request.user.id,
-                                        start_date__lt=timezone.now() + timedelta(days=30),
-                                        end_date__gt=timezone.now()).exclude(status=Status.reject)
+        rentals = Rental.objects.filter(renter__id=self.request.user.id).exclude(status=Status.reject)
+
         rooms_with_rentals = Room.objects.filter(
             rental__in=rentals
         ).annotate(
-            status=F('rental__status')
+            status=F('rental__status'),
+            is_paid = F('rental__is_paid')
         )
 
         context['rooms'] = rooms_with_rentals

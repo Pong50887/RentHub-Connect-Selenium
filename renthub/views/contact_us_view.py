@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -7,7 +6,7 @@ from ..models import PropertyOwner, Rental
 from ..admin import MaintenanceRequestForm
 
 
-class ContactUsView(LoginRequiredMixin, DetailView):
+class ContactUsView(DetailView):
     """
     View for displaying and submitting maintenance requests to admin.
     """

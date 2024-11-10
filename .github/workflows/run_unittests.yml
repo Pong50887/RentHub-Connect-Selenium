@@ -7,11 +7,20 @@ on:
   pull_request:
     branches:
       - "**"
+
 env:
   SECRET_KEY: random-secret-key-for-ci
   DEBUG: True
   ALLOWED_HOSTS: localhost
-  TIME_ZONE: UTC
+  TIME_ZONE: Asia/Bangkok
+  PGHOST: ${{ secrets.PGHOST }}
+  PGDATABASE: ${{ secrets.PGDATABASE }}
+  PGUSER: ${{ secrets.PGUSER }}
+  PGPASSWORD: ${{ secrets.PGPASSWORD }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_STORAGE_BUCKET_NAME: ${{ secrets.AWS_STORAGE_BUCKET_NAME }}
+  AWS_S3_REGION_NAME: ${{ secrets.AWS_S3_REGION_NAME }}
   
 jobs:
   build:
@@ -32,6 +41,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
     - name: Run Tests
       run: |
         python manage.py test renthub

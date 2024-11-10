@@ -15,5 +15,5 @@ class NotificationView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['unread_notifications'] = Notification.objects.filter(
             renter=self.request.user, is_read=False
-        )
+        ).order_by('-post_date')
         return context

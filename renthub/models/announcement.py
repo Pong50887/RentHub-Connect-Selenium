@@ -6,7 +6,7 @@ class Announcement(models.Model):
     Represents an announcement for the tenants.
     """
     title = models.CharField(max_length=255)
-    content = models.CharField(max_length=500)
+    content = models.TextField(max_length=500)
     publish_date = models.DateTimeField()
 
     def __str__(self):

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'renthub/dashboard.css' %}">
+
+<div class="dashboard container my-5">
+    <h1 class="text-center mb-4">Dashboard</h1>
+
+    <div class="income-summary text-center">
+        <h2 class="mb-4">Income Summary</h2>
+        
+        <div class="d-flex justify-content-center align-items-center mb-4">
+            <canvas id="incomeDoughnutChart" class="doughnut-chart"></canvas> 
+        </div>
+
+        <p class="amount">Total Income: ฿{{ total_income|floatformat:2 }}</p>
+        <p class="amount">Income This Month: ฿{{ monthly_income|floatformat:2 }}</p>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('incomeDoughnutChart').getContext('2d');
+    const incomeDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Collected Income', 'Pending Income'],
+            datasets: [{
+                label: 'Income Percentage',
+                data: [{{ income_percentage }}, 100 - {{ income_percentage }}], 
+                backgroundColor: ['#28a745', '#dc0805'],
+                borderColor: ['#28a745', '#dc0805'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            cutoutPercentage: 50,  
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return tooltipItem.raw.toFixed(2) + '%';
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}
