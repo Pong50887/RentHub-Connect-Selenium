@@ -16,6 +16,7 @@ class RentalPayment(models.Model):
         default=Status.wait,
     )
 
+
 @receiver(post_save, sender=RentalPayment)
 def update_rental_is_paid(sender, instance, **kwargs):
     rental = Rental.objects.get(room=instance.room, renter=instance.renter)

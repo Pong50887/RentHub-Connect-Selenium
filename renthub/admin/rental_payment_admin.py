@@ -7,7 +7,6 @@ class RentalPaymentAdmin(admin.ModelAdmin):
     list_display = ('room', 'renter', 'price', 'status', 'image_tag')
     readonly_fields = ('image_tag',)
 
-
     def image_tag(self, obj):
         if obj.image:
             return f'<img src="{obj.image.url}" width="100" height="100" />'
@@ -45,6 +44,7 @@ class RentalPaymentAdmin(admin.ModelAdmin):
 
         obj.delete()
 
-    def create_notification(self, renter, title, message):
+    @staticmethod
+    def create_notification(renter, title, message):
         """Create a new notification for the renter."""
         Notification.objects.create(renter=renter, title=title, message=message)

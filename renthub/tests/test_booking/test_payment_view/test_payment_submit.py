@@ -7,6 +7,7 @@ from django.contrib.messages import get_messages
 from renthub.models import Room, Rental, Renter
 import os
 
+
 class PaymentSubmitTest(TestCase):
     def setUp(self):
         # Create a test room and renter
@@ -103,6 +104,3 @@ class PaymentSubmitTest(TestCase):
 
         # Check if the payment status is correctly marked as 'not paid'
         self.assertFalse(rental.is_paid)
-
-
-

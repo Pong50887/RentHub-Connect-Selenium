@@ -170,5 +170,4 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 context['qr_code_path'] = None
                 context['send_or_cancel'] = False
 
-
         return context
