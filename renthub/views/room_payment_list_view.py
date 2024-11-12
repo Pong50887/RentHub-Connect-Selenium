@@ -3,8 +3,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..models import Room, Rental, Transaction
 from django.db.models import F
-from django.utils import timezone
-from datetime import timedelta
 
 from ..utils import Status
 
@@ -24,11 +22,11 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
             rental__in=rentals
         ).annotate(
             status=F('rental__status'),
-            is_paid = F('rental__is_paid')
+            is_paid=F('rental__is_paid')
         )
 
         context['rooms'] = rooms_with_rentals
 
-        transactions = Transaction.objects.filter(renter__id=self.request.user.id)
+        transactions = Transaction.objects.filter(renter__id=self.request.user.id).order_by('-date')
         context['transactions'] = transactions
         return context
