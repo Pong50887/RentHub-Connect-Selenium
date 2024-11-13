@@ -110,8 +110,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['deposit'] = room.price * 2
         context['total'] = room.price * 3
 
-
-
         if not rental:
             generate_qr_code(room.price * 3, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
