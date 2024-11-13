@@ -1,4 +1,3 @@
-from dateutil.relativedelta import relativedelta
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -14,7 +13,7 @@ class RoomDetailView(DetailView):
     Display the details of a specific room.
     """
     model = Room
-    template_name = "renthub/rental.html"
+    template_name = "renthub/room.html"
     context_object_name = "room"
 
     def get_object(self, queryset=None):
@@ -46,25 +45,5 @@ class RoomDetailView(DetailView):
             context["rental"] = Rental.objects.filter(renter=renter, room=room,
                                                       start_date__lt=timezone.now() + timedelta(days=30),
                                                       end_date__gt=timezone.now()).first()
-
-        rentals = Rental.objects.filter(room=room)
-        occupied_months = []
-
-        for rental in rentals:
-            start = rental.start_date
-            end = rental.end_date
-            current = start
-
-            while current <= end:
-                occupied_months.append(current.strftime("%Y-%m"))
-                if current.month == 12:
-                    current = current.replace(year=current.year + 1, month=1, day=1)
-                else:
-                    current = current + relativedelta(months=1)
-                if current.day > 28:
-                    current = current + relativedelta(day=31)
-                    current = current.replace(day=1)
-
-        context["occupied_months"] = occupied_months
 
         return context

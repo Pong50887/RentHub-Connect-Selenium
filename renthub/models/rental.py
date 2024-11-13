@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django.utils import timezone
 from django.db import models
 from .renter import Renter
@@ -13,8 +11,10 @@ class Rental(models.Model):
     """
     room = models.ForeignKey("renthub.Room", on_delete=models.CASCADE)
     renter = models.ForeignKey(Renter, on_delete=models.CASCADE)
-    start_date = models.DateTimeField('date rented', default=timezone.now)
-    end_date = models.DateTimeField('date checkout', default=timezone.now() + timedelta(days=30))
+    start_date = models.DateField('date rented', default=timezone.now)
+    end_date = models.DateField('date checkout', null=True, blank=True)
+    water_fee = models.IntegerField(default=0)
+    electric_fee = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='slip_images/', blank=True, null=True)
     last_checked_month = models.DateField(null=True, blank=True)
@@ -31,14 +31,14 @@ class Rental(models.Model):
 
     def check_monthly_payment_due(self):
         """Check if a new month within the rental period requires payment."""
-        now = timezone.now()
-        if self.start_date <= now < self.end_date:
+        now = timezone.now().date()
+        if self.start_date <= now:
 
             months_elapsed = (now.year - self.start_date.year) * 12 + (now.month - self.start_date.month)
 
             if months_elapsed > 0:
-                if self.last_checked_month != now.date().replace(day=1):
-                    self.last_checked_month = now.date().replace(day=1)
+                if self.last_checked_month != now.replace(day=1):
+                    self.last_checked_month = now.replace(day=1)
                     self.is_paid = False
                     self.create_payment_notification()
                     self.save()
@@ -57,3 +57,4 @@ class Rental(models.Model):
     def __str__(self):
         """Returns the short detail of the request."""
         return f"{self.renter} / {self.room} / {self.status}"
+

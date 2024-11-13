@@ -51,15 +51,26 @@
                         <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image">
                     </div>
                 {% endif %}
-                <div class="room-details">
-                    <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
-                    <hr class="separator-line">
-                    <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month</span></h3>
-                    <p><strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
-                    <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
-                    <strong>Room Size:</strong> {{ room.detail }} </p>
-
-                </div>
+                {% if rental %}
+                    <div class="room-details">
+                        <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
+                        <hr class="separator-line">
+                        <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month + water: {{ water }} + electrical: {{ electric }}</span></h3>
+                        <p><strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
+                        <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
+                        <strong>Room Size:</strong> {{ room.detail }} </p>
+                    </div>
+                {% else %}
+                    <div class="room-details">
+                        <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
+                        <hr class="separator-line">
+                        <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month + Deposit {{ deposit }} ฿</span></h3>
+                        <h3 class="text-success"><span class="bold-text">Total : {{ total }} ฿</span></h3>
+                        <p><strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
+                        <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
+                        <strong>Room Size:</strong> {{ room.detail }} </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -114,8 +125,6 @@
                 {% else %}
                     <button type="submit" class="btn btn-primary">Send</button>
                 {% endif %}
-        <input type="hidden" name="number_of_months" value="{{ number_of_months }}">
-        <input type="hidden" name="start_date" value="{{ start_date }}">
             </div>
     </form>
     <script>

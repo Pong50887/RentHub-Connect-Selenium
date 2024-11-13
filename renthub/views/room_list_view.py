@@ -8,7 +8,7 @@ class RoomListView(ListView):
     A view that displays a list of rental rooms.
     """
     model = Room
-    template_name = "renthub/rental_list.html"
+    template_name = "renthub/room_list.html"
     context_object_name = "rooms"
 
     def get_queryset(self):
@@ -26,9 +26,8 @@ class RoomListView(ListView):
         available_rooms = []
 
         if not start_date and not end_date:
-            current_month = str(datetime.now().date())[:-3]
             for room in rooms:
-                if room.is_available(current_month, 1):
+                if room.is_available:
                     available_rooms.append(room.id)
             return rooms.filter(pk__in=available_rooms)
 
@@ -40,9 +39,8 @@ class RoomListView(ListView):
         if selected_room_type:
             rooms = rooms.filter(room_type__id=selected_room_type)
 
-        number_of_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month + 1
         for room in rooms:
-            if room.is_available(start_month, number_of_months):
+            if room.is_available():
                 available_rooms.append(room.id)
         rooms = rooms.filter(pk__in=available_rooms)
 

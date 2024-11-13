@@ -1,4 +1,5 @@
 from ..models import Notification, Rental
+from ..utils import Status
 
 
 def unread_notifications_count(request):
@@ -9,10 +10,9 @@ def unread_notifications_count(request):
     return {'unread_count': 0}
 
 
-def check_monthly_payment_due(request):
-    if request.user.is_authenticated:
-        rentals = Rental.objects.filter(renter=request.user)
-        for rental in rentals:
-            rental.check_monthly_payment_due()
+def check_monthly_payment_due(_):
+    rentals = Rental.objects.filter(status=Status.approve)
+    for rental in rentals:
+        rental.check_monthly_payment_due()
 
     return {}

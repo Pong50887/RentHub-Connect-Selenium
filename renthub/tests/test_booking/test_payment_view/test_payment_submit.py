@@ -85,16 +85,14 @@ class PaymentSubmitTest(TestCase):
         self.assertTrue(rental.start_date < rental.end_date)
 
     def test_rental_check_monthly_payment_due(self):
-        today = timezone.now()
+        today = timezone.now().date()
         start_date = today - timedelta(days=31)
-        end_date = today + timedelta(days=31)
 
         # Create the rental instance
         rental = Rental.objects.create(
             room=self.room,
             renter=self.renter,
             start_date=start_date,
-            end_date=end_date,
             price=self.room.price
         )
 
