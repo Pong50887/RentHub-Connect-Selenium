@@ -6,6 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from ..models import Room, Rental, Renter
+from ..utils import get_room_images
 
 
 class RoomDetailView(DetailView):
@@ -35,6 +36,8 @@ class RoomDetailView(DetailView):
         """Add extra context data to the template."""
         context = super().get_context_data(**kwargs)
         room = self.get_object()
+
+        context["room_images"] = get_room_images(room.room_type)
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)

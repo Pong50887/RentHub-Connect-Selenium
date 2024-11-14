@@ -57,9 +57,27 @@
             <div class="room-header">
                 <h1>{{ room.room_type.type_name }} - Room {{ room.room_number }}</h1>
             </div>
-            {% if room.room_type.image %}
-                <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image">
+
+            {% if room_images %}
+                <div id="roomImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in room_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
             {% endif %}
+
             <div class="room-details">
                 <div class="room-detail">
                     <p><strong>Room Floor:</strong> {{ room.room_floor }} </p>
