@@ -9,8 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from datetime import datetime
 
-from ..models import Room, Renter, Rental, Transaction, RentalPayment
-from ..utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status
+from renthub.models import Room, Renter, Rental, Transaction, RentalPayment
+from renthub.utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status, get_room_images
 
 
 class RoomPaymentView(LoginRequiredMixin, DetailView):
@@ -94,6 +94,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         """Add additional context data to the template."""
         context = super().get_context_data(**kwargs)
         room = self.get_object()
+
+        context["room_images"] = get_room_images(room.room_type)
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)

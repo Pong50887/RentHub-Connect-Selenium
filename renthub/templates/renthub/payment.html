@@ -68,7 +68,16 @@
                         <h3 class="text-success"><span class="bold-text">Total : {{ total }} ฿</span></h3>
                         <p><strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
                         <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
-                        <strong>Room Size:</strong> {{ room.detail }} </p>
+                        <strong>Room Size:</strong> {{ room.detail }} <br>
+                        <strong>Features:</strong>
+                        <ul class="feature-list mb-3">
+                        {% for feature in room.room_type.features.all %}
+                            <li><i class="bi bi-check-circle-fill text-success"></i> {{ feature.name }}</li>
+                        {% empty %}
+                            <li>No features available.</li>
+                            </p>
+                        {% endfor %}
+                    </ul>
                     </div>
                 {% endif %}
             </div>
