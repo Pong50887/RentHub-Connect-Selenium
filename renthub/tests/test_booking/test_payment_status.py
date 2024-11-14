@@ -13,7 +13,7 @@ class PaymentStatusTests(TestCase):
         pass
 
 # ** change according to actions
-# submited
+# submitted
 # admin approved
 # admin disapproved
 
