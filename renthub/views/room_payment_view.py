@@ -99,8 +99,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
-            rental = Rental.objects.filter(renter=renter, room=room, start_date__lt=timezone.now() + timedelta(days=30),
-                                           end_date__gt=timezone.now()).order_by('-id').first()
+            rental = Rental.objects.filter(renter=renter, room=room).order_by('-id').first()
             if rental:
                 context['milestones'] = get_rental_progress_data(rental.status)
 
