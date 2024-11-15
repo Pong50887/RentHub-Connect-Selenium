@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <style>
         .custom-card {
             display: flex;
@@ -52,6 +56,19 @@
         .view-detail-btn:hover {
             background-color: #0056b3;
         }
+        .view-Notice-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .view-Notice-btn:hover {
+            background-color: #c82333;
+        }
         .column-title {
             font-size: 1.5rem;
             font-weight: bold;
@@ -75,6 +92,12 @@
             max-width: 900px;
             width: 100%;
         }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+        }
     </style>
 {% endblock %}
 
@@ -96,12 +119,52 @@
                             <p class="room-info">Monthly Rent: {{ room.price }} ฿</p>
                             <p class="room-info">Room Size: {{ room.detail }} </p>
                             <p class="room-status">Status: {{ room.status }}</p>
+                            <p>{{ rental_start_date }}</p>
                         </div>
                         {% if not room.is_paid %}
                             <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn" >Pay Month Rental</a>
                         {% else %}
                             <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
                         {% endif %}
+
+                        {% if not rental_end_date %}
+                            <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#exampleModalLong">
+                              Send Move-Out Notice
+                            </button>
+                        {% endif %}
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Important Move-Out Notice Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Please note the following important information regarding move-out notices:</p>
+                                <ul>
+                                    <li>You may only send a move-out notice at least one month in advance.</li>
+                                    <li>Move-out notices for the following month must be submitted by the 15th of the current month.</li>
+                                    <li>Once submitted, move-out notices cannot be modified or withdrawn.</li>
+                                    <li>The security deposit will be refunded approximately 10 days after the rental period ends.</li>
+                                </ul>
+                                <form method="POST" action="{% url 'renthub:payment_list' %}" id="moveOutForm">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label for="month-picker" class="form-label">Select month</label>
+                                        <input type="text" id="month-picker" name="end_month" class="form-control" placeholder="Select Move-out Month" required>
+                                    </div>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" >Submit Move-Out Notice</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}
@@ -137,6 +200,87 @@
             {% endif %}
         </div>
     </div>
-
 </div>
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Move-Out Notice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to submit the move-out notice for the selected month?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmSubmit">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const today = new Date();
+    const rentalStartDate = "{{ rental_start_date|date:'Y-m-d' }}";
+    const startDate = new Date(rentalStartDate);
+
+
+    const disabledMonths = [];
+    for (let i = 0; i < 6; i++) {
+        const disabledMonth = new Date(startDate);
+        disabledMonth.setMonth(startDate.getMonth() + i);
+        disabledMonth.setDate(1);
+        disabledMonths.push(disabledMonth);
+    }
+
+    let enableMonth;
+    if (today.getDate() <= 15) {
+        enableMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1); // Enable next month if today is <= 15
+    } else {
+        enableMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1); // Enable next-next month if today is >= 15
+    }
+
+    if (enableMonth.getMonth() === 0) { // Check if it becomes January (month 0)
+    enableMonth.setFullYear(enableMonth.getFullYear() + 1); // Increase the year
+    }
+
+    flatpickr("#month-picker", {
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true, // Show short month names (e.g., Jan, Feb)
+                dateFormat: "Y-m", // Format the date as Year-Month
+                theme: "light" // Optional: specify theme
+            })
+        ],
+        enable: [enableMonth],
+        minDate: new Date(startDate.getFullYear(), startDate.getMonth() + 6, 1), // Disable months up to 6 months from the start date
+        disable: disabledMonths, // Disable the rental_start_date and the next 5 months
+        disableMobile: true, // Optional: Disable mobile input if you prefer the desktop version
+        onChange: function(selectedDates) {
+            // Enable or disable the submit button based on whether a date is selected
+            const submitButton = document.querySelector('.btn-primary');
+            if (selectedDates.length > 0) {
+                submitButton.disabled = false; // Enable the submit button if a date is selected
+            } else {
+                submitButton.disabled = true; // Disable the submit button if no date is selected
+            }
+        }
+    });
+    const submitButton = document.querySelector('.btn-primary');
+    submitButton.disabled = true;
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission to show the confirmation modal
+
+        // Show confirmation modal
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
+
+        // Add event listener for the "Confirm" button in the confirmation modal
+        document.getElementById('confirmSubmit').addEventListener('click', function() {
+            // When confirmed, submit the form
+            document.getElementById("moveOutForm").submit();  // Replace with the correct form if needed
+        });
+    });
+
+
+</script>
 {% endblock %}
