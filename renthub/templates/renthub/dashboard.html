@@ -1,56 +1,136 @@
 {% extends 'base.html' %}
-
-{% load static %}
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'renthub/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'renthub/dashboard.css' %}">
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Dashboard</h1>
 
-<div class="dashboard container my-5">
-    <h1 class="text-center mb-4">Dashboard</h1>
+    <!-- Year and Month Filter Dropdown -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="dropdown" style="float: left; width: auto;">  <!-- Adjusted to float left -->
+                <label for="year">Year:</label>
+                <select name="year" id="year" class="form-select" onchange="this.form.submit()">
+                    {% for y in years %}
+                        <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <div class="income-summary text-center">
-        <h2 class="mb-4">Income Summary</h2>
-        
-        <div class="d-flex justify-content-center align-items-center mb-4">
-            <canvas id="incomeDoughnutChart" class="doughnut-chart"></canvas> 
+            <div class="dropdown" style="float: left; width: auto; margin-left: 10px;">  <!-- Adjusted to float left and added margin -->
+                <label for="month">Month:</label>
+                <select name="month" id="month" class="form-select" onchange="this.form.submit()">
+                    <option value="0" {% if not selected_month %}selected{% endif %}>-- All Months --</option>
+                    {% for month_num, month_name in months %}
+                        <option value="{{ month_num }}" {% if month_num == selected_month %}selected{% endif %}>
+                            {{ month_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
+    </form>
 
-        <p class="amount">Total Income: ฿{{ total_income|floatformat:2 }}</p>
-        <p class="amount">Income This Month: ฿{{ monthly_income|floatformat:2 }}</p>
+    <!-- Income Charts -->
+    {% if not selected_month %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title text-center">Overall Income for {{ selected_year }}</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="incomeBarChart" width="300" height="150"></canvas>
+        </div>
     </div>
+    {% endif %}
+
+    {% if selected_month %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h3 class="card-title text-center">Daily Income for {{ selected_month_name }} {{ selected_year }}</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="dailyIncomeChart" width="300" height="150"></canvas>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <script>
-    const ctx = document.getElementById('incomeDoughnutChart').getContext('2d');
-    const incomeDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Collected Income', 'Pending Income'],
-            datasets: [{
-                label: 'Income Percentage',
-                data: [{{ income_percentage }}, 100 - {{ income_percentage }}], 
-                backgroundColor: ['#28a745', '#dc0805'],
-                borderColor: ['#28a745', '#dc0805'],
-                borderWidth: 1
-            }]
-        },
+    // Chart.js default global settings
+    Chart.defaults.font.family = "'Roboto', sans-serif";
+    Chart.defaults.color = '#333';
+    Chart.defaults.borderColor = '#ccc';
+
+    // Monthly Income Bar Chart
+    {% if not selected_month %}
+    const incomeData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+            label: 'Income (฿)',
+            data: {{ monthly_income_data|safe }},
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+                'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)'
+            ],
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+        }]
+    };
+
+    const ctx = document.getElementById('incomeBarChart').getContext('2d');
+    const incomeBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: incomeData,
         options: {
             responsive: true,
-            cutoutPercentage: 50,  
             plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function (tooltipItem) {
-                            return tooltipItem.raw.toFixed(2) + '%';
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top'
-                }
+                legend: { position: 'top' },
+                tooltip: { callbacks: { label: (tooltipItem) => '฿ ' + tooltipItem.raw } }
+            },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Income (฿)' } },
+                x: { title: { display: true, text: 'Months' } }
             }
         }
     });
-</script>
+    {% endif %}
 
+    // Daily Income Line Chart
+    {% if selected_month %}
+    const dailyIncomeData = {
+        labels: Array.from({ length: {{ daily_income_data|length }} }, (_, i) => i + 1), // Days of the month
+        datasets: [{
+            label: 'Daily Income (฿)',
+            data: {{ daily_income_data|safe }},
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            tension: 0.3, // Smooth line
+        }]
+    };
+
+    const dailyCtx = document.getElementById('dailyIncomeChart').getContext('2d');
+    const dailyIncomeChart = new Chart(dailyCtx, {
+        type: 'line',
+        data: dailyIncomeData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: { callbacks: { label: (tooltipItem) => '฿ ' + tooltipItem.raw } }
+            },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Income (฿)' } },
+                x: { title: { display: true, text: 'Days of the Month' } }
+            }
+        }
+    });
+    {% endif %}
+</script>
 {% endblock %}
