@@ -1,5 +1,4 @@
 from django.contrib import admin
-from ..models import Notification, Renter
 
 
 class NotificationAdmin(admin.ModelAdmin):

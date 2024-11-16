@@ -129,7 +129,7 @@
 
                         {% if not rental_end_date %}
                             <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#exampleModalLong">
-                              Send Move-Out Notice
+                                Send Move-Out Notice
                             </button>
                         {% endif %}
 
@@ -145,22 +145,51 @@
                               <div class="modal-body">
                                 <p>Please note the following important information regarding move-out notices:</p>
                                 <ul>
-                                    <li>You may only send a move-out notice at least one month in advance.</li>
-                                    <li>Move-out notices for the following month must be submitted by the 15th of the current month.</li>
-                                    <li>Once submitted, move-out notices cannot be modified or withdrawn.</li>
-                                    <li>The security deposit will be refunded approximately 10 days after the rental period ends.</li>
+                                    <li>
+                                        <strong>Advanced Notification Requirement:</strong>
+                                        Renters must submit their move-out notice <strong>at least one month in advance</strong> of the intended move-out date. This allows sufficient time for both the renter and the landlord to plan.
+                                    </li>
+                                    <li>
+                                        <strong>Submission Deadline for the Following Month:</strong>
+                                        Move-out notices for the <strong>next month</strong> must be submitted <strong>by the 15th of the current month</strong>.
+                                        <ul>
+                                            <li>If submitted <strong>on or before the 15th</strong>, the renter can choose to vacate by the end of the following month.</li>
+                                            <li>If submitted <strong>after the 15th</strong>, the earliest possible move-out date will be the end of the month after the next (an additional month).</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>Examples of the Rule:</strong>
+                                        <ul>
+                                            <li>If today is <strong>March 10th</strong>, the renter can submit a move-out notice for the end of <strong>April</strong>.</li>
+                                            <li>If today is <strong>March 16th</strong>, the earliest possible move-out date will be the end of <strong>May</strong>.</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>Irrevocability of Notices:</strong>
+                                        Once a move-out notice is submitted, it <strong>cannot be modified or withdrawn</strong>. This ensures clarity and prevents logistical disruptions.
+                                    </li>
+                                    <li>
+                                        <strong>Security Deposit Refund Timeline:</strong>
+                                        The <strong>security deposit</strong> will be processed and refunded approximately <strong>10 days after the rental period ends</strong>, subject to inspections and any necessary deductions for damages or unpaid dues.
+                                    </li>
                                 </ul>
                                 <form method="POST" action="{% url 'renthub:payment_list' %}" id="moveOutForm">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        <label for="month-picker" class="form-label">Select month</label>
-                                        <input type="text" id="month-picker" name="end_month" class="form-control" placeholder="Select Move-out Month" required>
+                                        <label for="month-picker" class="form-label">Move-out month</label>
+                                        {% if target_month %}
+                                            <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ target_month }}" readonly>
+                                        {% else %}
+                                            <div class="alert alert-warning" role="alert">
+                                                You do not have a valid move-out month. Please check the move-out date requirements.
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </form>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" >Submit Move-Out Notice</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" {% if not target_month %}disabled{% endif %}>Submit Move-Out Notice</button>
                               </div>
                             </div>
                           </div>
@@ -219,56 +248,10 @@
   </div>
 </div>
 <script>
-    const today = new Date();
-    const rentalStartDate = "{{ rental_start_date|date:'Y-m-d' }}";
-    const startDate = new Date(rentalStartDate);
-
-
-    const disabledMonths = [];
-    for (let i = 0; i < 6; i++) {
-        const disabledMonth = new Date(startDate);
-        disabledMonth.setMonth(startDate.getMonth() + i);
-        disabledMonth.setDate(1);
-        disabledMonths.push(disabledMonth);
-    }
-
-    let enableMonth;
-    if (today.getDate() <= 15) {
-        enableMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1); // Enable next month if today is <= 15
-    } else {
-        enableMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1); // Enable next-next month if today is >= 15
-    }
-
-    if (enableMonth.getMonth() === 0) { // Check if it becomes January (month 0)
-    enableMonth.setFullYear(enableMonth.getFullYear() + 1); // Increase the year
-    }
-
-    flatpickr("#month-picker", {
-        plugins: [
-            new monthSelectPlugin({
-                shorthand: true, // Show short month names (e.g., Jan, Feb)
-                dateFormat: "Y-m", // Format the date as Year-Month
-                theme: "light" // Optional: specify theme
-            })
-        ],
-        enable: [enableMonth],
-        minDate: new Date(startDate.getFullYear(), startDate.getMonth() + 6, 1), // Disable months up to 6 months from the start date
-        disable: disabledMonths, // Disable the rental_start_date and the next 5 months
-        disableMobile: true, // Optional: Disable mobile input if you prefer the desktop version
-        onChange: function(selectedDates) {
-            // Enable or disable the submit button based on whether a date is selected
-            const submitButton = document.querySelector('.btn-primary');
-            if (selectedDates.length > 0) {
-                submitButton.disabled = false; // Enable the submit button if a date is selected
-            } else {
-                submitButton.disabled = true; // Disable the submit button if no date is selected
-            }
-        }
-    });
     const submitButton = document.querySelector('.btn-primary');
-    submitButton.disabled = true;
+    
     submitButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent form submission to show the confirmation modal
+        event.preventDefault(); // Prevent default submission to show the confirmation modal
 
         // Show confirmation modal
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
@@ -277,10 +260,8 @@
         // Add event listener for the "Confirm" button in the confirmation modal
         document.getElementById('confirmSubmit').addEventListener('click', function() {
             // When confirmed, submit the form
-            document.getElementById("moveOutForm").submit();  // Replace with the correct form if needed
+            document.getElementById("moveOutForm").submit();
         });
     });
-
-
 </script>
 {% endblock %}
