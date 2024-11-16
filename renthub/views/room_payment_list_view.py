@@ -53,7 +53,8 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         Notification.objects.create(
             renter=admin,
             title="Payment Due",
-            message=f"{self.request.user.username} has selected {end_month_str} as their move-out month. Please review and prepare for their departure.",
+            message=f"{self.request.user.username} has selected {end_month_str} "
+                    f"as their move-out month. Please review and prepare for their departure.",
             post_date=timezone.now(),
             is_read=False
         )
