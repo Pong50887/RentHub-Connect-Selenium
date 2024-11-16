@@ -18,6 +18,7 @@ class Rental(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='slip_images/', blank=True, null=True)
     last_checked_month = models.DateField(null=True, blank=True)
+    last_paid_date = models.DateField(null=True, blank=True)
     is_paid = models.BooleanField(default=True)
     status = models.CharField(
         max_length=10,
@@ -27,7 +28,7 @@ class Rental(models.Model):
 
     def is_ended(self):
         """Check if the event or rental period has ended."""
-        return timezone.now() > self.end_date
+        return timezone.now().date() > self.end_date
 
     def check_monthly_payment_due(self):
         """Check if a new month within the rental period requires payment."""
@@ -39,6 +40,7 @@ class Rental(models.Model):
             if months_elapsed > 0:
                 if self.last_checked_month != now.replace(day=1):
                     self.last_checked_month = now.replace(day=1)
+                    self.last_paid_date = None
                     self.is_paid = False
                     self.create_payment_notification()
                     self.save()
@@ -53,6 +55,14 @@ class Rental(models.Model):
             post_date=timezone.now(),
             is_read=False
         )
+
+    def is_payment_on_time(self):
+        """Checks if the last payment was made on time."""
+        if self.last_paid_date is None:
+            return False
+
+        return self.last_paid_date.day <= 15
+
 
     def __str__(self):
         """Returns the short detail of the request."""
