@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from decimal import Decimal
-from ...models import Room, Transaction, Renter
+from ..models import Room, Transaction, Renter
 
 
 class DashboardViewTest(TestCase):
