@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 
 from renthub.models import Room, Renter, Rental, Transaction, RentalPayment
 from renthub.utils import generate_qr_code, delete_qr_code, get_rental_progress_data, Status, get_room_images
@@ -109,15 +109,23 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context['deposit'] = room.price * 2
         context['total'] = room.price * 3
 
+        today = date.today()
+        if today.day > 15:
+            days_late = today.day - 15
+            additional_charge = days_late * 50
+        else:
+            additional_charge = 0
+
         if not rental:
             generate_qr_code(room.price * 3, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
             context['send_or_cancel'] = True
         else:
             if not rental.is_paid:
+                context['additional_charge'] = additional_charge
                 context['water'] = rental.water_fee
                 context['electric'] = rental.electric_fee
-                generate_qr_code(room.price + rental.water_fee + rental.electric_fee, room.room_number)
+                generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge, room.room_number)
                 context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
                 context['send_or_cancel'] = True
             else:

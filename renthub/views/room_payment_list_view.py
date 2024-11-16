@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -21,7 +21,6 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         """Return the context of data displayed on My Rentals page."""
         context = super().get_context_data(**kwargs)
         rentals = Rental.objects.filter(renter__id=self.request.user.id).exclude(status=Status.reject)
-
         rooms_with_rentals = Room.objects.filter(
             rental__in=rentals
         ).annotate(
@@ -32,6 +31,19 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         context['rooms'] = rooms_with_rentals
 
         rental = rentals.first()
+        today = date.today()
+        rental_start_date = rental.start_date
+        six_months_after_start = rental_start_date + relativedelta(months=5)
+        if today.day <= 15:
+            target_month = today + relativedelta(months=1)
+        else:
+            target_month = today + relativedelta(months=2)
+
+        if target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m'):
+            context['target_month'] = target_month.strftime('%Y-%m')
+        else:
+            context['target_month'] = None
+
         if rental:
             context['rental_start_date'] = rental.start_date
             context['rental_end_date'] = rental.end_date
