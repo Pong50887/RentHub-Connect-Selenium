@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect, get_object_or_404
 from django.utils import timezone

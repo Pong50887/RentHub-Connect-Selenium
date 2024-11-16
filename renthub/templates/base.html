@@ -121,16 +121,15 @@
                                             Room Overview
                                         </a>
                                     {% endif %}
-                                    {% if user.is_authenticated %}
-                                        <li>
-                                            <form action="{% url 'logout' %}" method="POST" class="form-inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="dropdown-item">
-                                                    Logout
-                                                </button>
-                                            </form>
-                                        </li>
-                                    {% endif %}
+                                    <a class="dropdown-item" href="{% url 'renthub:profile_settings' %}">Profile Settings</a>
+                                    <li>
+                                        <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="dropdown-item">
+                                                Logout
+                                            </button>
+                                        </form>
+                                    </li>
                                 </li>
                             </ul>
                         </li>
@@ -141,7 +140,6 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-
                             <div class="dropdown user-icon">
                                 <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false" onclick="moveDotToNotification()">
                                     &#128100;
@@ -154,31 +152,36 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
-                                        Notification
-                                        {% if unread_count > 0 %}
-                                            <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
-                                                {{ unread_count }}
-                                            </span>
-                                        {% endif %}
+                                            Notification
+                                            {% if unread_count > 0 %}
+                                                <span id="notification-dot" class="badge rounded-pill bg-danger d-none">
+                                                    {{ unread_count }}
+                                                </span>
+                                            {% endif %}
                                         </a>
-                                        {% if user.is_superuser %}
+                                    </li>
+                                    {% if user.is_superuser %}
+                                        <li>
                                             <a class="dropdown-item" href="{% url 'renthub:dashboard' %}">
                                                 Income Dashboard
                                             </a>
+                                        </li>
+                                        <li>
                                             <a class="dropdown-item" href="{% url 'renthub:room_overview' %}">
                                                 Room Overview
                                             </a>
-                                        {% endif %}
-                                        {% if user.is_authenticated %}
-                                            <li>
-                                                <form action="{% url 'logout' %}" method="POST" class="form-inline">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="dropdown-item">
-                                                        Logout
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        {% endif %}
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'renthub:profile_settings' %}">Profile Settings</a>
+                                    </li>
+                                    <li>
+                                        <form action="{% url 'logout' %}" method="POST" class="form-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="dropdown-item">
+                                                Logout
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -220,33 +223,15 @@
         </div>
     </footer>
 
-<script>
-    function moveDotToNotification() {
-        const iconDot = document.getElementById('icon-dot');
-        const notificationDot = document.getElementById('notification-dot');
-
-        if (iconDot) {
-            iconDot.classList.add('d-none');
+    <script>
+        function moveDotToNotification() {
+            let notificationDot = document.getElementById('notification-dot');
+            let iconDot = document.getElementById('icon-dot');
+            if (notificationDot && iconDot) {
+                notificationDot.classList.remove('d-none');
+                iconDot.classList.add('d-none');
+            }
         }
-
-        if (notificationDot) {
-            notificationDot.classList.remove('d-none');
-        }
-    }
-
-    document.querySelector('.dropdown').addEventListener('hidden.bs.dropdown', function () {
-        const iconDot = document.getElementById('icon-dot');
-        const notificationDot = document.getElementById('notification-dot');
-
-        if (iconDot) {
-            iconDot.classList.remove('d-none');
-        }
-
-        if (notificationDot) {
-            notificationDot.classList.add('d-none');
-        }
-    });
-</script>
-
+    </script>
 </body>
 </html>

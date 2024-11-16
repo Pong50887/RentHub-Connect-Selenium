@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from renthub.models import Renter
+
+from ..models import Renter
 
 
 class ThaiCitizenshipIDWidget(forms.MultiWidget):

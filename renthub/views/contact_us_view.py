@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 
 from ..models import PropertyOwner, Rental
-from ..admin import MaintenanceRequestForm
+from ..forms import MaintenanceRequestForm
 
 
 class ContactUsView(DetailView):
