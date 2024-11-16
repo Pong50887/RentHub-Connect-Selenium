@@ -21,32 +21,34 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         """Return the context of data displayed on My Rentals page."""
         context = super().get_context_data(**kwargs)
         rentals = Rental.objects.filter(renter__id=self.request.user.id).exclude(status=Status.reject)
-        rooms_with_rentals = Room.objects.filter(
-            rental__in=rentals
-        ).annotate(
-            status=F('rental__status'),
-            is_paid=F('rental__is_paid')
-        )
 
-        context['rooms'] = rooms_with_rentals
+        if rentals:
+            rooms_with_rentals = Room.objects.filter(
+                rental__in=rentals
+            ).annotate(
+                status=F('rental__status'),
+                is_paid=F('rental__is_paid')
+            )
 
-        rental = rentals.first()
-        today = date.today()
-        rental_start_date = rental.start_date
-        six_months_after_start = rental_start_date + relativedelta(months=5)
-        if today.day <= 15:
-            target_month = today + relativedelta(months=1)
-        else:
-            target_month = today + relativedelta(months=2)
+            context['rooms'] = rooms_with_rentals
 
-        if target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m'):
-            context['target_month'] = target_month.strftime('%Y-%m')
-        else:
-            context['target_month'] = None
+            rental = rentals.first()
+            today = date.today()
+            rental_start_date = rental.start_date
+            six_months_after_start = rental_start_date + relativedelta(months=5)
+            if today.day <= 15:
+                target_month = today + relativedelta(months=1)
+            else:
+                target_month = today + relativedelta(months=2)
 
-        if rental:
-            context['rental_start_date'] = rental.start_date
-            context['rental_end_date'] = rental.end_date
+            if target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m'):
+                context['target_month'] = target_month.strftime('%Y-%m')
+            else:
+                context['target_month'] = None
+
+            if rental:
+                context['rental_start_date'] = rental.start_date
+                context['rental_end_date'] = rental.end_date
 
         transactions = Transaction.objects.filter(renter__id=self.request.user.id).order_by('-date')
         context['transactions'] = transactions
