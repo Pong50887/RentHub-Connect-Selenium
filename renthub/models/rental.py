@@ -63,7 +63,6 @@ class Rental(models.Model):
 
         return self.last_paid_date.day <= 15
 
-
     def __str__(self):
         """Returns the short detail of the request."""
         return f"{self.renter} / {self.room} / {self.status}"

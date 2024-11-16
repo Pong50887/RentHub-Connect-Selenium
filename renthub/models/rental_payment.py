@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+
 class RentalPayment(models.Model):
     room = models.ForeignKey("renthub.Room", on_delete=models.CASCADE)
     renter = models.ForeignKey(Renter, on_delete=models.CASCADE)
