@@ -17,7 +17,6 @@ class PaymentListViewTests(TestCase):
         self.room3 = Room.objects.create(room_number=103, detail='A cozy room', price=1000.00)
         Rental.objects.create(room=self.room1, renter=self.renter1, price=self.room1.price)
         Rental.objects.create(room=self.room2, renter=self.renter1, price=self.room2.price)
-        # RentalRequest.objects.create(room=self.room3, renter=self.renter1, price=self.room3.price)
 
     def test_no_rental_message_for_renter_without_rentals(self):
         """A renter without any rental sees that their payment list page is empty."""
