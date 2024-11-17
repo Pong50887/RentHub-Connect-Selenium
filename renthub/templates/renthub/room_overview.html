@@ -3,6 +3,19 @@
 
 {% block content %}
 
+{% block extra_styles %}
+    <style>
+        .card {
+            height: 115px;
+        }
+
+        .card-body {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
 <div class="container text-center mt-4 mb-3">
     <h1 class="display-4">Room Overview</h1>
     <hr class="w-100 mx-auto">
@@ -13,14 +26,28 @@
         {% for room in rooms %}
             <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
                 <div class="card shadow-sm border-0">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Room {{ room.room_number }}</h5>
-                        <p class="card-text">
-                            {% if room.is_available %}
-                                <span class="badge bg-success">Available</span>
-                            {% else %}
-                                <span class="badge bg-danger">Occupied</span>
-                                <small class="text-muted d-block mt-1">by {{ room.renter_name }}</small>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Room {{ room.room_number }}</h5>
+                        <p class="card-text text-center">
+                            <div class="d-flex justify-content-center align-items-center">
+                                {% if room.is_available %}
+                                    <span class="badge bg-success me-0">Available</span>
+                                {% else %}
+                                    <span class="badge bg-danger me-0">Occupied</span>
+                                {% endif %}
+
+                                {% if not room.is_available %}
+                                    {% if room.is_paid %}
+                                        <span class="badge bg-success ms-2">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning ms-2">Unpaid</span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            {% if not room.is_available %}
+                                <small class="text-muted text-center d-block mt-2">
+                                    by <a href="{% url 'renthub:user_profile' room.renter_id %}" class="text-decoration-none">{{ room.renter_name }}</a>
+                                </small>
                             {% endif %}
                         </p>
                     </div>
@@ -32,5 +59,7 @@
         {% endfor %}
     </div>
 </div>
+
+
 
 {% endblock %}
