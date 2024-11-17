@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .maintenance_request_form import MaintenanceRequestForm
+from ..forms import MaintenanceRequestForm
 
 
 class MaintenanceRequestAdmin(admin.ModelAdmin):

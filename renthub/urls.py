@@ -19,4 +19,6 @@ urlpatterns = [
     path('contact_us/', views.ContactUsView.as_view(), name='contact_us'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('overview/', views.RoomOverviewView.as_view(), name='room_overview'),
+    path('profile/', views.ProfileSettingsView.as_view(), name='profile_settings'),
+    path('user/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
 ]

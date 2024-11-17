@@ -1,6 +1,5 @@
 from django.views.generic import ListView
 from ..models import Room, RoomType
-from datetime import datetime
 
 
 class RoomListView(ListView):
@@ -8,29 +7,21 @@ class RoomListView(ListView):
     A view that displays a list of rental rooms.
     """
     model = Room
-    template_name = "renthub/rental_list.html"
+    template_name = "renthub/room_list.html"
     context_object_name = "rooms"
 
     def get_queryset(self):
         """Retrieve and filter the list of rooms based on user input."""
-        rooms = Room.objects.all()
+        rooms = Room.objects.all().order_by("room_number")
         search_entry = self.request.GET.get("search", "")
         selected_room_type = self.request.GET.get("room_type", "")
         sort_price_option = self.request.GET.get("sort", "")
-        start_month = self.request.GET.get("start_month")
-        end_month = self.request.GET.get("end_month")
-
-        start_date = datetime.strptime(start_month, "%Y-%m") if start_month else None
-        end_date = datetime.strptime(end_month, "%Y-%m") if end_month else None
 
         available_rooms = []
-
-        if not start_date and not end_date:
-            current_month = str(datetime.now().date())[:-3]
-            for room in rooms:
-                if room.is_available(current_month, 1):
-                    available_rooms.append(room.id)
-            return rooms.filter(pk__in=available_rooms)
+        for room in rooms:
+            if room.is_available:
+                available_rooms.append(room.id)
+        rooms = rooms.filter(pk__in=available_rooms)
 
         if search_entry:
             rooms = (rooms.filter(room_number__icontains=search_entry)
@@ -40,9 +31,8 @@ class RoomListView(ListView):
         if selected_room_type:
             rooms = rooms.filter(room_type__id=selected_room_type)
 
-        number_of_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month + 1
         for room in rooms:
-            if room.is_available(start_month, number_of_months):
+            if room.is_available():
                 available_rooms.append(room.id)
         rooms = rooms.filter(pk__in=available_rooms)
 
@@ -61,8 +51,6 @@ class RoomListView(ListView):
             "selected_room_type": self.request.GET.get("room_type", ""),
             "sort_price_option": self.request.GET.get("sort", ""),
             "room_types": RoomType.objects.all(),
-            "search_results_exist": bool(self.get_queryset()),
-            "start_date": self.request.GET.get("start_month"),
-            "end_date": self.request.GET.get("end_month")
+            "search_results_exist": bool(self.get_queryset())
         })
         return context

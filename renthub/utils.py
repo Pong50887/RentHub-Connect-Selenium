@@ -7,7 +7,8 @@ from django.conf import settings
 import boto3
 from botocore.exceptions import ClientError
 
-from mysite.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_REGION_NAME
+from mysite import settings
+from renthub.models import RoomType
 
 logger = logging.getLogger('renthub')
 
@@ -16,9 +17,9 @@ def get_s3_client():
     """Get S3 client for authentication to access S3 storage."""
     return boto3.client(
         's3',
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        region_name=AWS_S3_REGION_NAME
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME
     )
 
 
@@ -102,3 +103,13 @@ def get_rental_progress_data(status):
         milestones[1]["symbol"] = "x"
 
     return milestones
+
+
+def get_room_images(room_type: RoomType):
+    """Return list of room type's image urls"""
+    image_url_list = []
+    image_folder_path = f'https://{settings.AWS_S3_CUSTOM_DOMAIN}/room_images/{room_type.id}/'
+    image_url_list.append(f"{image_folder_path}bedroom.jpg")
+    image_url_list.append(f"{image_folder_path}bathroom.jpg")
+    image_url_list.append(f"{image_folder_path}kitchen.jpg")
+    return image_url_list

@@ -1,45 +1,84 @@
-.doughnut-chart {
-    width: 150px;
-    height: 150px;
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
 }
 
-.dashboard {
-    max-width: 500px;
-    margin: 0 auto;
+/* Headers */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #343a40;
 }
 
-.income-summary {
-    background-color: #f9f9f9;
-    padding: 20px;
+/* Dropdown Filters */
+.dropdown-filter {
+    margin-bottom: 15px;
+
+}
+
+label {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #495057;
+}
+
+.form-select {
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Card Styles */
+.card {
+    border: 1px solid #dee2e6;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.text-center {
+.card-header {
+    padding: 15px;
+    font-size: 1.25rem;
+    font-weight: bold;
     text-align: center;
 }
 
-.amount {
-    font-size: 1.2rem;
-    color: #333;
-    font-weight: bold;
+.card-body {
+    padding: 20px;
 }
 
-.income-summary .d-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Chart Canvas */
+canvas {
+    display: block;
+    margin: 0 auto;
 }
 
-.income-summary h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+/* Chart Titles */
+.card-title {
+    margin: 0;
 }
 
-.chartjs-tooltip {
-    background-color: rgba(0, 0, 0, 0.8) !important;
+/* Colors */
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.text-white {
     color: #fff !important;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 0.9rem;
+}
+
+/* Hover Effects for Filters */
+.form-select:hover {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }

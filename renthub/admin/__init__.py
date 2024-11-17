@@ -11,10 +11,9 @@ from .rental_admin import RentalAdmin
 from .transaction_admin import TransactionAdmin
 from .renter_admin import RenterAdmin
 from .maintenance_request_admin import MaintenanceRequestAdmin
-from .maintenance_request_form import MaintenanceRequestForm
 from .feature_admin import FeatureAdmin
 from .property_owner_admin import PropertyOwnerAdmin
-from.rental_payment_admin import RentalPaymentAdmin
+from .rental_payment_admin import RentalPaymentAdmin
 
 admin.site.register(Room, RoomAdmin)
 admin.site.register(RoomType, RoomTypeAdmin)

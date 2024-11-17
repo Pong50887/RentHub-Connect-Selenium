@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'renthub.views.context_processors.unread_notifications_count',
                 'renthub.views.context_processors.check_monthly_payment_due',
+                'renthub.views.context_processors.check_rental_ended',
             ],
         },
     },

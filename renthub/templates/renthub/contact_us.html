@@ -14,31 +14,5 @@
             </form>
         </div>
     </div>
-
-    <hr>
-    
-    <div class="row justify-content-center text-center">
-        <div class="col-md-4">
-            <div class="contact-info">
-                <i class="bi bi-geo-alt" style="font-size: 2rem; color: #775344;"></i>
-                <p class="mt-2"><strong>Location</strong></p>
-                <p>{{ contact.location }}</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="contact-info">
-                <i class="bi bi-telephone" style="font-size: 2rem; color: #775344;"></i>
-                <p class="mt-2"><strong>Phone Number</strong></p>
-                <p><a href="tel:{{ contact.phone_number }}">{{ contact.phone_number }}</a></p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="contact-info">
-                <i class="bi bi-envelope" style="font-size: 2rem; color: #775344;"></i>
-                <p class="mt-2"><strong>Email</strong></p>
-                <p><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

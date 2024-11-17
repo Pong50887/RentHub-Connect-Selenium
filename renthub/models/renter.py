@@ -7,6 +7,7 @@ class Renter(User):
     Represents a renter, extending Django's default User model.
     """
     phone_number = models.CharField(max_length=10)
+    thai_citizenship_id = models.CharField(max_length=13, blank=True, null=True, unique=True)
 
     class Meta:
         verbose_name = "Renter"
