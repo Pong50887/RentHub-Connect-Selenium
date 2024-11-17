@@ -70,7 +70,7 @@
         }
         footer {
             background-color: #00006f;
-            height: 60px;
+
         }
     </style>
     {% block extra_css %}
@@ -219,9 +219,32 @@
 
     {% block content %}{% endblock %}
 
-    <footer class="footer mt-auto py-3" style="background-color: #00006f; display: {% block footer_display %}block{% endblock %};">
+    <footer class="footer mt-auto py-4" style="background-color: #00006f;">
         <div class="container text-center text-white">
-            <span>© 2024 RentHub Connect. All rights reserved.</span>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>RentHub Connect</h4>
+                    <p class="mb-0">© 2024 RentHub Connect. All rights reserved.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Contact Us</h4>
+                    <p class="mb-0">Address: 123 Main St, Bangkok, Thailand</p>
+                    <p class="mb-0">Phone: +66 123 456 789</p>
+                    <p class="mb-0">Email: info@renthub.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Follow Us</h4>
+                    <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i> Facebook</a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i> Twitter</a>
+                    <a href="#" class="text-white"><i class="bi bi-instagram"></i> Instagram</a>
+                </div>
+            </div>
+            <hr class="bg-white">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-white mb-0">All content on this website is for informational purposes only. Terms and conditions apply.</p>
+                </div>
+            </div>
         </div>
     </footer>
 

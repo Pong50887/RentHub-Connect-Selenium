@@ -123,6 +123,7 @@
         {% if qr_code_path %}
             <h3 class="mb-3 text-center">Scan this QR code to complete the payment</h3>
             <div class="text-center">
+                <h4 class="text-muted">Payment to: <strong>{{ qr_code_owner_name }}</strong></h4>
                 <img src="{{ qr_code_path }}" alt="QR Code for payment" class="img-fluid mb-4" style="max-width: 200px;">
             </div>
         {% endif %}
