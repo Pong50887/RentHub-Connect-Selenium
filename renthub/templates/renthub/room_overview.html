@@ -38,9 +38,13 @@
 
                                 {% if not room.is_available %}
                                     {% if room.is_paid %}
-                                        <span class="badge bg-success ms-2">Paid</span>
+                                        {% if room.is_paid is not none and not room.is_paid_on_time %}
+                                            <span class="badge bg-warning ms-2">Delayed</span>
+                                        {% else %}
+                                            <span class="badge bg-success ms-2">Paid</span>
+                                        {% endif %}
                                     {% else %}
-                                        <span class="badge bg-warning ms-2">Unpaid</span>
+                                        <span class="badge bg-danger ms-2">Unpaid</span>
                                     {% endif %}
                                 {% endif %}
                             </div>
