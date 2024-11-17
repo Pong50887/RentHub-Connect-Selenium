@@ -121,6 +121,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             generate_qr_code(room.price * 3, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
             context['send_or_cancel'] = True
+            context['qr_code_owner_name'] = "Achirawich"
         else:
             if not rental.is_paid:
                 context['additional_charge'] = additional_charge
@@ -129,8 +130,10 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge, room.room_number)
                 context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
                 context['send_or_cancel'] = True
+                context['qr_code_owner_name'] = "Achirawich"
             else:
                 context['qr_code_path'] = None
                 context['send_or_cancel'] = False
+                context['qr_code_owner_name'] = "N/A"
 
         return context
