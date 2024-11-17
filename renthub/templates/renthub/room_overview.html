@@ -46,7 +46,7 @@
                             </div>
                             {% if not room.is_available %}
                                 <small class="text-muted text-center d-block mt-2">
-                                    by <a href="{% url 'renthub:user_profile' room.renter_id %}" class="text-decoration-none">{{ room.renter_name }}</a>
+                                    by <a href="{% url 'renthub:user_profile' room.renter_name %}" class="text-decoration-none">{{ room.renter_name }}</a>
                                 </small>
                             {% endif %}
                         </p>
