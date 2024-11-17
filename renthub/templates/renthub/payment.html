@@ -54,7 +54,6 @@
                     <div class="room-details">
                         <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
                         <hr class="separator-line">
-                        <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month + water: {{ water }} + electrical: {{ electric }} + additional_charge: {{ additional_charge }}</span></h3>
                         <p><strong>Room Floor:</strong> {{ room.room_floor }}<br>
                             <strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
                             <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
@@ -67,14 +66,43 @@
                                <li>No features available.</li>
                             {% endfor %}
                             </ul>
-                        </p>
+                        {% if not rental.is_paid %}
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Amount (฿)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monthly Rent</td>
+                                        <td>{{ room.price }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Water Charges</td>
+                                        <td>{{ water }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Electricity Charges</td>
+                                        <td>{{ electric }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Additional Charges</td>
+                                        <td>{{ additional_charge }}</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <th>Total</th>
+                                        <th>{{ total }}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}    
                     </div>
                 {% else %}
                     <div class="room-details">
                         <h2><span class="bold-text">{{ room.room_type.type_name }} - Room {{ room.room_number }}</span></h2>
                         <hr class="separator-line">
-                        <h3 class="text-success"><span class="bold-text">{{ room.price }} ฿ / month + Deposit {{ deposit }} ฿</span></h3>
-                        <h3 class="text-success"><span class="bold-text">Total : {{ total }} ฿</span></h3>
                         <p><strong>Room Floor:</strong> {{ room.room_floor }}<br>
                             <strong>Room Type:</strong> {{ room.room_type.type_name }}<br>
                             <strong>Monthly Rent:</strong> {{ room.price }} ฿<br>
@@ -87,7 +115,28 @@
                                <li>No features available.</li>
                             {% endfor %}
                             </ul>
-                        </p>
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Amount (฿)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Monthly Rent</td>
+                                    <td>{{ room.price }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deposit</td>
+                                    <td>{{ deposit }}</td>
+                                </tr>
+                                <tr class="table-success">
+                                        <th>Total</th>
+                                        <th>{{ total }}</th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 {% endif %}
             </div>

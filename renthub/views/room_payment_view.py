@@ -108,7 +108,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         rental = Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).first()
         context['rental'] = rental
         context['deposit'] = room.price * 2
-        context['total'] = room.price * 3
 
         today = date.today()
         if today.day > 15:
@@ -117,6 +116,15 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         else:
             additional_charge = 0
 
+        if rental:
+            context['total'] = room.price + rental.water_fee + rental.electric_fee + additional_charge
+            context['additional_charge'] = additional_charge
+            context['water'] = rental.water_fee
+            context['electric'] = rental.electric_fee
+        else:
+            context['total'] = room.price * 3
+
+
         if not rental:
             generate_qr_code(room.price * 3, room.room_number)
             context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
@@ -124,9 +132,6 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             context['qr_code_owner_name'] = "Achirawich"
         else:
             if not rental.is_paid:
-                context['additional_charge'] = additional_charge
-                context['water'] = rental.water_fee
-                context['electric'] = rental.electric_fee
                 generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge, room.room_number)
                 context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
                 context['send_or_cancel'] = True

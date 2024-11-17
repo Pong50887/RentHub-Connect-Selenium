@@ -28,7 +28,8 @@ class Rental(models.Model):
 
     def is_ended(self):
         """Check if the event or rental period has ended."""
-        return timezone.now().date() > self.end_date
+        if self.end_date:
+            return timezone.now().date() > self.end_date
 
     def check_monthly_payment_due(self):
         """Check if a new month within the rental period requires payment."""

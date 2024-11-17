@@ -16,3 +16,11 @@ def check_monthly_payment_due(_):
         rental.check_monthly_payment_due()
 
     return {}
+
+def check_rental_ended(_):
+    rentals = Rental.objects.filter(status=Status.approve)
+    for rental in rentals:
+        if rental.is_ended():
+            rental.delete()
+
+    return {}
