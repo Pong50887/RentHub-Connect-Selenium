@@ -28,3 +28,4 @@ All project documents are in the [Project Wiki](../../wiki/Home).
 - [Iteration 4](../../wiki/Iteration-4-Plan)
 - [Iteration 5](../../wiki/Iteration-5-Plan)
 - [Iteration 6](../../wiki/Iteration-6-Plan)
+- [Iteration 7](../../wiki/Iteration-7-Plan)
