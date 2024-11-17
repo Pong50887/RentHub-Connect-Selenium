@@ -16,7 +16,7 @@ class PaymentStatusWaitTests(TestCase):
     """Tests of PaymentStatus when status is wait."""
 
     def setUp(self):
-        """Set up data for the tests."""
+        """Set up data for the PaymentStatusWaitTests."""
         self.renter = Renter.objects.create_user(username='renter', password='testpassword',
                                                  phone_number='1234567890')
         self.room = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
@@ -81,7 +81,8 @@ class PaymentStatusWaitTests(TestCase):
 
     def test_payment_history_view(self):
         """A renter can see their payment history with wait status."""
-        response = self.client.get(reverse('renthub:payment_history', kwargs={'pk': Transaction.objects.get(room=self.room).id}))
+        response = self.client.get(reverse('renthub:payment_history',
+                                           kwargs={'pk': Transaction.objects.get(room=self.room).id}))
         content = response.content.decode('utf-8')
         self.assertIn(str(Status.wait).title(), content, f"'{str(Status.wait).title()}' not found in response.")
 
@@ -90,7 +91,7 @@ class PaymentStatusApproveTests(TestCase):
     """Tests of PaymentStatus when status is approve."""
 
     def setUp(self):
-        """Set up data for the tests."""
+        """Set up data for the PaymentStatusApproveTests."""
         self.renter = Renter.objects.create_user(username='renter', password='testpassword',
                                                  phone_number='1234567890')
         self.room = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
@@ -154,16 +155,18 @@ class PaymentStatusApproveTests(TestCase):
 
     def test_payment_history_view(self):
         """A renter can see their payment history with approve status."""
-        response = self.client.get(reverse('renthub:payment_history', kwargs={'pk': Transaction.objects.get(room=self.room).id}))
+        response = self.client.get(reverse('renthub:payment_history',
+                                           kwargs={'pk': Transaction.objects.get(room=self.room).id}))
         content = response.content.decode('utf-8')
-        self.assertIn(str(Status.approve).title(), content, f"'{str(Status.approve).title()}' not found in response.")
+        self.assertIn(str(Status.approve).title(), content,
+                      f"'{str(Status.approve).title()}' not found in response.")
 
 
 class PaymentStatusRejectTests(TestCase):
     """Tests of PaymentStatus when status is reject."""
 
     def setUp(self):
-        """Set up data for the tests."""
+        """Set up data for the PaymentStatusRejectTests."""
         self.renter = Renter.objects.create_user(username='renter', password='testpassword',
                                                  phone_number='1234567890')
         self.room = Room.objects.create(room_number=101, detail='A cozy room', price=1000.00)
@@ -216,6 +219,8 @@ class PaymentStatusRejectTests(TestCase):
 
     def test_payment_history_view(self):
         """A renter can see their payment history with wait status."""
-        response = self.client.get(reverse('renthub:payment_history', kwargs={'pk': Transaction.objects.get(room=self.room).id}))
+        response = self.client.get(reverse('renthub:payment_history',
+                                           kwargs={'pk': Transaction.objects.get(room=self.room).id}))
         content = response.content.decode('utf-8')
-        self.assertIn(str(Status.reject).title(), content, f"'{str(Status.reject).title()}' not found in response.")
+        self.assertIn(str(Status.reject).title(), content,
+                      f"'{str(Status.reject).title()}' not found in response.")

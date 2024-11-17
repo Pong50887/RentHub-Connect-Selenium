@@ -116,6 +116,7 @@ class PaymentHistoryViewTests(TestCase):
         url = reverse('renthub:payment', args=[self.room.room_number])
         self.client.post(url, self.form_data, follow=True)
 
-        response = self.client.get(reverse('renthub:payment_history', kwargs={'pk': Transaction.objects.get(room=self.room).id}))
+        response = self.client.get(reverse('renthub:payment_history',
+                                           kwargs={'pk': Transaction.objects.get(room=self.room).id}))
         content = response.content.decode('utf-8')
         self.assertIn(f'{self.room.room_number}', content)
