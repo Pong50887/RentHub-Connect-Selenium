@@ -54,6 +54,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                     room=room, renter=renter, defaults={'price': room.price,
                                                         'start_date': start_date,
                                                         'last_checked_month': start_date,
+                                                        'last_paid_date': start_date,
                                                         }
                 )
                 rental.image = file_path

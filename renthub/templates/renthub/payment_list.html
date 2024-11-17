@@ -121,7 +121,7 @@
                             <p class="room-status">Status: {{ room.status }}</p>
                         </div>
                         {% if not room.is_paid %}
-                            <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn" >Pay Month Rental</a>
+                            <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn" >Pay Rental</a>
                         {% else %}
                             <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
                         {% endif %}
