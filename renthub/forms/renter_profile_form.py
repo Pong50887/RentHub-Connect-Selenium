@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 from ..models import Renter
 
@@ -10,14 +10,18 @@ class RenterProfileForm(forms.ModelForm):
     Form for users to update their profile information.
     """
     password = forms.CharField(widget=forms.PasswordInput(), label='Current Password')
-    new_password1 = forms.CharField(widget=forms.PasswordInput(), label='New Password')
-    new_password2 = forms.CharField(widget=forms.PasswordInput(), label='Confirm New Password')
+    new_password1 = forms.CharField(widget=forms.PasswordInput(), label='New Password', validators=[validate_password])
+    new_password2 = forms.CharField(widget=forms.PasswordInput(), label='Confirm New Password',
+                                    validators=[validate_password])
 
     class Meta:
         model = Renter
         fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id']
 
     def clean(self):
+        """
+        Clean the form data by validating the current password and checking if the new passwords match.
+        """
         cleaned_data = super().clean()
         current_password = cleaned_data.get('password')
         new_password1 = cleaned_data.get('new_password1')
@@ -26,11 +30,11 @@ class RenterProfileForm(forms.ModelForm):
         if current_password:
             user = authenticate(username=self.instance.username, password=current_password)
             if not user:
-                raise ValidationError("The current password is incorrect.")
+                self.add_error('password', "The current password is incorrect.")
 
         if new_password1 or new_password2:
             if new_password1 != new_password2:
-                raise ValidationError("The new passwords do not match.")
+                self.add_error('new_password2', "The new passwords do not match.")
 
         return cleaned_data
 

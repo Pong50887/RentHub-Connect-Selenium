@@ -1,11 +1,7 @@
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import PasswordChangeForm
-from django.views import View
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render
+
 from ..forms import RenterProfileForm
 from ..models import Renter
 
