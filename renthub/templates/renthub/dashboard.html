@@ -11,18 +11,18 @@
     <!-- Year and Month Filter Dropdown -->
     <form method="get" class="mb-4">
         <div class="row">
-            <div class="dropdown" style="float: left; width: auto;">  <!-- Adjusted to float left -->
+            <div class="dropdown-filter" style="float: left; width: auto;">
                 <label for="year">Year:</label>
-                <select name="year" id="year" class="form-select" onchange="this.form.submit()">
+                <select name="year" id="year" class="form-select" onchange="this.form.submit()" style="width: 80px">
                     {% for y in years %}
                         <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="dropdown" style="float: left; width: auto; margin-left: 10px;">  <!-- Adjusted to float left and added margin -->
+            <div class="dropdown" style="float: left; width: auto; margin-left: 10px;">
                 <label for="month">Month:</label>
-                <select name="month" id="month" class="form-select" onchange="this.form.submit()">
+                <select name="month" id="month" class="form-select" onchange="this.form.submit()" style="width: 150px">
                     <option value="0" {% if not selected_month %}selected{% endif %}>-- All Months --</option>
                     {% for month_num, month_name in months %}
                         <option value="{{ month_num }}" {% if month_num == selected_month %}selected{% endif %}>
@@ -41,7 +41,7 @@
             <h3 class="card-title text-center">Overall Income for {{ selected_year }}</h3>
         </div>
         <div class="card-body">
-            <canvas id="incomeBarChart" width="300" height="150"></canvas>
+            <canvas id="incomeBarChart" width="800" height="500"></canvas>
         </div>
     </div>
     {% endif %}
@@ -52,7 +52,7 @@
             <h3 class="card-title text-center">Daily Income for {{ selected_month_name }} {{ selected_year }}</h3>
         </div>
         <div class="card-body">
-            <canvas id="dailyIncomeChart" width="300" height="150"></canvas>
+            <canvas id="dailyIncomeChart" width="800" height="500"></canvas>
         </div>
     </div>
     {% endif %}
@@ -71,12 +71,7 @@
         datasets: [{
             label: 'Income (฿)',
             data: {{ monthly_income_data|safe }},
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
-                'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)'
-            ],
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
             borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1,
         }]
@@ -88,6 +83,7 @@
         data: incomeData,
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'top' },
                 tooltip: { callbacks: { label: (tooltipItem) => '฿ ' + tooltipItem.raw } }
@@ -121,6 +117,7 @@
         data: dailyIncomeData,
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'top' },
                 tooltip: { callbacks: { label: (tooltipItem) => '฿ ' + tooltipItem.raw } }

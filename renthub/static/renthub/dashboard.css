@@ -1,60 +1,84 @@
-.card {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    height: auto;
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Headers */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* Dropdown Filters */
+.dropdown-filter {
+    margin-bottom: 15px;
+
+}
+
+label {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #495057;
 }
 
 .form-select {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    width: 100%; /* Ensure full width inside dropdown */
-}
-
-.form-label {
-    margin-right: 10px;
-}
-
-/* Dropdown Buttons - Full Width */
-.dropdown {
-    width: 100%; /* Ensure dropdown spans the full container width */
-    margin-bottom: 1rem;
-}
-
-.dropdown label {
-    display: block; /* Ensure label appears above the select */
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.dropdown select {
-    width: 100%; /* Full width for the dropdown select */
-    border: 2px solid #007bff;
-    background-color: #f8f9fa;
-    color: #007bff;
-    font-weight: bold;
-    padding: 10px 12px;
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
     border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
+    font-size: 1rem;
 }
 
-.dropdown select:hover {
-    background-color: #007bff;
-    color: #fff;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+/* Card Styles */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.dropdown select:focus {
+.card-header {
+    padding: 15px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Chart Canvas */
+canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Chart Titles */
+.card-title {
+    margin: 0;
+}
+
+/* Colors */
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.text-white {
+    color: #fff !important;
+}
+
+/* Hover Effects for Filters */
+.form-select:hover {
+    border-color: #80bdff;
     outline: none;
-    box-shadow: 0 0 5px 2px rgba(0, 123, 255, 0.6);
-}
-
-#incomeBarChart, #dailyIncomeChart {
-    width: 300px !important;
-    height: 150px !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
