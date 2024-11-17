@@ -12,7 +12,7 @@ class RoomListView(ListView):
 
     def get_queryset(self):
         """Retrieve and filter the list of rooms based on user input."""
-        rooms = Room.objects.all()
+        rooms = Room.objects.all().order_by("room_number")
         search_entry = self.request.GET.get("search", "")
         selected_room_type = self.request.GET.get("room_type", "")
         sort_price_option = self.request.GET.get("sort", "")
