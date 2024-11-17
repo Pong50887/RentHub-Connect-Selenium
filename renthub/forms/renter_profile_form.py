@@ -9,9 +9,10 @@ class RenterProfileForm(forms.ModelForm):
     """
     Form for users to update their profile information.
     """
-    password = forms.CharField(widget=forms.PasswordInput(), label='Current Password')
-    new_password1 = forms.CharField(widget=forms.PasswordInput(), label='New Password', validators=[validate_password])
-    new_password2 = forms.CharField(widget=forms.PasswordInput(), label='Confirm New Password',
+    password = forms.CharField(widget=forms.PasswordInput(), label='Current Password', required=False)
+    new_password1 = forms.CharField(widget=forms.PasswordInput(), label='New Password', required=False,
+                                    validators=[validate_password])
+    new_password2 = forms.CharField(widget=forms.PasswordInput(), label='Confirm New Password', required=False,
                                     validators=[validate_password])
 
     class Meta:
