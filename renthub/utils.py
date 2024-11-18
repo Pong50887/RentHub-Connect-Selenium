@@ -201,3 +201,4 @@ def admin_login(browser):
     browser.find_element(By.NAME, 'username').send_keys('rhadmin')
     browser.find_element(By.NAME, 'password').send_keys('renthub1234')
     browser.find_element(By.XPATH, '//input[@type="submit"]').click()
+    
