@@ -1,11 +1,21 @@
-from promptpay import qrcode
-import os
 import logging
+import os
+import signal
+import subprocess
+import time
 from enum import Enum
 
-from django.conf import settings
 import boto3
 from botocore.exceptions import ClientError
+from django.conf import settings
+from django.urls import reverse
+from promptpay import qrcode
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
 from mysite import settings
 from renthub.models import RoomType
@@ -113,3 +123,81 @@ def get_room_images(room_type: RoomType):
     image_url_list.append(f"{image_folder_path}bathroom.jpg")
     image_url_list.append(f"{image_folder_path}kitchen.jpg")
     return image_url_list
+
+
+class Browser:
+    """Provide access to an instance of a Selenium web driver."""
+
+    @classmethod
+    def get_browser(cls):
+        """Class method to initialize a headless Chrome WebDriver."""
+        options = webdriver.ChromeOptions()
+        # options.add_argument('--headless')
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        return driver
+
+    @classmethod
+    def start_django_server(cls):
+        """Start the Django server using the test database."""
+        server_command = ['python3', 'manage.py', 'runserver', '127.0.0.1:8000']
+        cls.server_process = subprocess.Popen(server_command)
+        time.sleep(5)
+
+    @classmethod
+    def stop_django_server(cls):
+        """Stop the Django development server."""
+        cls.server_process.terminate()
+
+    @classmethod
+    def get_logged_in_browser(cls, username, password):
+        """Class method to initialize a headless browser and log in."""
+        driver = cls.get_browser()
+
+        try:
+            driver.get(f"{settings.BASE_URL}/accounts/login/?next=/")
+            username_field = driver.find_element(By.XPATH, '//td//input[@name="username"]')
+            password_field = driver.find_element(By.XPATH, '//td//input[@name="password"]')
+            login_button = driver.find_element(By.XPATH, '//form//button[@type="submit"]')
+
+            username_field.send_keys(username)
+            password_field.send_keys(password)
+            login_button.click()
+
+            WebDriverWait(driver, 10).until(EC.url_to_be(f"{settings.BASE_URL}{reverse('renthub:home')}"))
+
+        except Exception as e:
+            raise RuntimeError(f"An error occurred during login: {e}")
+
+        return driver
+
+
+def kill_port():
+    # Specify the port to check
+    port = 8000
+
+    try:
+        # Find the process using the port
+        result = subprocess.run(
+            ["lsof", "-i", f":{port}"], capture_output=True, text=True
+        )
+        lines = result.stdout.splitlines()
+
+        # Parse the output to get the PID (Process ID)
+        if len(lines) > 1:  # First line is the header, skip it
+            pid = int(lines[1].split()[1])  # Extract PID from the output
+            print(f"Terminating process on port {port} with PID {pid}")
+
+            # Kill the process
+            os.kill(pid, signal.SIGTERM)
+    except Exception as e:
+        print(f"Failed to free port {port}: {e}")
+
+
+def admin_login(browser):
+    browser.get(f"{settings.BASE_URL}/admin/login/")
+    browser.find_element(By.NAME, 'username').send_keys('rhadmin')
+    browser.find_element(By.NAME, 'password').send_keys('renthub1234')
+    browser.find_element(By.XPATH, '//input[@type="submit"]').click()
