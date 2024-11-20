@@ -1,9 +1,11 @@
 from django.db import models
 from .room import Room
 
+
 def upload_to_room_directory(instance, filename):
     # Access the related room's id from the instance
     return f'room_images/{instance.room.room_number}/{filename}'
+
 
 class RoomImage(models.Model):
     """
