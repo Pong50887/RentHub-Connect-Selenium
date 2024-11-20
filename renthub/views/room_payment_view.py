@@ -25,6 +25,26 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         room = get_object_or_404(Room, room_number=room_number)
         return room
 
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET requests with a validation check.
+        Redirect to the home page if the user is not eligible to access this page.
+        """
+        room = self.get_object()
+        try:
+            renter = Renter.objects.get(id=request.user.id)
+        except Renter.DoesNotExist:
+            messages.error(request, "You need to register as a renter to view this page.")
+            return redirect('renthub:home')
+
+        # Check if the user has an active rental for this room
+        rental = Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).first()
+        if not rental:
+            messages.error(request, "You do not have an active rental for this room.")
+            return redirect('renthub:home')
+
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         """Handle POST requests to upload a payment slip."""
         room = self.get_object()
@@ -132,7 +152,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             context['qr_code_owner_name'] = "Achirawich"
         else:
             if not rental.is_paid:
-                generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge, room.room_number)
+                generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge,
+                                 room.room_number)
                 context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
                 context['send_or_cancel'] = True
                 context['qr_code_owner_name'] = "Achirawich"
