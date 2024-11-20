@@ -31,16 +31,14 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         Redirect to the home page if the user is not eligible to access this page.
         """
         room = self.get_object()
+        if not room.is_available():
+            messages.error(request, "This room is not available.")
+            return redirect('renthub:home')
+
         try:
             renter = Renter.objects.get(id=request.user.id)
         except Renter.DoesNotExist:
             messages.error(request, "You need to register as a renter to view this page.")
-            return redirect('renthub:home')
-
-        # Check if the user has an active rental for this room
-        rental = Rental.objects.filter(room=room, renter=renter).exclude(status=Status.reject).first()
-        if not rental:
-            messages.error(request, "You do not have an active rental for this room.")
             return redirect('renthub:home')
 
         return super().get(request, *args, **kwargs)
