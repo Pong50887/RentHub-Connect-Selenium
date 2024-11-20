@@ -136,7 +136,7 @@
                 </div>
             {% endif %}
         {% endfor %}
-    {% elif not search_results_exist and search_entry or selected_room_type or start_date or end_date %}
+    {% else %}
         <p class="alert alert-warning text-center">Currently, we don't have any matched rooms available.</p>
     {% endif %}
 </div>
