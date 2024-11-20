@@ -63,7 +63,7 @@
                     <div class="carousel-inner">
                         {% for image in room_images %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 600px;">
-                                <img src="{{ image }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image"
+                                <img src="{{ image.image.url }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image"
                                 style="object-fit: cover; width: 100%; height: 100%;">
                             </div>
                         {% endfor %}
