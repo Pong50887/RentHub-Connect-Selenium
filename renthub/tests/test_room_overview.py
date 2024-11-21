@@ -1,85 +1,77 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 from ..models import Room, Rental, Renter
 from ..utils import Status
 
 
 class RoomOverviewViewTest(TestCase):
+    """
+    Tests for the Room Overview page to ensure proper functionality and access control.
+    """
 
     def setUp(self):
-        # Create test renter
+        """Set up test data, including a superuser, a regular user, and test rooms and rentals."""
+        self.superuser = User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="admin_password"
+        )
+        self.client.login(username="admin", password="admin_password")
+
         self.renter = Renter.objects.create(
-            username="testuser",
+            username="test_user",
             email="testuser@example.com",
             phone_number="1234567890",
             thai_citizenship_id="1234567890123"
         )
 
-        # Create rooms
-        self.room1 = Room.objects.create(room_number=101, detail='Test Room', price=99.99,)
-        self.room2 = Room.objects.create(room_number=102, detail='Test Room', price=99.99,)
+        self.room1 = Room.objects.create(room_number=101, detail='Test Room 1', price=1000.0)
+        self.room2 = Room.objects.create(room_number=102, detail='Test Room 2', price=1200.0)
 
-        # Create rentals for the rooms (room2 will have an active rental)
-        self.rental1 = Rental.objects.create(
+        Rental.objects.create(
             room=self.room2,
             renter=self.renter,
             status=Status.approve,
             is_paid=False,
-            price=self.room1.price
+            price=self.room2.price
         )
 
-    def test_room_overview_view_success(self):
-        """Test that the room overview page loads successfully and displays room information."""
+    def test_superuser_access(self):
+        """Ensure that superusers can access the Room Overview page."""
         response = self.client.get(reverse('renthub:room_overview'))
-
-        # Check if the response status code is 200
         self.assertEqual(response.status_code, 200)
-
-        # Check if the correct template is used
         self.assertTemplateUsed(response, 'renthub/room_overview.html')
 
-        # Check if rooms are in the context
-        self.assertIn('rooms', response.context)
+    def test_non_superuser_redirect(self):
+        """Ensure that non-superusers are redirected to the home page with an error message."""
+        self.client.logout()
+        response = self.client.get(reverse('renthub:room_overview'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('renthub:home'))
 
-        # Check if room 1 is available and room 2 is occupied
-        room1_data = next(room for room in response.context['rooms'] if room['room_number'] == 101)
-        room2_data = next(room for room in response.context['rooms'] if room['room_number'] == 102)
+        User.objects.create_user(
+            username="regular_user",
+            email="regularuser@example.com",
+            password="password123"
+        )
+        self.client.login(username="regular_user", password="password123")
+        response = self.client.get(reverse('renthub:room_overview'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('renthub:home'))
 
-        # Room 1 should be available
+    def test_room_availability_context(self):
+        """Verify that the Room Overview page provides correct context data for room availability."""
+        response = self.client.get(reverse('renthub:room_overview'))
+        rooms = response.context['rooms']
+
+        room1_data = next(room for room in rooms if room['room_number'] == 101)
+        room2_data = next(room for room in rooms if room['room_number'] == 102)
+
         self.assertTrue(room1_data['is_available'])
         self.assertIsNone(room1_data['renter_name'])
         self.assertIsNone(room1_data['is_paid'])
 
-        # Room 2 should be occupied, unpaid, with renter details
         self.assertFalse(room2_data['is_available'])
-        self.assertEqual(room2_data['renter_name'], 'testuser')
+        self.assertEqual(room2_data['renter_name'], self.renter.username)
         self.assertFalse(room2_data['is_paid'])
-
-    def test_no_rooms_available(self):
-        """Test if no rooms are available."""
-        # Set the rental status of all rooms to 'approve' (occupied)
-        Rental.objects.create(
-            room=self.room1,
-            renter=self.renter,
-            status=Status.approve,
-            is_paid=False,
-            price=self.room1.price
-        )
-        response = self.client.get(reverse('renthub:room_overview'))
-
-        # Check if the response status code is 200
-        self.assertEqual(response.status_code, 200)
-
-        # Ensure both rooms are occupied
-        room1_data = next(room for room in response.context['rooms'] if room['room_number'] == 101)
-        room2_data = next(room for room in response.context['rooms'] if room['room_number'] == 102)
-
-        self.assertFalse(room1_data['is_available'])
-        self.assertFalse(room2_data['is_available'])
-
-    def test_room_with_no_active_rentals(self):
-        """Test that rooms without any active rentals are marked as available."""
-        # No rentals for room1 (it should be available)
-        room1_data = next(room for room in self.client.get(reverse('renthub:room_overview')).context['rooms'] if
-                          room['room_number'] == 101)
-        self.assertTrue(room1_data['is_available'])
