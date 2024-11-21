@@ -1,5 +1,4 @@
-from django.urls import path, re_path
-from django.shortcuts import redirect
+from django.urls import path
 
 from . import views
 
@@ -23,5 +22,4 @@ urlpatterns = [
     path('overview/', views.RoomOverviewView.as_view(), name='room_overview'),
     path('profile/', views.ProfileSettingsView.as_view(), name='profile_settings'),
     path('user/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
-    re_path(r'^.*$', lambda request: redirect('renthub:home')),
 ]
