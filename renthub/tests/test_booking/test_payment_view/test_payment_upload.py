@@ -35,7 +35,7 @@ class PaymentViewTests(TestCase):
         Rental.objects.create(room=self.room1, renter=self.renter, price=self.room1.price)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room1.room_number}))
-        self.assertRedirects(response, reverse('renthub:home'))
+        self.assertNotContains(response, 'Upload Payment Slip:')
 
     def test_photo_upload_visible_if_rental_is_rejected(self):
         """A renter can upload a payment photo if their latest RentalRequest for the room was rejected."""

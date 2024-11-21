@@ -39,7 +39,7 @@ class PaymentViewTests(TestCase):
         Rental.objects.create(room=self.room1, renter=self.renter, price=self.room1.price)
         self.client.login(username='renter1', password='testpassword')
         response = self.client.get(reverse('renthub:payment', kwargs={'room_number': self.room1.room_number}))
-        self.assertRedirects(response, reverse('renthub:home'))
+        self.assertNotContains(response, 'Scan this QR code to complete the payment')
 
     def test_qr_visible_if_latest_rental_is_rejected(self):
         """A renter cannot see the QR code if they have a Rental for the room and their latest RentalRequest

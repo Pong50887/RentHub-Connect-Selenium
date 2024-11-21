@@ -6,7 +6,7 @@ import unittest
 
 from django.test import TestCase
 from django.urls import reverse
-from renthub.models import Rental, Room, Renter
+from renthub.models import Room, Renter
 
 
 class PaymentViewTests(TestCase):
