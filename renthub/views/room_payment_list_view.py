@@ -31,9 +31,7 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
                 rental_start_date = F('rental__start_date'),
                 rental_end_date = F('rental__end_date')
             )
-
             context['rooms'] = rooms_with_rentals
-
             today = date.today()
             for room in rooms_with_rentals:
                 rental_start_date = room.rental_start_date
@@ -45,7 +43,6 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
 
                 room.target_month = target_month.strftime('%Y-%m')
                 room.in_month = target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m')
-                print(room.in_month)
 
         transactions = Transaction.objects.filter(renter__id=self.request.user.id).order_by('-date')
         context['transactions'] = transactions
