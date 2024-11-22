@@ -144,6 +144,10 @@
                               <div class="modal-body">
                                 <p>Please note the following important information regarding move-out notices:</p>
                                 <ul>
+                                     <li>
+                                        <strong>Minimum Rental Period:</strong>
+                                        Renters must commit to a minimum rental period of <strong>6 months</strong>. If a renter terminates the agreement and moves out before completing 6 months, the <strong>security deposit will not be refunded</strong>.
+                                    </li>
                                     <li>
                                         <strong>Advanced Notification Requirement:</strong>
                                         Renters must submit their move-out notice <strong>at least one month in advance</strong> of the intended move-out date. This allows sufficient time for both the renter and the landlord to plan.
@@ -176,13 +180,12 @@
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="month-picker" class="form-label">Move-out month</label>
-                                        {% if target_month %}
-                                            <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ target_month }}" readonly>
-                                        {% else %}
+                                        {% if not in_month %}
                                             <div class="alert alert-warning" role="alert">
-                                                You do not have a valid move-out month. Please check the move-out date requirements.
+                                                The selected month is within the 6-month rental period.
                                             </div>
                                         {% endif %}
+                                        <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ target_month }}" readonly>
                                     </div>
                                 </form>
                               </div>
