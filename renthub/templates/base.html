@@ -59,7 +59,6 @@
             color: inherit; 
             border: none;
         }
-        
         .user-icon .btn:hover,
         .user-icon .btn:focus,
         .user-icon .btn:active {
@@ -70,7 +69,6 @@
         }
         footer {
             background-color: #00006f;
-
         }
     </style>
     {% block extra_css %}
@@ -103,7 +101,7 @@
                             <a class="nav-link" href="#" id="usernameDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ user.username }}
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="min-width: 100px;">
                                 <li>
                                     <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
                                     Notification
@@ -150,7 +148,7 @@
                                         </span>
                                     {% endif %}
                                 </span>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" style="min-width: 100px;">
                                     <li>
                                         <a class="dropdown-item" href="{% url 'renthub:notifications' %}">
                                             Notification
@@ -194,7 +192,7 @@
                                 <span class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
                                     &#128100;
                                 </span>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" style="min-width: 100px;">
                                     <li><a class="dropdown-item disabled" aria-disabled="true">Notification</a></li>
                                 </ul>
                             </div>
