@@ -1,5 +1,6 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import DetailView
 from django.utils import timezone
@@ -21,10 +22,17 @@ class RoomDetailView(DetailView):
         """Retrieve the room object based on the room number."""
         room_number = self.kwargs.get("room_number")
         room = get_object_or_404(Room, room_number=room_number)
+
         return room
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests for room details."""
+        room_number = self.kwargs.get("room_number")
+        room = get_object_or_404(Room, room_number=room_number)
+        if not room.is_available():
+            messages.error(self.request, "The room is not available.")
+            return redirect('renthub:home')
+
         try:
             self.get_object()
         except Http404:
