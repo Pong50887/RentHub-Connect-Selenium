@@ -27,26 +27,25 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
                 rental__in=rentals
             ).annotate(
                 status=F('rental__status'),
-                is_paid=F('rental__is_paid')
+                is_paid=F('rental__is_paid'),
+                rental_start_date = F('rental__start_date'),
+                rental_end_date = F('rental__end_date')
             )
 
             context['rooms'] = rooms_with_rentals
 
-            rental = rentals.first()
             today = date.today()
-            rental_start_date = rental.start_date
-            six_months_after_start = rental_start_date + relativedelta(months=5)
-            if today.day <= 15:
-                target_month = today + relativedelta(months=1)
-            else:
-                target_month = today + relativedelta(months=2)
+            for room in rooms_with_rentals:
+                rental_start_date = room.rental_start_date
+                six_months_after_start = rental_start_date + relativedelta(months=5)
+                if today.day <= 15:
+                    target_month = today + relativedelta(months=1)
+                else:
+                    target_month = today + relativedelta(months=2)
 
-            context['target_month'] = target_month.strftime('%Y-%m')
-            context['in_month'] = target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m')
-
-            if rental:
-                context['rental_start_date'] = rental.start_date
-                context['rental_end_date'] = rental.end_date
+                room.target_month = target_month.strftime('%Y-%m')
+                room.in_month = target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m')
+                print(room.in_month)
 
         transactions = Transaction.objects.filter(renter__id=self.request.user.id).order_by('-date')
         context['transactions'] = transactions
