@@ -85,7 +85,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 transaction = Transaction.objects.create(
                     room=room,
                     renter=renter,
-                    price=room.price,
+                    price=total,
                     date=datetime.now(),
                     image=file_path
                 )
@@ -109,7 +109,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 transaction = Transaction.objects.create(
                     room=room,
                     renter=renter,
-                    price=room.price,
+                    price=total,
                     date=datetime.now(),
                     image=file_path
                 )
