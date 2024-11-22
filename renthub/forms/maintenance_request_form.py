@@ -19,9 +19,10 @@ class MaintenanceRequestForm(forms.ModelForm):
             'request_message': 'Describe the problem',
         }
 
-    def save(self, rental, commit=True):
+    def save(self, commit=True):
         maintenance_request = super().save(commit=False)
-        maintenance_request.rental = rental
+        if not maintenance_request.rental:
+            maintenance_request.rental = self.instance.rental
         maintenance_request.date_requested = timezone.now()
         if commit:
             maintenance_request.save()
