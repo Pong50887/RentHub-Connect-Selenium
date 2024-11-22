@@ -41,10 +41,8 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
             else:
                 target_month = today + relativedelta(months=2)
 
-            if target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m'):
-                context['target_month'] = target_month.strftime('%Y-%m')
-            else:
-                context['target_month'] = None
+            context['target_month'] = target_month.strftime('%Y-%m')
+            context['in_month'] = target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m')
 
             if rental:
                 context['rental_start_date'] = rental.start_date
