@@ -30,7 +30,7 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
                 is_paid=F('rental__is_paid'),
                 rental_start_date=F('rental__start_date'),
                 rental_end_date=F('rental__end_date')
-            )
+            ).order_by('room_number')
 
             context['rooms'] = rooms_with_rentals
             today = date.today()
