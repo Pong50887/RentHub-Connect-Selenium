@@ -5,6 +5,7 @@ from renthub.models import MaintenanceRequest, Rental, Renter, Room
 from renthub.utils import Status
 from unittest import skip
 
+
 class MaintenanceRequestAccessTest(TestCase):
     """Tests for maintenance request access."""
     def setUp(self):
