@@ -28,9 +28,10 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
             ).annotate(
                 status=F('rental__status'),
                 is_paid=F('rental__is_paid'),
-                rental_start_date = F('rental__start_date'),
-                rental_end_date = F('rental__end_date')
+                rental_start_date=F('rental__start_date'),
+                rental_end_date=F('rental__end_date')
             )
+
             context['rooms'] = rooms_with_rentals
             today = date.today()
             for room in rooms_with_rentals:
