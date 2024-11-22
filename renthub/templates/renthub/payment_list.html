@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <style>
         .custom-card {
             display: flex;
@@ -186,12 +182,13 @@
                                             </div>
                                         {% endif %}
                                         <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ room.target_month }}" readonly>
+                                        <input type="hidden" name="room_number" value="{{ room.room_number }}">
                                     </div>
                                 </form>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary-list" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" {% if not room.target_month %}disabled{% endif %}>Submit Move-Out Notice</button>
+                                <button type="button" id="submitMoveOutNotice{{ room.room_number }}" class="btn btn-primary" data-bs-toggle="modal" {% if not room.target_month %}disabled{% endif %}>Submit Move-Out Notice</button>
                               </div>
                             </div>
                           </div>
@@ -250,10 +247,12 @@
   </div>
 </div>
 <script>
-    const submitButton = document.querySelector('.btn-primary');
-    
+document.querySelectorAll('[id^="submitMoveOutNotice"]').forEach(function(submitButton) {
     submitButton.addEventListener('click', function(event) {
         event.preventDefault(); // Prevent default submission to show the confirmation modal
+
+        // Get the room number from the button ID (which includes the room number)
+        const roomNumber = submitButton.id.replace('submitMoveOutNotice', '');
 
         // Show confirmation modal
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
@@ -261,9 +260,12 @@
 
         // Add event listener for the "Confirm" button in the confirmation modal
         document.getElementById('confirmSubmit').addEventListener('click', function() {
-            // When confirmed, submit the form
-            document.getElementById("moveOutForm").submit();
+            // When confirmed, submit the form for the specific room
+            const form = document.getElementById("moveOutForm");
+            form.querySelector('input[name="room_number"]').value = roomNumber; // Set the room_number dynamically
+            form.submit();
         });
     });
+});
 </script>
 {% endblock %}

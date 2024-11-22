@@ -82,6 +82,18 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental.image = file_path
                 rental.save()
 
+                transaction = Transaction.objects.create(
+                    room=room,
+                    renter=renter,
+                    price=room.price,
+                    date=datetime.now(),
+                    image=file_path
+                )
+                transaction.image = file_path
+                transaction.save()
+                messages.success(request, "Your rental request was submitted successfully!")
+                delete_qr_code(room.room_number)
+
             else:
                 rental.status = Status.wait
                 rental.save()
@@ -94,17 +106,17 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 )
                 rental_payment.save()
 
-            transaction = Transaction.objects.create(
-                room=room,
-                renter=renter,
-                price=room.price,
-                date=datetime.now(),
-                image=file_path
-            )
-            transaction.image = file_path
-            transaction.save()
-            messages.success(request, "Your rental request was submitted successfully!")
-            delete_qr_code(room.room_number)
+                transaction = Transaction.objects.create(
+                    room=room,
+                    renter=renter,
+                    price=room.price,
+                    date=datetime.now(),
+                    image=file_path
+                )
+                transaction.image = file_path
+                transaction.save()
+                messages.success(request, "Your rental request was submitted successfully!")
+                delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
             messages.error(request, "No payment slip uploaded.")

@@ -50,12 +50,16 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        room_number = request.POST.get('room_number')
         end_month_str = request.POST.get('end_month')
         end_month = datetime.strptime(end_month_str, "%Y-%m")
         new_end_date = end_month - relativedelta(days=1)
         end_month_last_day = new_end_date.date()
         admin = User.objects.get(username="rhadmin")
-        rental = Rental.objects.filter(renter__id=self.request.user.id).exclude(status=Status.reject).first()
+        rental = Rental.objects.filter(
+            renter__id=self.request.user.id,
+            room__room_number=room_number
+        ).exclude(status=Status.reject).first()
         rental.end_date = end_month_last_day
         rental.save()
 
