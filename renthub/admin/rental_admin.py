@@ -4,6 +4,7 @@ from renthub.models import Transaction, Rental, Notification
 
 class RentalAdmin(admin.ModelAdmin):
     list_display = ('room', 'renter', 'price', 'image_tag', 'status', 'is_paid', 'last_checked_month')
+    exclude = ('last_checked_month',)
     readonly_fields = ('image_tag',)
 
     def image_tag(self, obj):
