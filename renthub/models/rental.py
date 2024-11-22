@@ -59,8 +59,11 @@ class Rental(models.Model):
 
     def is_payment_on_time(self):
         """Checks if the last payment was made on time."""
+        if self.start_date.month == timezone.now().month and self.start_date.year == timezone.now().year:
+            return True
+
         if self.last_paid_date is None:
-            return False
+            return timezone.now().day <= 15
 
         return self.last_paid_date.day <= 15
 
