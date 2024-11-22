@@ -28,7 +28,12 @@ class RoomDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         """Handle GET requests for room details."""
         room_number = self.kwargs.get("room_number")
-        room = get_object_or_404(Room, room_number=room_number)
+        try:
+            room = get_object_or_404(Room, room_number=room_number)
+        except Http404:
+            messages.error(self.request, "The room does not exist.")
+            return redirect('renthub:home')
+
         if not room.is_available():
             messages.error(self.request, "The room is not available.")
             return redirect('renthub:home')
