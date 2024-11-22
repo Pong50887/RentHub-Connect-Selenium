@@ -47,6 +47,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         """Handle POST requests to upload a payment slip."""
         room = self.get_object()
+        total = float(request.POST.get('total'))
 
         try:
             renter = Renter.objects.get(id=request.user.id)
@@ -85,7 +86,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental_payment = RentalPayment.objects.create(
                     room=room,
                     renter=renter,
-                    price=room.price,
+                    price=total,
                     image=file_path,
                     status=Status.wait,
                 )
