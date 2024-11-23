@@ -1,82 +1,266 @@
 [
 {
-  "model": "renthub.roomtype",
-  "pk": 1,
-  "fields": {
-    "type_name": "Single Bedroom",
-    "description": "Cozy single bedroom with ample natural light, featuring a comfortable bed, modern furnishings, and e",
-    "ideal_for": "Ideal for solo travelers, students, or professionals looking for a quiet and comfortable space to re",
-    "image": "room_images/single_bed.jpg"
-  }
+    "model": "renthub.room",
+    "pk": 1,
+    "fields": {
+        "room_number": 101,
+        "room_floor": 1,
+        "detail": "3x3 meters",
+        "price": "3500.00",
+        "room_type": 1
+    }
 },
 {
-  "model": "renthub.roomtype",
-  "pk": 2,
-  "fields": {
-    "type_name": "Double Bedroom",
-    "description": "Spacious double bedroom with a cozy ambiance, featuring a large bed, stylish decor, and modern ameni",
-    "ideal_for": "Couples, friends, or business travelers seeking a comfortable shared space.",
-    "image": "room_images/Double_bed.jpg"
-  }
+    "model": "renthub.room",
+    "pk": 2,
+    "fields": {
+        "room_number": 102,
+        "room_floor": 1,
+        "detail": "3.5x3.5 meters",
+        "price": "4000.00",
+        "room_type": 2
+    }
 },
 {
-  "model": "renthub.roomtype",
-  "pk": 3,
-  "fields": {
-    "type_name": "Queen Size Bedroom",
-    "description": "Elegant queen-size bedroom with a spacious layout, featuring a plush queen bed and upscale amenities",
-    "ideal_for": "Couples, business travelers, or those seeking extra comfort and space.",
-    "image": "room_images/Queen_size_bed.jpg"
-  }
+    "model": "renthub.room",
+    "pk": 3,
+    "fields": {
+        "room_number": 103,
+        "room_floor": 1,
+        "detail": "4x4 meters",
+        "price": "5000.00",
+        "room_type": 3
+    }
 },
 {
-  "model": "renthub.roomtype",
-  "pk": 4,
-  "fields": {
-    "type_name": "King Size Bedroom",
-    "description": "Luxurious king-size bedroom offering maximum comfort, with a large king bed, modern furnishings, and",
-    "ideal_for": "Couples, families, or guests seeking a spacious and premium experience.",
-    "image": "room_images/King_size_bed.jpg"
-  }
+    "model": "renthub.room",
+    "pk": 4,
+    "fields": {
+        "room_number": 104,
+        "room_floor": 1,
+        "detail": "5x5 meters",
+        "price": "6000.00",
+        "room_type": 4
+    }
 },
 {
-  "model": "renthub.room",
-  "pk": 1,
-  "fields": {
-    "room_number": 101,
-    "detail": "9x9inch",
-    "price": "3500.00",
-    "room_type": 1
-  }
+    "model": "renthub.room",
+    "pk": 5,
+    "fields": {
+        "room_number": 105,
+        "room_floor": 1,
+        "detail": "3x3 meters",
+        "price": "3500.00",
+        "room_type": 1
+    }
 },
 {
-  "model": "renthub.room",
-  "pk": 2,
-  "fields": {
-    "room_number": 102,
-    "detail": "11x11inch",
-    "price": "4000.00",
-    "room_type": 2
-  }
+    "model": "renthub.room",
+    "pk": 6,
+    "fields": {
+        "room_number": 106,
+        "room_floor": 1,
+        "detail": "3.5x3.5 meters",
+        "price": "4000.00",
+        "room_type": 2
+    }
 },
 {
-  "model": "renthub.room",
-  "pk": 3,
-  "fields": {
-    "room_number": 103,
-    "detail": "13x13inch",
-    "price": "5000.00",
-    "room_type": 3
-  }
+    "model": "renthub.room",
+    "pk": 7,
+    "fields": {
+        "room_number": 107,
+        "room_floor": 1,
+        "detail": "4x4 meters",
+        "price": "5000.00",
+        "room_type": 3
+    }
 },
 {
-  "model": "renthub.room",
-  "pk": 4,
-  "fields": {
-    "room_number": 104,
-    "detail": "15x15inch",
-    "price": "6000.00",
-    "room_type": 4
-  }
+    "model": "renthub.room",
+    "pk": 8,
+    "fields": {
+        "room_number": 108,
+        "room_floor": 1,
+        "detail": "5x5 meters",
+        "price": "6000.00",
+        "room_type": 4
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 9,
+    "fields": {
+        "room_number": 201,
+        "room_floor": 2,
+        "detail": "3x3 meters",
+        "price": "4000.00",
+        "room_type": 1
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 10,
+    "fields": {
+        "room_number": 202,
+        "room_floor": 2,
+        "detail": "3.5x3.5 meters",
+        "price": "5000.00",
+        "room_type": 2
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 11,
+    "fields": {
+        "room_number": 203,
+        "room_floor": 2,
+        "detail": "4x4 meters",
+        "price": "6500.00",
+        "room_type": 3
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 12,
+    "fields": {
+        "room_number": 204,
+        "room_floor": 2,
+        "detail": "5x5 meters",
+        "price": "7500.00",
+        "room_type": 4
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 13,
+    "fields": {
+        "room_number": 205,
+        "room_floor": 2,
+        "detail": "3x3 meters",
+        "price": "4000.00",
+        "room_type": 1
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 14,
+    "fields": {
+        "room_number": 206,
+        "room_floor": 2,
+        "detail": "3.5x3.5 meters",
+        "price": "5000.00",
+        "room_type": 2
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 15,
+    "fields": {
+        "room_number": 207,
+        "room_floor": 2,
+        "detail": "4x4 meters",
+        "price": "6500.00",
+        "room_type": 3
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 16,
+    "fields": {
+        "room_number": 208,
+        "room_floor": 2,
+        "detail": "5x5 meters",
+        "price": "7500.00",
+        "room_type": 4
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 17,
+    "fields": {
+        "room_number": 109,
+        "room_floor": 1,
+        "detail": "3x3 meters",
+        "price": "3500.00",
+        "room_type": 1
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 18,
+    "fields": {
+        "room_number": 110,
+        "room_floor": 1,
+        "detail": "3.5x3.5 meters",
+        "price": "4000.00",
+        "room_type": 2
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 19,
+    "fields": {
+        "room_number": 111,
+        "room_floor": 1,
+        "detail": "4x4 meters",
+        "price": "5000.00",
+        "room_type": 3
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 20,
+    "fields": {
+        "room_number": 112,
+        "room_floor": 1,
+        "detail": "5x5 meters",
+        "price": "6000.00",
+        "room_type": 4
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 21,
+    "fields": {
+        "room_number": 209,
+        "room_floor": 2,
+        "detail": "3x3 meters",
+        "price": "4000.00",
+        "room_type": 1
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 22,
+    "fields": {
+        "room_number": 210,
+        "room_floor": 2,
+        "detail": "3.5x3.5 meters",
+        "price": "5000.00",
+        "room_type": 2
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 23,
+    "fields": {
+        "room_number": 211,
+        "room_floor": 2,
+        "detail": "4x4 meters",
+        "price": "6500.00",
+        "room_type": 3
+    }
+},
+{
+    "model": "renthub.room",
+    "pk": 24,
+    "fields": {
+        "room_number": 212,
+        "room_floor": 2,
+        "detail": "5x5 meters",
+        "price": "7500.00",
+        "room_type": 4
+    }
 }
 ]

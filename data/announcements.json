@@ -1,0 +1,38 @@
+[
+{
+    "model": "renthub.announcement",
+    "pk": 1,
+    "fields": {
+        "title": "Test",
+        "content": "nothing to annouce",
+        "publish_date": "2024-11-03T10:34:15Z"
+    }
+},
+{
+    "model": "renthub.announcement",
+    "pk": 2,
+    "fields": {
+        "title": "Pong lost key",
+        "content": "Pong from room 104, please retrive your key at the office room",
+        "publish_date": "2024-11-03T10:41:45Z"
+    }
+},
+{
+    "model": "renthub.announcement",
+    "pk": 3,
+    "fields": {
+        "title": "Light out",
+        "content": "Electricity is gone for 5 hours start at 00.00",
+        "publish_date": "2024-11-03T11:30:31Z"
+    }
+},
+{
+    "model": "renthub.announcement",
+    "pk": 4,
+    "fields": {
+        "title": "Lockdown",
+        "content": "Visiters is not allowed in this period",
+        "publish_date": "2024-11-03T11:31:46Z"
+    }
+}
+]

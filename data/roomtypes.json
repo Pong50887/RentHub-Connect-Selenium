@@ -1,0 +1,42 @@
+[
+{
+    "model": "renthub.roomtype",
+    "pk": 1,
+    "fields": {
+        "type_name": "Single Bed Room",
+        "description": "Cozy single bedroom with ample natural light, featuring a comfortable bed, modern furnishings, and elegant decor. The room is thoughtfully arranged with a cozy reading chair, a small desk for work or study, and plenty of storage space. Amenities include high-speed Wi-Fi, a flat-screen TV, and climate control for year-round comfort. The private bathroom is equipped with a walk-in shower, quality toiletries, and plush towels. Perfect for solo travelers, this intimate space combines warmth and practicality, creating a peaceful haven to relax and recharge.",
+        "ideal_for": "Ideal for solo travelers, students, or professionals looking for a quiet and comfortable space.",
+        "image": "room_images/single_bed.jpg"
+    }
+},
+{
+    "model": "renthub.roomtype",
+    "pk": 2,
+    "fields": {
+        "type_name": "Double Bed Room",
+        "description": "Spacious double bedroom with a cozy ambiance, featuring a large bed, stylish decor, and modern amenities. The room includes soft lighting, a comfortable seating nook, and a practical work desk, perfect for both relaxation and focus. Additional features include high-speed Wi-Fi, a flat-screen TV, and climate control. The ensuite bathroom is equipped with a sleek shower, premium toiletries, and fresh, soft towels. Designed for a restful stay, this inviting space blends warmth and sophistication, providing a tranquil retreat for guests seeking comfort and style.",
+        "ideal_for": "Couples, friends, or business travelers seeking a comfortable shared space.",
+        "image": "room_images/Double_bed.jpg"
+    }
+},
+{
+    "model": "renthub.roomtype",
+    "pk": 3,
+    "fields": {
+        "type_name": "Queen Size Bed Room",
+        "description": "Elegant queen-size bedroom with a spacious layout, featuring a plush queen bed and upscale amenities. The room is thoughtfully designed with stylish decor, a comfortable seating area, and a well-lit work desk. Amenities include high-speed Wi-Fi, a flat-screen TV, and air conditioning. The ensuite bathroom offers a luxurious walk-in shower, premium toiletries, and soft, high-quality towels. Ideal for both relaxation and productivity, this refined space combines comfort and elegance to create a welcoming retreat for any guest.",
+        "ideal_for": "Couples, business travelers, or those seeking extra comfort and space.",
+        "image": "room_images/Queen_size_bed.jpg"
+    }
+},
+{
+    "model": "renthub.roomtype",
+    "pk": 4,
+    "fields": {
+        "type_name": "King Size Bed Room",
+        "description": "Luxurious king-size bedroom offering maximum comfort, with a large king bed, modern furnishings, and tasteful decor. The room features plush bedding, a cozy seating area, a spacious work desk, and ample closet space. Amenities include a flat-screen TV, high-speed Wi-Fi, air conditioning, and a minibar. The ensuite bathroom boasts a sleek design with a walk-in shower, premium toiletries, and soft towels.",
+        "ideal_for": "Couples, families, or guests seeking a spacious and premium experience.",
+        "image": "room_images/King_size_bed.jpg"
+    }
+}
+]

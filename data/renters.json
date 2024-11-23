@@ -1,0 +1,42 @@
+[
+{
+    "model": "renthub.renter",
+    "pk": 2,
+    "fields": {
+        "phone_number": "0987654321",
+        "thai_citizenship_id": "0987654321012"
+    }
+},
+{
+    "model": "renthub.renter",
+    "pk": 3,
+    "fields": {
+        "phone_number": "0123456789",
+        "thai_citizenship_id": "6655443322110"
+    }
+},
+{
+    "model": "renthub.renter",
+    "pk": 4,
+    "fields": {
+        "phone_number": "0987654231",
+        "thai_citizenship_id": "0011223344556"
+    }
+},
+{
+    "model": "renthub.renter",
+    "pk": 6,
+    "fields": {
+        "phone_number": "0123456789",
+        "thai_citizenship_id": "0123456789012"
+    }
+},
+{
+    "model": "renthub.renter",
+    "pk": 14,
+    "fields": {
+        "phone_number": "0987654321",
+        "thai_citizenship_id": "1234567890123"
+    }
+}
+]
