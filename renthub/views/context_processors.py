@@ -25,3 +25,14 @@ def check_rental_ended(_):
             rental.delete()
 
     return {}
+
+
+def global_context(_):
+    # Logic for contact details
+    contact = {
+        'location': '123 Main St, Bangkok, Thailand',
+        'phone_number': '0987654321',
+        'email': 'info@renthub.com'
+    }
+
+    return {'contact': contact}

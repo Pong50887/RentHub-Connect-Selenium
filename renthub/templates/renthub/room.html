@@ -63,7 +63,7 @@
                     <div class="carousel-inner">
                         {% for image in room_images %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 600px;">
-                                <img src="{{ image }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image"
+                                <img src="{{ image.image.url }}" alt="{{ room.room_type.type_name }}" class="img-fluid room-image"
                                 style="object-fit: cover; width: 100%; height: 100%;">
                             </div>
                         {% endfor %}
@@ -130,6 +130,7 @@
                               This agreement outlines the obligations and conditions associated with your rental, 
                               which begins at the start of the next month.
                               <ol>
+                                <li>Tenants must commit to a minimum rental period of 6 months. If a tenant terminates the rental agreement before completing 6 months, the security deposit will not be refunded.</li>
                                 <li>Tenants must pay rent, electricity, water, and phone bills by the 15th of each month. Late payments will incur a fine of 50 THB per day.</li>
                                 <li>A maximum of 3 people are allowed to stay in one room for peace and safety. Bringing outsiders into the room without prior permission is prohibited.</li>
                                 <li>Tenants are responsible for the safekeeping of their belongings. The landlord will not be liable for any loss.</li>

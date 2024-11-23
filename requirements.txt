@@ -7,3 +7,7 @@ psycopg2-binary
 django-storages
 boto3
 botocore
+selenium
+urllib3
+webdriver-manager
+chromedriver-autoinstaller

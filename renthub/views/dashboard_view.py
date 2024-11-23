@@ -1,7 +1,10 @@
 import calendar
 from datetime import datetime
 from django.views.generic import ListView
+from django.contrib import messages
+from django.shortcuts import redirect
 from django.db.models import Sum
+
 from ..models import Room, Transaction
 
 
@@ -12,6 +15,15 @@ class DashboardView(ListView):
     model = Room
     template_name = "renthub/dashboard.html"
     context_object_name = 'rooms'
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Restrict access to superusers only.
+        """
+        if not request.user.is_superuser:
+            messages.error(request, "You do not have permission to access the dashboard.")
+            return redirect('renthub:home')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Override the get_context_data method to add custom context for the dashboard."""

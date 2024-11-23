@@ -1,7 +1,8 @@
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib import messages
 from ..forms import RenterProfileForm
 from ..models import Renter
 
@@ -19,4 +20,17 @@ class ProfileSettingsView(LoginRequiredMixin, UpdateView):
         """
         Ensure the current logged-in user is the one being edited.
         """
-        return Renter.objects.get(id=self.request.user.id)
+        try:
+            return Renter.objects.get(id=self.request.user.id)
+        except Renter.DoesNotExist:
+            return None
+
+    def get(self, request, *args, **kwargs):
+        """
+        Redirect if the object does not exist.
+        """
+        obj = self.get_object()
+        if obj is None:
+            messages.error(request, "Only renter can view profiles.")
+            return redirect("renthub:home")
+        return super().get(request, *args, **kwargs)

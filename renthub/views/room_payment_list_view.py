@@ -27,40 +27,39 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
                 rental__in=rentals
             ).annotate(
                 status=F('rental__status'),
-                is_paid=F('rental__is_paid')
-            )
+                is_paid=F('rental__is_paid'),
+                rental_start_date=F('rental__start_date'),
+                rental_end_date=F('rental__end_date')
+            ).order_by('room_number')
 
             context['rooms'] = rooms_with_rentals
-
-            rental = rentals.first()
             today = date.today()
-            rental_start_date = rental.start_date
-            six_months_after_start = rental_start_date + relativedelta(months=5)
-            if today.day <= 15:
-                target_month = today + relativedelta(months=1)
-            else:
-                target_month = today + relativedelta(months=2)
+            for room in rooms_with_rentals:
+                rental_start_date = room.rental_start_date
+                six_months_after_start = rental_start_date + relativedelta(months=5)
+                if today.day <= 15:
+                    target_month = today + relativedelta(months=1)
+                else:
+                    target_month = today + relativedelta(months=2)
 
-            if target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m'):
-                context['target_month'] = target_month.strftime('%Y-%m')
-            else:
-                context['target_month'] = None
-
-            if rental:
-                context['rental_start_date'] = rental.start_date
-                context['rental_end_date'] = rental.end_date
+                room.target_month = target_month.strftime('%Y-%m')
+                room.in_month = target_month.strftime('%Y-%m') > six_months_after_start.strftime('%Y-%m')
 
         transactions = Transaction.objects.filter(renter__id=self.request.user.id).order_by('-date')
         context['transactions'] = transactions
         return context
 
     def post(self, request, *args, **kwargs):
+        room_number = request.POST.get('room_number')
         end_month_str = request.POST.get('end_month')
         end_month = datetime.strptime(end_month_str, "%Y-%m")
         new_end_date = end_month - relativedelta(days=1)
         end_month_last_day = new_end_date.date()
         admin = User.objects.get(username="rhadmin")
-        rental = Rental.objects.filter(renter__id=self.request.user.id).exclude(status=Status.reject).first()
+        rental = Rental.objects.filter(
+            renter__id=self.request.user.id,
+            room__room_number=room_number
+        ).exclude(status=Status.reject).first()
         rental.end_date = end_month_last_day
         rental.save()
 

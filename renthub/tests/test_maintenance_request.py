@@ -50,8 +50,7 @@ class MaintenanceRequestAccessTest(TestCase):
 
         response = self.client.post(self.url, data)
 
-        self.assertEqual(response.status_code,
-                         302)  # Assuming the response is a redirect after successful form submission
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(MaintenanceRequest.objects.count(), 1)
         maintenance_request = MaintenanceRequest.objects.first()
         self.assertEqual(maintenance_request.rental, self.rental)

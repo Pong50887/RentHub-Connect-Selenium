@@ -25,9 +25,31 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         room = get_object_or_404(Room, room_number=room_number)
         return room
 
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET requests with a validation check.
+        Redirect to the home page if the user is not eligible to access this page.
+        """
+        room = self.get_object()
+
+        try:
+            renter = Renter.objects.get(id=request.user.id)
+        except Renter.DoesNotExist:
+            messages.error(request, "You need to register as a renter to view this page.")
+            return redirect('renthub:home')
+
+        if not room.is_available() and not Rental.objects.filter(room=room, renter=renter).exists():
+            messages.error(request, "This room is not available.")
+            return redirect('renthub:home')
+
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         """Handle POST requests to upload a payment slip."""
         room = self.get_object()
+        total = (request.POST.get('total'))
+        if total:
+            float(total)
 
         try:
             renter = Renter.objects.get(id=request.user.id)
@@ -60,29 +82,41 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental.image = file_path
                 rental.save()
 
+                transaction = Transaction.objects.create(
+                    room=room,
+                    renter=renter,
+                    price=total,
+                    date=datetime.now(),
+                    image=file_path
+                )
+                transaction.image = file_path
+                transaction.save()
+                messages.success(request, "Your rental request was submitted successfully!")
+                delete_qr_code(room.room_number)
+
             else:
                 rental.status = Status.wait
                 rental.save()
                 rental_payment = RentalPayment.objects.create(
                     room=room,
                     renter=renter,
-                    price=room.price,
+                    price=total,
                     image=file_path,
                     status=Status.wait,
                 )
                 rental_payment.save()
 
-            transaction = Transaction.objects.create(
-                room=room,
-                renter=renter,
-                price=room.price,
-                date=datetime.now(),
-                image=file_path
-            )
-            transaction.image = file_path
-            transaction.save()
-            messages.success(request, "Your rental request was submitted successfully!")
-            delete_qr_code(room.room_number)
+                transaction = Transaction.objects.create(
+                    room=room,
+                    renter=renter,
+                    price=total,
+                    date=datetime.now(),
+                    image=file_path
+                )
+                transaction.image = file_path
+                transaction.save()
+                messages.success(request, "Your rental request was submitted successfully!")
+                delete_qr_code(room.room_number)
             return redirect('renthub:home')
         else:
             messages.error(request, "No payment slip uploaded.")
@@ -94,8 +128,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         room = self.get_object()
 
-        if room.room_type:
-            context["room_images"] = get_room_images(room.room_type)
+        if room.room_image:
+            context["room_images"] = room.room_image.all()
 
         try:
             renter = Renter.objects.get(id=self.request.user.id)
@@ -132,7 +166,8 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
             context['qr_code_owner_name'] = "Achirawich"
         else:
             if not rental.is_paid:
-                generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge, room.room_number)
+                generate_qr_code(room.price + rental.water_fee + rental.electric_fee + additional_charge,
+                                 room.room_number)
                 context['qr_code_path'] = f"{settings.MEDIA_URL}qr_code_images/{room.room_number}.png"
                 context['send_or_cancel'] = True
                 context['qr_code_owner_name'] = "Achirawich"

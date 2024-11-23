@@ -19,27 +19,26 @@ class RoomListView(ListView):
 
         available_rooms = []
         for room in rooms:
-            if room.is_available:
+            if room.is_available():
                 available_rooms.append(room.id)
         rooms = rooms.filter(pk__in=available_rooms)
 
         if search_entry:
             rooms = (rooms.filter(room_number__icontains=search_entry)
                      | rooms.filter(room_type__type_name__icontains=search_entry)
-                     | rooms.filter(detail__icontains=search_entry))
+                     | rooms.filter(room_type__description__icontains=search_entry)
+                     | rooms.filter(room_type__ideal_for__icontains=search_entry)
+                     | rooms.filter(room_type__type_name__icontains=search_entry)
+                     | rooms.filter(room_type__features__name__icontains=search_entry)
+                     | rooms.filter(detail__icontains=search_entry)).distinct()
 
         if selected_room_type:
             rooms = rooms.filter(room_type__id=selected_room_type)
 
-        for room in rooms:
-            if room.is_available():
-                available_rooms.append(room.id)
-        rooms = rooms.filter(pk__in=available_rooms)
-
         if sort_price_option == "price_asc":
-            rooms = rooms.order_by("price")
+            rooms = rooms.order_by("price", "room_number")
         elif sort_price_option == "price_desc":
-            rooms = rooms.order_by("-price")
+            rooms = rooms.order_by("-price", "room_number")
 
         return rooms
 

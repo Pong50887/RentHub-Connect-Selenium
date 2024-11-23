@@ -1,10 +1,25 @@
 from django.views.generic import TemplateView
-from ..models import Room, Rental
+from django.contrib import messages
+from django.shortcuts import redirect
+
+from ..models import Room
 from ..utils import Status
 
 
 class RoomOverviewView(TemplateView):
+    """
+    View to display an overview of all rooms in the system.
+    """
     template_name = "renthub/room_overview.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Restrict access to superusers only.
+        """
+        if not request.user.is_superuser:
+            messages.error(request, "You do not have permission to access the room overview page.")
+            return redirect('renthub:home')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
@@ -12,12 +27,10 @@ class RoomOverviewView(TemplateView):
         """
         context = super().get_context_data(**kwargs)
 
-        # Fetch all rooms and prefetch related rentals
         rooms = Room.objects.prefetch_related('rental_set').order_by('room_number')
 
         room_data = []
         for room in rooms:
-            # Check if the room has an active rental
             active_rental = room.rental_set.filter(status__in=[Status.wait, Status.approve]).first()
 
             is_paid_on_time = None

@@ -1,0 +1,10 @@
+[
+{
+    "model": "renthub.propertyowner",
+    "pk": 7,
+    "fields": {
+        "location": "123 Main St, Bangkok, Thailand",
+        "phone_number": "0987654321"
+    }
+}
+]

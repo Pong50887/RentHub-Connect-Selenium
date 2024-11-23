@@ -1,0 +1,530 @@
+[
+{
+    "model": "renthub.notification",
+    "pk": 23,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 101 - 9x9 feet has been approved.",
+        "post_date": "2024-11-11T07:20:14.669Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 24,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Rejected",
+        "message": "Your rental for Room 102 - 11x11 feet has been rejected.",
+        "post_date": "2024-11-11T07:20:23.902Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 25,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 212 - 5x5 meters has been approved.",
+        "post_date": "2024-11-13T10:22:54.476Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 26,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 212 - 5x5 meters has been approved.",
+        "post_date": "2024-11-13T12:02:10.512Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 27,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 212 - 5x5 meters has been approved.",
+        "post_date": "2024-11-13T13:59:40.083Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 28,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 212 - 5x5 meters has been approved.",
+        "post_date": "2024-11-13T14:09:38.829Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 29,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 212 - 5x5 meters is due for this month.",
+        "post_date": "2024-11-14T10:58:56.885Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 30,
+    "fields": {
+        "renter": 3,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 201 - 3x3 meters has been approved.",
+        "post_date": "2024-11-14T12:05:54.466Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 31,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 201 - 3x3 meters is due for this month.",
+        "post_date": "2024-11-14T12:07:20.443Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 32,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "3 has selected 2024-12 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-14T14:25:26.044Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 33,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "3 has selected 2024-12 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-14T14:32:29.638Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 34,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "3 has selected 2024-12 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-14T14:33:20.788Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 35,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo2 has selected 2024-12 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-14T14:46:59.145Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 36,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo2 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-16T07:05:47.138Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 37,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo2 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-16T07:12:35.714Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 38,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 201 - 3x3 meters has been approved.",
+        "post_date": "2024-11-16T07:22:17.371Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 39,
+    "fields": {
+        "renter": 3,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 204 - 5x5 meters has been approved.",
+        "post_date": "2024-11-16T16:04:19.239Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 40,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 202 - 3.5x3.5 meters has been approved.",
+        "post_date": "2024-11-17T15:43:37.286Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 41,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 104 - 5x5 meters has been approved.",
+        "post_date": "2024-11-17T15:46:18.312Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 42,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo2 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-17T15:51:53.960Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 43,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 101 - 3x3 meters has been approved.",
+        "post_date": "2024-11-17T16:03:36.403Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 44,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 101 - 3x3 meters has been approved.",
+        "post_date": "2024-11-17T16:04:48.766Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 45,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 205 - 3x3 meters has been approved.",
+        "post_date": "2024-11-20T10:09:07.306Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 46,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 205 - 3x3 meters has been approved.",
+        "post_date": "2024-11-22T13:20:52.938Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 47,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Approved",
+        "message": "Your payment for Room 205 - 3x3 meters has been approved.",
+        "post_date": "2024-11-22T13:25:49.156Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 48,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 102 - 3.5x3.5 meters has been approved.",
+        "post_date": "2024-11-22T13:47:16.382Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 49,
+    "fields": {
+        "renter": 2,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 102 - 3.5x3.5 meters is due for this month.",
+        "post_date": "2024-11-22T13:47:17.183Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 50,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T14:08:13.891Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 51,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T14:43:12.401Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 52,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T14:52:41.961Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 53,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T14:53:43.787Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 54,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T14:53:49.062Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 55,
+    "fields": {
+        "renter": 3,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 105 - 3x3 meters has been approved.",
+        "post_date": "2024-11-22T14:56:38.559Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 56,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:13:26.750Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 57,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:14:16.113Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 58,
+    "fields": {
+        "renter": 3,
+        "title": "Maintenance Request Approved",
+        "message": "Your maintenance request for Room 105 - 3x3 meters has been approved.",
+        "post_date": "2024-11-22T15:21:51.896Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 59,
+    "fields": {
+        "renter": 2,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 101 - 3x3 meters has been approved.",
+        "post_date": "2024-11-22T15:22:43.267Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 60,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:32:09.779Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 61,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:32:15.743Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 62,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:34:36.321Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 63,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:37:48.721Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 64,
+    "fields": {
+        "renter": 1,
+        "title": "Payment Due",
+        "message": "demo1 has selected 2025-01 as their move-out month. Please review and prepare for their departure.",
+        "post_date": "2024-11-22T15:37:58.546Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 65,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 105 - 3x3 meters is due for this month.",
+        "post_date": "2024-11-22T15:47:16.223Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 66,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 105 - 3x3 meters is due for this month.",
+        "post_date": "2024-11-22T15:57:36.578Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 67,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 105 - 3x3 meters is due for this month.",
+        "post_date": "2024-11-22T15:57:37.154Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 68,
+    "fields": {
+        "renter": 3,
+        "title": "Rental Approved",
+        "message": "Your rental for Room 101 - 3x3 meters has been approved.",
+        "post_date": "2024-11-23T13:57:01.567Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 69,
+    "fields": {
+        "renter": 2,
+        "title": "Maintenance Request Approved",
+        "message": "Your maintenance request for Room 105 - 3x3 meters has been approved.",
+        "post_date": "2024-11-23T13:57:03.386Z",
+        "is_read": true
+    }
+},
+{
+    "model": "renthub.notification",
+    "pk": 70,
+    "fields": {
+        "renter": 3,
+        "title": "Payment Due",
+        "message": "Your payment for the rental of Room 101 - 3x3 meters is due for this month.",
+        "post_date": "2024-11-23T14:03:40.501Z",
+        "is_read": true
+    }
+}
+]

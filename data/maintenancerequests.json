@@ -1,0 +1,13 @@
+[
+{
+    "model": "renthub.maintenancerequest",
+    "pk": 3,
+    "fields": {
+        "rental": 216,
+        "request_message": "Heyyy",
+        "title": "I am demo1",
+        "status": "approve",
+        "date_requested": "2024-11-23T13:57:03.257Z"
+    }
+}
+]

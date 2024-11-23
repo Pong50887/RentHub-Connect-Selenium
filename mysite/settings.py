@@ -68,6 +68,7 @@ TEMPLATES = [
                 'renthub.views.context_processors.unread_notifications_count',
                 'renthub.views.context_processors.check_monthly_payment_due',
                 'renthub.views.context_processors.check_rental_ended',
+                'renthub.views.context_processors.global_context',
             ],
         },
     },
@@ -197,3 +198,4 @@ AWS_S3_VERIFY = True
 MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+BASE_URL = config('BASE_URL', default='http://localhost:8000')

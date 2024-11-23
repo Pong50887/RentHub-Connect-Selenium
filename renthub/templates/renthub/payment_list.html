@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <style>
         .custom-card {
             display: flex;
@@ -126,14 +122,14 @@
                             <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
                         {% endif %}
 
-                        {% if not rental_end_date %}
-                            <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#exampleModalLong">
+                        {% if not room.rental_end_date %}
+                            <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#moveOutModal{{ room.room_number }}">
                                 Send Move-Out Notice
                             </button>
                         {% endif %}
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal fade" id="moveOutModal{{ room.room_number }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -144,6 +140,10 @@
                               <div class="modal-body">
                                 <p>Please note the following important information regarding move-out notices:</p>
                                 <ul>
+                                     <li>
+                                        <strong>Minimum Rental Period:</strong>
+                                        Renters must commit to a minimum rental period of <strong>6 months</strong>. If a renter terminates the agreement and moves out before completing 6 months, the <strong>security deposit will not be refunded</strong>.
+                                    </li>
                                     <li>
                                         <strong>Advanced Notification Requirement:</strong>
                                         Renters must submit their move-out notice <strong>at least one month in advance</strong> of the intended move-out date. This allows sufficient time for both the renter and the landlord to plan.
@@ -176,19 +176,19 @@
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="month-picker" class="form-label">Move-out month</label>
-                                        {% if target_month %}
-                                            <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ target_month }}" readonly>
-                                        {% else %}
+                                        {% if not room.in_month %}
                                             <div class="alert alert-warning" role="alert">
-                                                You do not have a valid move-out month. Please check the move-out date requirements.
+                                                The selected month is within the 6-month rental period.
                                             </div>
                                         {% endif %}
+                                        <input type="text" id="month-picker" name="end_month" class="form-control" value="{{ room.target_month }}" readonly>
+                                        <input type="hidden" name="room_number" value="{{ room.room_number }}">
                                     </div>
                                 </form>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary-list" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" {% if not target_month %}disabled{% endif %}>Submit Move-Out Notice</button>
+                                <button type="button" id="submitMoveOutNotice{{ room.room_number }}" class="btn btn-primary" data-bs-toggle="modal" {% if not room.target_month %}disabled{% endif %}>Submit Move-Out Notice</button>
                               </div>
                             </div>
                           </div>
@@ -247,10 +247,12 @@
   </div>
 </div>
 <script>
-    const submitButton = document.querySelector('.btn-primary');
-    
+document.querySelectorAll('[id^="submitMoveOutNotice"]').forEach(function(submitButton) {
     submitButton.addEventListener('click', function(event) {
         event.preventDefault(); // Prevent default submission to show the confirmation modal
+
+        // Get the room number from the button ID (which includes the room number)
+        const roomNumber = submitButton.id.replace('submitMoveOutNotice', '');
 
         // Show confirmation modal
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
@@ -258,9 +260,12 @@
 
         // Add event listener for the "Confirm" button in the confirmation modal
         document.getElementById('confirmSubmit').addEventListener('click', function() {
-            // When confirmed, submit the form
-            document.getElementById("moveOutForm").submit();
+            // When confirmed, submit the form for the specific room
+            const form = document.getElementById("moveOutForm");
+            form.querySelector('input[name="room_number"]').value = roomNumber; // Set the room_number dynamically
+            form.submit();
         });
     });
+});
 </script>
 {% endblock %}

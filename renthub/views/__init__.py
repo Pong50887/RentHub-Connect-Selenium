@@ -16,3 +16,4 @@ from .dashboard_view import DashboardView
 from .room_overview_view import RoomOverviewView
 from .profile_settings_view import ProfileSettingsView
 from .user_profile_view import UserProfileView
+from .unavailable_view import UnavailableView

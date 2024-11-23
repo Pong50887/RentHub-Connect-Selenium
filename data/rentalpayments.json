@@ -1,0 +1,13 @@
+[
+{
+    "model": "renthub.rentalpayment",
+    "pk": 17,
+    "fields": {
+        "room": 1,
+        "renter": 3,
+        "price": "10500.00",
+        "image": "slip_images/101_3.png",
+        "status": "wait"
+    }
+}
+]
