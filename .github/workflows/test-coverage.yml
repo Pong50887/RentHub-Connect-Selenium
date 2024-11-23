@@ -46,9 +46,14 @@ jobs:
       run: |
           python manage.py migrate
 
+    - name: Clean up test database connections
+      run: |
+          psql -U $PGUSER -d $PGDATABASE -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'test_***' AND pid <> pg_backend_pid();"
+          psql -U $PGUSER -d $PGDATABASE -c "DROP DATABASE IF EXISTS test_***;"
+     
     - name: Run tests
       run: |
-        pytest --ds=mysite.settings --cov=. --cov-report=xml
+        pytest --reuse-db --ds=mysite.settings --cov=. --cov-report=xml
     - name: Upload results to Codecov
       uses: codecov/codecov-action@v4
       with:
