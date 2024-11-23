@@ -87,7 +87,7 @@ localhost:8000
 ```
 or
 ```url
-127.0.0.1:8000/
+127.0.0.1:8000
 ```
 ### And you should be redirected to the renthub home page
 <img width="1440" alt="Screenshot 2567-11-23 at 21 45 27" src="https://github.com/user-attachments/assets/93eaa32c-bda3-479f-a916-51119e651072">
@@ -157,6 +157,7 @@ sudo kill <PID>
 sudo kill -9 <PID>
 ```
 or 
+
 Mac
 Searching the PID in your Activity Moniter, right click, and press Quit.
 
