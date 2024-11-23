@@ -19,11 +19,18 @@ class MaintenanceRequestForm(forms.ModelForm):
             'request_message': 'Describe the problem',
         }
 
-    def save(self, commit=True):
+    def save(self, rental=None, commit=True):
+        """
+        Save the maintenance request, associating it with a rental if provided.
+        """
         maintenance_request = super().save(commit=False)
-        if not maintenance_request.rental:
-            maintenance_request.rental = self.instance.rental
+        if rental:
+            maintenance_request.rental = rental
+        elif not maintenance_request.rental:
+            raise ValueError("A rental instance must be provided to save the maintenance request.")
+
         maintenance_request.date_requested = timezone.now()
+
         if commit:
             maintenance_request.save()
         return maintenance_request

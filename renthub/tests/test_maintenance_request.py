@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.utils import timezone
 from renthub.models import MaintenanceRequest, Rental, Renter, Room
 from renthub.utils import Status
-from unittest import skip
 
 
 class MaintenanceRequestAccessTest(TestCase):
@@ -37,7 +36,6 @@ class MaintenanceRequestAccessTest(TestCase):
 
         self.url = reverse('renthub:contact_us')
 
-    @skip
     def test_renter_with_rental_can_submit_maintenance_request(self):
         """Test that a renter with an active rental can submit a maintenance request"""
         data = {
@@ -52,8 +50,7 @@ class MaintenanceRequestAccessTest(TestCase):
 
         response = self.client.post(self.url, data)
 
-        self.assertEqual(response.status_code,
-                         302)  # Assuming the response is a redirect after successful form submission
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(MaintenanceRequest.objects.count(), 1)
         maintenance_request = MaintenanceRequest.objects.first()
         self.assertEqual(maintenance_request.rental, self.rental)
