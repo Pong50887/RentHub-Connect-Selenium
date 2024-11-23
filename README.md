@@ -9,11 +9,11 @@ RentHub-Connect is an application designed to streamline apartment management by
 ### 1. Clone the repository
 Run this in your terminal
 ```
-git clone https://github.com/Karczel/ku-polls.git
+git clone https://github.com/Pong50887/RentHub-Connect
 ```
 ### 2. Navigate to the project directory
 ```commandline
-cd ku-polls
+cd RentHub-Connect
 ```
 ### 3. Create a virtual environment
 ```commandline
@@ -99,11 +99,24 @@ Try Google Chrome or Brave.
 Your data are saved to cloud database (neon.tech Postgres, Amazon S3) up-to-date in real-time
 But if you want to save your questions and choices locally
 To save your data
+Windows
+```commandline
+python manage.py dumpdata auth.user --indent 4 > data\users.json
+```
+Mac/Linux
 - users
 ```commandline
 python3 manage.py dumpdata auth.user --indent 4 > data/users.json
 ```
+
 - app models
+Windows
+```commandline
+for %model in (user, announcement, feature, maintenancerequest, notification, propertyowner, rental, rentalpayment, renter, room, roomimage, roomtype, transaction) do (
+    python manage.py dumpdata <yourappname>.%model --indent 4 > data\%model%s.json
+)
+```
+Mac/Linux
 ```commandline
 for model in user announcement feature maintenancerequest notification propertyowner rental rentalpayment renter room roomimage roomtype transaction; do
     python3 manage.py dumpdata <yourappname>.$model --indent 4 > data/${model}s.json
