@@ -38,6 +38,7 @@ class RentalAdmin(admin.ModelAdmin):
             latest_transaction.status = obj.status
             latest_transaction.save()
 
-    def create_notification(self, renter, title, message):
+    @staticmethod
+    def create_notification(renter, title, message):
         """Create a new notification for the renter."""
         Notification.objects.create(renter=renter, title=title, message=message)
