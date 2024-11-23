@@ -3,6 +3,7 @@ import re
 
 from django.test import TestCase
 from django.urls import reverse
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
@@ -24,13 +25,13 @@ class PaymentListViewTests(TestCase):
         admin_login(self.browser)
 
         self.browser.get(f"{settings.BASE_URL}/admin/renthub/rental")
-        table_row = self.browser.find_element(By.CSS_SELECTOR, "#result_list tbody tr")
-        if table_row:
+        try:
+            table_row = self.browser.find_element(By.CSS_SELECTOR, "#result_list tbody tr")
             room = table_row.find_element(By.CSS_SELECTOR, '.field-room a').text
             self.room_number = re.search(r"Room (\d+)", room).group(1)
             self.renter = table_row.find_element(By.CSS_SELECTOR, '.field-renter').text
             self.pwd = f"hackme{self.renter[-1]*2}"
-        else:
+        except NoSuchElementException:
             self.room_number = "207"
             self.renter = "demo4"
             self.pwd = 'hackme44'
