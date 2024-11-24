@@ -45,10 +45,10 @@ For windows
 copy sample.env .env
 ```
 
-You'll have to create your own neon.tech Postgre database and Amazon S3 to connect with the application
-Follow these tutorial, you only have to get values for your .env
-[neon.tech Postgre database](https://www.youtube.com/watch?v=kvIK2NpuF2I)
-[Amazon S3 tutorial](https://www.youtube.com/watch?v=JQVQcNN0cXE)
+You'll have to create your own neon.tech Postgre database and Amazon S3 to connect with the application <br>
+Follow these tutorial, you only have to get values for your .env <br>
+[neon.tech Postgre database](https://www.youtube.com/watch?v=kvIK2NpuF2I) <br>
+[Amazon S3 tutorial](https://www.youtube.com/watch?v=JQVQcNN0cXE) <br>
 
 
 ### 7. Migrate
