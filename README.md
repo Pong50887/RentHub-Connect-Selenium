@@ -62,6 +62,29 @@ python manage.py test
 ```
 
 ### 9. Load data
+Media files 
+First, download awscli
+Windows
+```commandline
+choco install awscli
+```
+Mac/Linux
+```commandline
+brew install awscli
+```
+log in to your amazon cli
+```
+aws configure
+```
+input your aws configuration data
+
+If the aws configuration data is correct, then you'd be able to load media/ into S3 with
+```commandline
+aws s3 sync media/ s3://<your-bucket-name> --region <your-region-name>
+
+```
+
+Relational files
 For Windows
 ```commandline
 for %f in (data\*.json) do python manage.py loaddata "%f"
@@ -72,6 +95,7 @@ for file in data/*.json; do
     python manage.py loaddata $file
 done
 ```
+if you ran into loaddata errors, you simply rerun those commands again until no error reports appears
 
 ## Running the Application
 ## 1. After you've finished the Installation Tutorial
@@ -129,6 +153,11 @@ done
 
 To save your media files
 First, download awscli
+Windows
+```commandline
+choco install awscli
+```
+Mac/Linux
 ```commandline
 brew install awscli
 ```
@@ -140,7 +169,7 @@ input your aws configuration data
 
 If the aws configuration data is correct, then you'd be able to load media into media/ with
 ```commandline
-aws s3 sync media/ s3://<your-bucket-name> --region <your-region-name>
+aws s3 sync s3://<your-bucket-name> --region <your-region-name> media/  
 ```
 
 ## 4. Terminate the running application
