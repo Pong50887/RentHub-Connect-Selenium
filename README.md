@@ -64,10 +64,12 @@ python manage.py test
 ### 9. Load data
 Media files 
 First, download awscli
+
 Windows
 ```commandline
 choco install awscli
 ```
+
 Mac/Linux
 ```commandline
 brew install awscli
@@ -85,10 +87,12 @@ aws s3 sync media/ s3://<your-bucket-name> --region <your-region-name>
 ```
 
 Relational files
+
 For Windows
 ```commandline
 for %f in (data\*.json) do python manage.py loaddata "%f"
 ```
+
 For Mac/Linux
 ```commandline
 for file in data/*.json; do
@@ -109,10 +113,12 @@ python manage.py runserver --insecure
 ```
 
 ## 2. Use your web browser of choice
+
 type this in your web browser's URL bar
 ```url
 localhost:8000
 ```
+
 or
 ```url
 127.0.0.1:8000
@@ -124,13 +130,15 @@ or
 Try Google Chrome or Brave.
 
 ## 3. Saving data
-Your data are saved to cloud database (neon.tech Postgres, Amazon S3) up-to-date in real-time
-But if you want to save your questions and choices locally
-To save your data
+Your data are saved to cloud database (neon.tech Postgres, Amazon S3) up-to-date in real-time <br>
+But if you want to save your questions and choices locally <br>
+To save your data <br>
+
 Windows
 ```commandline
 python manage.py dumpdata auth.user --indent 4 > data\users.json
 ```
+
 Mac/Linux
 - users
 ```commandline
@@ -138,12 +146,14 @@ python3 manage.py dumpdata auth.user --indent 4 > data/users.json
 ```
 
 - app models
+  
 Windows
 ```commandline
 for %model in (user, announcement, feature, maintenancerequest, notification, propertyowner, rental, rentalpayment, renter, room, roomimage, roomtype, transaction) do (
     python manage.py dumpdata <yourappname>.%model --indent 4 > data\%model%.json
 )
 ```
+
 Mac/Linux
 ```commandline
 for model in user announcement feature maintenancerequest notification propertyowner rental rentalpayment renter room roomimage roomtype transaction; do
@@ -151,22 +161,25 @@ for model in user announcement feature maintenancerequest notification propertyo
 done
 ```
 
-To save your media files
-First, download awscli
+To save your media files  <br>
+First, download awscli  <br>
+
 Windows
 ```commandline
 choco install awscli
 ```
+
 Mac/Linux
 ```commandline
 brew install awscli
 ```
+
 log in to your amazon cli
 ```
 aws configure
 ```
-input your aws configuration data
 
+input your aws configuration data  <br>
 If the aws configuration data is correct, then you'd be able to load media into media/ with
 ```commandline
 aws s3 sync s3://<your-bucket-name> --region <your-region-name> media/  
