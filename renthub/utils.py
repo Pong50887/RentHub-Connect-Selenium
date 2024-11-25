@@ -42,7 +42,8 @@ def generate_qr_code(price, room_number):
     """Generate Promptpay QR payment with fixed price."""
     try:
         logger.info(f"Generating QR code for room {room_number} with price {price}")
-        payload_with_amount = qrcode.generate_payload("0983923856", price)
+        phone_number = settings.PROMPTPAY_PHONE_NUMBER
+        payload_with_amount = qrcode.generate_payload(phone_number, price)
         qr_code_path = f"media/qr_code_images/{room_number}.png"
         qrcode.to_file(payload_with_amount, qr_code_path)
         logger.info(f"QR code generated successfully for room {room_number}.")
