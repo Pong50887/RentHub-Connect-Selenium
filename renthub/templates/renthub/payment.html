@@ -219,7 +219,8 @@
         {% elif send_or_cancel %}
             <div class="mb-3">
                 <label for="myFile" class="form-label">Upload Payment Slip:</label>
-                <input type="file" id="myFile" name="payment_slip" class="form-control" required>
+                <input type="file" id="myFile" name="payment_slip" class="form-control" accept="image/*" required>
+                <div id="file-error" class="text-danger" style="display: none;">Please upload a valid image file.</div>
             </div>
         {% endif %}
             <div class="payment-actions d-flex justify-content-start">
@@ -231,8 +232,7 @@
             </div>
     </form>
     <script>
-        window.addEventListener('beforeunload', function (e) {
-            // Send a POST request to delete the QR code
+        window.addEventListener('beforeunload', function () {
             fetch("{% url 'renthub:delete_qr_code' room.room_number %}", {
                 method: 'POST',
                 headers: {
@@ -241,6 +241,20 @@
                 },
                 body: JSON.stringify({}),
             });
+        });
+    </script>
+    <script>
+        const fileInput = document.getElementById('myFile');
+        const errorDiv = document.getElementById('file-error');
+    
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file && !file.type.startsWith('image/')) {
+                errorDiv.style.display = 'block';
+                fileInput.value = ''; 
+            } else {
+                errorDiv.style.display = 'none';
+            }
         });
     </script>
 </div>
