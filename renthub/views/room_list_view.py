@@ -13,9 +13,9 @@ class RoomListView(ListView):
     def get_queryset(self):
         """Retrieve and filter the list of rooms based on user input."""
         rooms = Room.objects.all().order_by("room_number")
-        search_entry = self.request.GET.get("search", "")
-        selected_room_type = self.request.GET.get("room_type", "")
-        sort_price_option = self.request.GET.get("sort", "")
+        search_entry = self.request.POST.get("search", "").strip()[:100]
+        selected_room_type = self.request.POST.get("room_type", "")
+        sort_price_option = self.request.POST.get("sort", "")
 
         available_rooms = []
         for room in rooms:
@@ -28,11 +28,10 @@ class RoomListView(ListView):
                      | rooms.filter(room_type__type_name__icontains=search_entry)
                      | rooms.filter(room_type__description__icontains=search_entry)
                      | rooms.filter(room_type__ideal_for__icontains=search_entry)
-                     | rooms.filter(room_type__type_name__icontains=search_entry)
                      | rooms.filter(room_type__features__name__icontains=search_entry)
                      | rooms.filter(detail__icontains=search_entry)).distinct()
 
-        if selected_room_type:
+        if selected_room_type.isdigit() and RoomType.objects.filter(id=selected_room_type).exists():
             rooms = rooms.filter(room_type__id=selected_room_type)
 
         if sort_price_option == "price_asc":
@@ -46,10 +45,16 @@ class RoomListView(ListView):
         """Add additional context to the template."""
         context = super().get_context_data(**kwargs)
         context.update({
-            "search_entry": self.request.GET.get("search", ""),
-            "selected_room_type": self.request.GET.get("room_type", ""),
-            "sort_price_option": self.request.GET.get("sort", ""),
+            "search_entry": self.request.POST.get("search", ""),
+            "selected_room_type": self.request.POST.get("room_type", ""),
+            "sort_price_option": self.request.POST.get("sort", ""),
             "room_types": RoomType.objects.all(),
             "search_results_exist": bool(self.get_queryset())
         })
         return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle the POST request."""
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+        return self.render_to_response(context)

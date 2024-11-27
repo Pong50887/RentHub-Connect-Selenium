@@ -33,20 +33,6 @@
             color: #28a745;
             font-weight: bold;
         }
-        .availability-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            border-radius: 12px;
-            color: #fff;
-            margin-left: 10px;
-        }
-        .available {
-            background-color: #4CAF50;
-        }
-        .not-available {
-            background-color: #E74C3C;
-        }
         .filter-section {
             max-width: 1000px;
             margin: 20px auto;
@@ -57,12 +43,26 @@
             flex-direction: column;
             gap: 10px;
         }
+        .filter-section .error-message {
+            color: gray;
+            font-size: 0.875rem;
+            margin-left: 10px;
+            margin-top: 5px;
+        }
         .search-container {
             display: flex;
             gap: 10px;
+            width: 100%;
         }
-        .search-container input {
+        .search-container .search-field {
             flex-grow: 1;
+        }
+        .search-container .room-type-dropdown {
+            flex-basis: 50%;
+            max-width: 200px;
+        }
+        .filter-section .btn-outline-secondary i {
+            margin-left: 5px;
         }
         .filter-section .form-control {
             color: #6c757d;
@@ -70,35 +70,19 @@
         .filter-section .form-control:not(:placeholder-shown) {
             color: #000;
         }
-        .filter-section .btn-outline-secondary i {
-            margin-left: 5px;
-        }
-        .filter-section .availability-options {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            gap: 10px;
-        }
-        .filter-section .availability-options li {
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
     </style>
-
 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Available Rooms</h1>
 
-    <!-- Filter and Search Section -->
     <div class="filter-section">
-        <form method="get" action="{% url 'renthub:room_list' %}" class="w-100">
+        <form method="post" action="{% url 'renthub:room_list' %}" class="w-100">
+            {% csrf_token %}
             <div class="search-container">
-                <input type="text" name="search" value="{{ search_entry }}" class="form-control mt-2" placeholder="Search by room number or details">
-                <select name="room_type" class="form-control mt-2">
+                <input type="text" name="search" value="{{ search_entry }}" class="form-control mt-2 search-field" placeholder="Search by room number or details" maxlength="100">
+                <select name="room_type" class="form-control mt-2 room-type-dropdown">
                     <option value="" {% if not selected_room_type %}selected{% endif %}>All Room Types</option>
                     {% for room_type in room_types %}
                         <option value="{{ room_type.id }}" {% if selected_room_type == room_type.id|stringformat:"s" %}selected{% endif %}>{{ room_type.type_name }}</option>
@@ -108,8 +92,11 @@
                     <i class="bi bi-search"></i>
                 </button>
             </div>
-    
-            <div class="form-row mt-2 d-flex justify-content-end">
+
+            <div class="form-row mt-2 d-flex justify-content-between">
+                <div class="error-message">
+                    (The search field has a character limit of 100.)
+                </div>
                 <button type="submit" name="sort" value="{% if sort_price_option == 'price_desc' %}price_asc{% else %}price_desc{% endif %}" class="btn btn-outline-secondary">
                     {% if sort_price_option == 'price_desc' %}Sort from High to Low{% else %}Sort from Low to High{% endif %} <i class="bi {% if sort_price_option == 'price_desc' %}bi-sort-down{% else %}bi-sort-up{% endif %}"></i>
                 </button>
@@ -117,7 +104,6 @@
         </form>
     </div>
 
-    <!-- Room List -->
     {% if search_results_exist %}
         {% for room in rooms %}
             {% if room.is_available %}
