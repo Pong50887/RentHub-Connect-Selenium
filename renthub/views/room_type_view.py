@@ -14,4 +14,7 @@ class RoomTypeView(ListView):
     def get_queryset(self):
         """Retrieve the rooms that match the specified room type from the URL."""
         room_type = self.kwargs['room_type']
-        return Room.objects.filter(room_type__type_name=room_type).order_by('room_number')
+        rooms = Room.objects.filter(room_type__type_name=room_type).order_by('room_number')
+        available_rooms = [room for room in rooms if room.is_available()]
+        print(available_rooms)
+        return available_rooms

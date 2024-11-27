@@ -42,19 +42,17 @@
 
     {% if rooms %}
         {% for room in rooms %}
-            {% if room.is_available %}
-                <div class="custom-card">
-                    {% if room.room_type.image %}
-                        <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="room-image">
-                    {% endif %}
-                    <div class="room-details">
-                        <h2>Room Number: {{ room.room_number }}</h2>
-                        <p class="room-price">{{ room.price }} ฿ / month</p>
-                        <p><strong>Room Size:</strong> {{ room.detail }} </p>
-                        <a href="{% url 'renthub:room' room.room_number %}" class="btn btn-primary">View Details</a>
-                    </div>
+            <div class="custom-card">
+                {% if room.room_type.image %}
+                    <img src="{{ room.room_type.image.url }}" alt="{{ room.room_type.type_name }}" class="room-image">
+                {% endif %}
+                <div class="room-details">
+                    <h2>Room Number: {{ room.room_number }}</h2>
+                    <p class="room-price">{{ room.price }} ฿ / month</p>
+                    <p><strong>Room Size:</strong> {{ room.detail }} </p>
+                    <a href="{% url 'renthub:room' room.room_number %}" class="btn btn-primary">View Details</a>
                 </div>
-            {% endif %}
+            </div>
         {% endfor %}
     {% else %}
         <p class="alert alert-warning text-center">No rooms available of this type.</p>
