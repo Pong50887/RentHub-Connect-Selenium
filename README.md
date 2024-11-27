@@ -224,10 +224,6 @@ deactivate
 ```
 
 # Existing demo users and passwords <br>
-## Admin
-|    Username     |    password     |
-|:---------------:|:---------------:|
-|     rhadmin     |   renthub1234   |
 
 ## Property
 |    Username     |    password     |
