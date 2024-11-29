@@ -227,7 +227,7 @@
                 {% if not send_or_cancel %}
                     <!-- Add something in the future -->
                 {% else %}
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary" id="send-button" onclick="disableButtonAndSubmit()">Send</button>
                 {% endif %}
             </div>
     </form>
@@ -258,4 +258,18 @@
         });
     </script>
 </div>
+<script>
+    function disableButtonAndSubmit() {
+        const button = document.getElementById('send-button');
+        const form = document.getElementById('paymentSlipForm');
+
+        // Disable the button to prevent multiple submissions
+        button.disabled = true;
+        // Optionally change the button text
+        button.innerHTML = "Sending...";
+
+        // Submit the form explicitly
+        form.submit();
+    }
+</script>
 {% endblock %}
