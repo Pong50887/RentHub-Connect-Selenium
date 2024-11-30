@@ -17,7 +17,7 @@ class RenterProfileForm(forms.ModelForm):
 
     class Meta:
         model = Renter
-        fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id']
+        fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id', 'thai_citizenship_id_image']
 
     def clean(self):
         """

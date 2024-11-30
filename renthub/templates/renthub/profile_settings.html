@@ -45,6 +45,10 @@
                             <label for="thai_citizenship_id">Citizenship ID</label>
                             <input type="text" id="thai_citizenship_id" class="form-control" value="{{ form.thai_citizenship_id.value }}" disabled>
                         </div>
+                        <div class="form-group">
+                            <label for="thai_citizenship_id_image">Citizenship ID Image</label>
+                            <img id="thai_citizenship_id_image" class="form-control" src="{{ form.thai_citizenship_id_image.value.url }}" alt="Citizenship ID Image" style="max-width: 100%; height: auto;">
+                        </div>
 
                         <!-- Change Password Section -->
                         <button class="btn btn-warning mt-4 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#changePasswordSection" aria-expanded="false" aria-controls="changePasswordSection">
