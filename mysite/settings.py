@@ -14,7 +14,6 @@ from pathlib import Path
 from decouple import config, Csv
 import sys
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -186,7 +185,6 @@ STORAGES = {
     },
 }
 
-
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
@@ -203,3 +201,6 @@ MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 BASE_URL = config('BASE_URL', default='http://localhost:8000')
+
+ADMIN_USERNAME = config('ADMIN_USERNAME')
+ADMIN_PASSWORD = config('ADMIN_PASSWORD')

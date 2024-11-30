@@ -19,6 +19,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 from mysite import settings
+from mysite.settings import ADMIN_USERNAME, ADMIN_PASSWORD
 from renthub.models import RoomType
 
 logger = logging.getLogger('renthub')
@@ -134,7 +135,7 @@ class Browser:
     def get_browser(cls):
         """Class method to initialize a headless Chrome WebDriver."""
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument("--disable-extensions")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
@@ -157,7 +158,12 @@ class Browser:
     def get_logged_in_browser(cls, username, password):
         """Class method to initialize a headless browser and log in."""
         driver = cls.get_browser()
+        cls.log_in(driver, username, password)
+        return driver
 
+    @classmethod
+    def log_in(cls, driver, username, password):
+        """Log in with username and password."""
         try:
             driver.get(f"{settings.BASE_URL}/accounts/login/?next=/")
             username_field = driver.find_element(By.XPATH, '//td//input[@name="username"]')
@@ -173,7 +179,6 @@ class Browser:
         except Exception as e:
             raise RuntimeError(f"An error occurred during login: {e}")
 
-        return driver
 
 
 def kill_port():
@@ -216,6 +221,6 @@ def kill_port():
 
 def admin_login(browser):
     browser.get(f"{settings.BASE_URL}/admin/login/")
-    browser.find_element(By.NAME, 'username').send_keys('rhadmin')
-    browser.find_element(By.NAME, 'password').send_keys('renthub1234')
+    browser.find_element(By.NAME, 'username').send_keys(ADMIN_USERNAME)
+    browser.find_element(By.NAME, 'password').send_keys(ADMIN_PASSWORD)
     browser.find_element(By.XPATH, '//input[@type="submit"]').click()

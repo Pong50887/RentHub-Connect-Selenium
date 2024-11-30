@@ -6,6 +6,8 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from mysite.settings import ADMIN_USERNAME
 from ..models import Room, Rental, Transaction, Notification
 from django.db.models import F
 from ..utils import Status
@@ -55,7 +57,7 @@ class RoomPaymentListView(LoginRequiredMixin, TemplateView):
         end_month = datetime.strptime(end_month_str, "%Y-%m")
         new_end_date = end_month - relativedelta(days=1)
         end_month_last_day = new_end_date.date()
-        admin = User.objects.get(username="rhadmin")
+        admin = User.objects.get(username=ADMIN_USERNAME)
         rental = Rental.objects.filter(
             renter__id=self.request.user.id,
             room__room_number=room_number
