@@ -51,7 +51,8 @@
                             <div id="image-preview" style="display: inline-block; margin-top: 10px;">
                                 <!-- The preview image will be displayed here -->
                             </div>
-                            <input type="file" name="thai_citizenship_id_image" id="thai_citizenship_id_image" class="form-control mt-2">
+                            <input type="file" name="thai_citizenship_id_image" id="thai_citizenship_id_image" class="form-control mt-2" accept="image/*">
+                            <div id="file-error" class="text-danger" style="display: none;">Please upload a valid image file.</div>
                         </div>
 
                         <!-- Change Password Section -->
@@ -107,6 +108,18 @@
 </div>
 
 <script>
+    const fileInput = document.getElementById('myFile');
+            const errorDiv = document.getElementById('file-error');
+
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+                if (file && !file.type.startsWith('image/')) {
+                    errorDiv.style.display = 'block';
+                    fileInput.value = '';
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            });
     document.addEventListener("DOMContentLoaded", function () {
         const fileInput = document.getElementById("thai_citizenship_id_image");
         const previewContainer = document.getElementById("image-preview");

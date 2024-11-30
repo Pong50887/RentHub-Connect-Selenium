@@ -56,7 +56,8 @@ class RenterSignupForm(UserCreationForm):
     thai_citizenship_id_image = forms.ImageField(
         required=True,
         label="Thai Citizenship ID Image",
-        help_text="Upload an image of your Thai citizenship ID for admin to approve your identity."
+        help_text="Upload an image of your Thai citizenship ID for admin to approve your identity.",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
     )
 
     class Meta:
