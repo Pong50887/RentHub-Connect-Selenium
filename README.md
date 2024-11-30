@@ -31,8 +31,9 @@ All project documents are in the [Project Wiki](../../wiki/Home).
 - [Project Development Plan](../../wiki/Project-Development-Plan)
 - [Domain Model](../../wiki/Domain-Model)
 - [Task Board](https://github.com/users/Pong50887/projects/3/views/1)
-- [Running the Application](../../wiki/Running-the-Application)
 - [Installation](../../wiki/Installation)
+- [Running the Application](../../wiki/Running-the-Application)
+
 
 ## Iteration Plans
 - [Iteration 1](../../wiki/Iteration-1-Plan)
