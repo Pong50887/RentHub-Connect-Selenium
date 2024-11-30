@@ -180,7 +180,6 @@ class Browser:
             raise RuntimeError(f"An error occurred during login: {e}")
 
 
-
 def kill_port():
     # Specify the port to check
     port = 8000

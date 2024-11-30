@@ -10,7 +10,7 @@ class MaintenanceRequestForm(forms.ModelForm):
         fields = ['title', 'request_message']
 
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control','maxlength': '100'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'maxlength': '100'}),
             'request_message': forms.Textarea(attrs={'class': 'form-control', 'maxlength': '1000'}),
         }
 
