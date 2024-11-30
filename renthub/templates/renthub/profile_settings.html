@@ -47,7 +47,11 @@
                         </div>
                         <div class="form-group">
                             <label for="thai_citizenship_id_image">Citizenship ID Image</label>
-                            <img id="thai_citizenship_id_image" class="form-control" src="{{ form.thai_citizenship_id_image.value.url }}" alt="Citizenship ID Image" style="max-width: 100%; height: auto;">
+                            <img class="form-control" src="{{ form.thai_citizenship_id_image.value.url }}" alt="Citizenship ID Image" style="max-width: 100%; height: auto;">
+                            <div id="image-preview" style="display: inline-block; margin-top: 10px;">
+                                <!-- The preview image will be displayed here -->
+                            </div>
+                            <input type="file" name="thai_citizenship_id_image" id="thai_citizenship_id_image" class="form-control mt-2">
                         </div>
 
                         <!-- Change Password Section -->
@@ -101,4 +105,44 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("thai_citizenship_id_image");
+        const previewContainer = document.getElementById("image-preview");
+
+        fileInput.addEventListener("change", function () {
+            // Clear any previous preview
+            previewContainer.innerHTML = "";
+
+            // Check if a file was selected
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+
+                // Validate that the selected file is an image
+                if (file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // Create an img element for the preview
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.style.maxWidth = "200px";
+                        img.style.maxHeight = "200px";
+                        img.style.marginTop = "10px";
+
+                        // Append the img element to the preview container
+                        previewContainer.appendChild(img);
+                    };
+
+                    // Read the image file as a data URL
+                    reader.readAsDataURL(file);
+                } else {
+                    // If the file is not an image, show an error message
+                    previewContainer.innerHTML = "<p style='color: red;'>Please select a valid image file.</p>";
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

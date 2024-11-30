@@ -18,6 +18,9 @@ class RenterProfileForm(forms.ModelForm):
     class Meta:
         model = Renter
         fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id', 'thai_citizenship_id_image']
+        widgets = {
+            'thai_citizenship_id_image': forms.ClearableFileInput(attrs={'accept': 'image/*'})
+        }
 
     def clean(self):
         """
