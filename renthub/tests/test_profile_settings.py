@@ -29,16 +29,9 @@ class ProfileSettingsTests(TestCase):
         self.temp_image.seek(0)
 
     def tearDown(self):
-        # Explicitly delete the test file
-        if self.renter.thai_citizenship_id_image:
-            try:
-                # Check if the storage supports path-based deletion
-                file_path = self.renter.thai_citizenship_id_image.path
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-            except NotImplementedError:
-                # If the storage doesn't support paths (e.g., S3), we skip the deletion
-                pass
+        """Delete temp_image"""
+        if hasattr(self, 'temp_image') and os.path.exists(self.temp_image.name):
+            os.remove(self.temp_image.name)
 
     def test_profile_page_access(self):
         """
