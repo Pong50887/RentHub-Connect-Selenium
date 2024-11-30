@@ -17,7 +17,8 @@ class RenterProfileForm(forms.ModelForm):
 
     class Meta:
         model = Renter
-        fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id', 'thai_citizenship_id_image']
+        fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'thai_citizenship_id',
+                  'thai_citizenship_id_image']
         widgets = {
             'thai_citizenship_id_image': forms.ClearableFileInput(attrs={'accept': 'image/*'})
         }
@@ -30,6 +31,7 @@ class RenterProfileForm(forms.ModelForm):
         current_password = cleaned_data.get('password')
         new_password1 = cleaned_data.get('new_password1')
         new_password2 = cleaned_data.get('new_password2')
+        thai_citizenship_id_image = cleaned_data.get('thai_citizenship_id_image')
 
         if current_password:
             user = authenticate(username=self.instance.username, password=current_password)

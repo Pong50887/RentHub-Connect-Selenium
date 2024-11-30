@@ -5,10 +5,14 @@ import signal
 import subprocess
 import time
 from enum import Enum
+from io import BytesIO
 
 import boto3
+from PIL import Image
 from botocore.exceptions import ClientError
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from promptpay import qrcode
 from selenium import webdriver
@@ -223,3 +227,18 @@ def admin_login(browser):
     browser.find_element(By.NAME, 'username').send_keys(ADMIN_USERNAME)
     browser.find_element(By.NAME, 'password').send_keys(ADMIN_PASSWORD)
     browser.find_element(By.XPATH, '//input[@type="submit"]').click()
+
+
+def create_temp_image_file():
+    """
+    Creates a temporary image file to simulate an upload for testing.
+    Returns a SimpleUploadedFile object that can be assigned to an ImageField.
+    """
+    # Create an image using Pillow
+    temp_file = BytesIO()
+    image = Image.new('RGB', (100, 100), color='blue')
+    image.save(temp_file, format='PNG')
+    temp_file.seek(0)  # Rewind the BytesIO object to the start
+
+    # Wrap the BytesIO content in a SimpleUploadedFile, simulating a real file upload
+    return SimpleUploadedFile('temp_image.png', temp_file.read(), content_type='image/png')

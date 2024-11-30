@@ -1,7 +1,11 @@
+import os
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import authenticate
 from ..models import Renter
+from ..utils import create_temp_image_file
 
 
 class ProfileSettingsTests(TestCase):
@@ -9,6 +13,7 @@ class ProfileSettingsTests(TestCase):
         """
         Set up a test renter and log in.
         """
+        self.temp_image = create_temp_image_file()
         self.renter = Renter.objects.create_user(
             username='test_user',
             email='testuser@example.com',
@@ -16,10 +21,24 @@ class ProfileSettingsTests(TestCase):
             phone_number='0123456789',
             first_name='Test',
             last_name='User',
-            thai_citizenship_id='1234567890123'
+            thai_citizenship_id='1234567890123',
+            thai_citizenship_id_image=self.temp_image
         )
         self.client.login(username='test_user', password='test_password123')
         self.url = reverse('renthub:profile_settings')
+        self.temp_image.seek(0)
+
+    def tearDown(self):
+        # Explicitly delete the test file
+        if self.renter.thai_citizenship_id_image:
+            try:
+                # Check if the storage supports path-based deletion
+                file_path = self.renter.thai_citizenship_id_image.path
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except NotImplementedError:
+                # If the storage doesn't support paths (e.g., S3), we skip the deletion
+                pass
 
     def test_profile_page_access(self):
         """
@@ -40,7 +59,8 @@ class ProfileSettingsTests(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'thai_citizenship_id': '1234567890123',
-        })
+            'thai_citizenship_id_image': self.temp_image,
+        }, format='multipart')
         self.assertEqual(response.status_code, 302)
         self.renter.refresh_from_db()
         self.assertEqual(self.renter.username, 'updated_user')
@@ -58,10 +78,11 @@ class ProfileSettingsTests(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'thai_citizenship_id': '1234567890123',
+            'thai_citizenship_id_image': self.temp_image,
             'password': 'test_password123',
             'new_password1': 'newpassword456',
             'new_password2': 'newpassword456',
-        })
+        }, format='multipart')
         self.assertEqual(response.status_code, 302)
         self.renter.refresh_from_db()
         self.client.logout()
@@ -79,10 +100,11 @@ class ProfileSettingsTests(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'thai_citizenship_id': '1234567890123',
+            'thai_citizenship_id_image': self.temp_image,
             'password': 'test_password123',
             'new_password1': 'newpassword456',
             'new_password2': 'different_password',
-        })
+        }, format='multipart')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "The new passwords do not match.")
         self.renter.refresh_from_db()
@@ -99,10 +121,11 @@ class ProfileSettingsTests(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'thai_citizenship_id': '1234567890123',
+            'thai_citizenship_id_image': self.temp_image,
             'password': 'wrong_password',
             'new_password1': 'newpassword456',
             'new_password2': 'newpassword456',
-        })
+        }, format='multipart')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "The current password is incorrect.")
         self.renter.refresh_from_db()
