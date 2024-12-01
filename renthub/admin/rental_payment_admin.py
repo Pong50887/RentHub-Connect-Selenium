@@ -32,12 +32,14 @@ class RentalPaymentAdmin(admin.ModelAdmin):
         rental = Rental.objects.filter(room=obj.room, renter=obj.renter).get()
 
         if obj.status == "approve" and original_status != "approve":
-            self.create_notification(obj.renter, "Payment Approved", f"Your payment for {obj.room} has been approved.")
+            self.create_notification(obj.renter, "Payment Approved",
+                                     f"Your payment for {obj.room} has been approved.")
             rental.status = Status.approve
             rental.save()
 
         elif obj.status == "reject" and original_status != "reject":
-            self.create_notification(obj.renter, "Payment Rejected", f"Your payment for {obj.room} has been rejected.")
+            self.create_notification(obj.renter, "Payment Rejected",
+                                     f"Your payment for {obj.room} has been rejected. Please contact admin.")
             rental.status = Status.reject
             rental.save()
 

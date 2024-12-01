@@ -31,10 +31,12 @@ class RentalAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         if obj.status == "approve" and original_status != "approve":
-            self.create_notification(obj.renter, "Rental Approved", f"Your rental for {obj.room} has been approved.")
+            self.create_notification(obj.renter, "Rental Approved",
+                                     f"Your rental for {obj.room} has been approved.")
 
         elif obj.status == "reject" and original_status != "reject":
-            self.create_notification(obj.renter, "Rental Rejected", f"Your rental for {obj.room} has been rejected.")
+            self.create_notification(obj.renter, "Rental Rejected",
+                                     f"Your rental for {obj.room} has been rejected. Please contact admin.")
             obj.delete()
 
         latest_transaction = Transaction.objects.filter(

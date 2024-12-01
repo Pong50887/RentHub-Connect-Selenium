@@ -82,6 +82,20 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental.image = file_path
                 rental.save()
 
+                if rental.check_overlapped():
+                    transaction = Transaction.objects.create(
+                        room=room,
+                        renter=renter,
+                        price=total,
+                        date=datetime.now(),
+                        image=file_path,
+                        status=Status.reject
+                    )
+                    transaction.image = file_path
+                    transaction.save()
+                    messages.success(request, "Your rental request could not be processed.")
+                    return redirect('renthub:home')
+
                 transaction = Transaction.objects.create(
                     room=room,
                     renter=renter,

@@ -68,6 +68,25 @@ class Rental(models.Model):
 
         return self.last_paid_date.day <= 15
 
+    def check_overlapped(self):
+        """
+        Override save to ensure a room cannot have multiple active rentals.
+        If a duplicate rental exists, delete the new one and notify the renter.
+        """
+        existing_rental = Rental.objects.filter(
+            room=self.room,
+        ).exclude(id=self.id).first()
+
+        if existing_rental:
+            Notification.objects.create(
+                renter=self.renter,
+                title="Rental Creation Failed",
+                message=f"Your rental request for room {self.room} failed as it is already occupied. Contact admin.",
+                post_date=timezone.now(),
+                is_read=False
+            )
+        return existing_rental
+
     def __str__(self):
         """Returns the short detail of the request."""
         return f"{self.renter} / {self.room} / {self.status}"
