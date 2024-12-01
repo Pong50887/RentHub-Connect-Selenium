@@ -83,6 +83,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental.save()
 
                 if rental.check_overlapped():
+                    rental.delete()
                     transaction = Transaction.objects.create(
                         room=room,
                         renter=renter,
@@ -167,9 +168,9 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
 
         if rental:
             context['total'] = room.price + rental.water_fee + rental.electric_fee + additional_charge
-            context['additional_charge'] = additional_charge
-            context['water'] = rental.water_fee
-            context['electric'] = rental.electric_fee
+            context['additional_charge'] = float(additional_charge)
+            context['water'] = float(rental.water_fee)
+            context['electric'] = float(rental.electric_fee)
         else:
             context['total'] = room.price * 3
 
