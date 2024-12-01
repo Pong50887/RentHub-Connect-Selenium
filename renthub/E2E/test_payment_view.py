@@ -33,6 +33,11 @@ class PaymentViewTests(TestCase):
 
         self.browser.get(f"{settings.BASE_URL}/admin/renthub/rental")
         try:
+            paginator = self.browser.find_element(By.CSS_SELECTOR, "p.paginator")
+
+            if "0" in paginator.text:
+                raise NoSuchElementException()
+
             table_rows = self.browser.find_elements(By.CSS_SELECTOR, "#result_list tbody tr")
 
             for table_row in table_rows:

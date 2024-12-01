@@ -30,12 +30,16 @@ class PaymentListViewTests(TestCase):
 
         self.browser.get(f"{settings.BASE_URL}/admin/renthub/rental")
         try:
+            paginator = self.browser.find_element(By.CSS_SELECTOR, "p.paginator")
+
+            if "0" in paginator.text:
+                raise NoSuchElementException()
+
             table_rows = self.browser.find_elements(By.CSS_SELECTOR, "#result_list tbody tr")
 
             for table_row in table_rows:
                 renter = table_row.find_element(By.CSS_SELECTOR, '.field-renter').text
 
-                # Check if renter's name matches the pattern "demo[1-5]"
                 if re.match(r"demo[1-5]", renter):
                     room = table_row.find_element(By.CSS_SELECTOR, '.field-room a').text
                     self.room_number = re.search(r"Room (\d+)", room).group(1)
@@ -53,7 +57,6 @@ class PaymentListViewTests(TestCase):
             renter_select.select_by_visible_text('demo4')
             price_field = self.browser.find_element(By.ID, 'id_price')
             price_field.send_keys(100)
-
             save_button = self.browser.find_element(By.NAME, '_save')
             save_button.click()
 
