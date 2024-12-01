@@ -93,7 +93,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                     )
                     transaction.image = file_path
                     transaction.save()
-                    messages.success(request,"Your rental request could not be processed.")
+                    messages.success(request, "Your rental request could not be processed.")
                     return redirect('renthub:home')
 
                 transaction = Transaction.objects.create(
