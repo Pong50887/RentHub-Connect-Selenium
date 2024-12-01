@@ -5,7 +5,7 @@
     "fields": {
         "room_number": 101,
         "room_floor": 1,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "3500.00",
         "room_type": 1
     }
@@ -16,7 +16,7 @@
     "fields": {
         "room_number": 102,
         "room_floor": 1,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "4000.00",
         "room_type": 2
     }
@@ -27,7 +27,7 @@
     "fields": {
         "room_number": 103,
         "room_floor": 1,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "5000.00",
         "room_type": 3
     }
@@ -38,7 +38,7 @@
     "fields": {
         "room_number": 104,
         "room_floor": 1,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "6000.00",
         "room_type": 4
     }
@@ -49,7 +49,7 @@
     "fields": {
         "room_number": 105,
         "room_floor": 1,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "3500.00",
         "room_type": 1
     }
@@ -60,7 +60,7 @@
     "fields": {
         "room_number": 106,
         "room_floor": 1,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "4000.00",
         "room_type": 2
     }
@@ -71,7 +71,7 @@
     "fields": {
         "room_number": 107,
         "room_floor": 1,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "5000.00",
         "room_type": 3
     }
@@ -82,7 +82,7 @@
     "fields": {
         "room_number": 108,
         "room_floor": 1,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "6000.00",
         "room_type": 4
     }
@@ -93,7 +93,7 @@
     "fields": {
         "room_number": 201,
         "room_floor": 2,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "4000.00",
         "room_type": 1
     }
@@ -104,7 +104,7 @@
     "fields": {
         "room_number": 202,
         "room_floor": 2,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "5000.00",
         "room_type": 2
     }
@@ -115,7 +115,7 @@
     "fields": {
         "room_number": 203,
         "room_floor": 2,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "6500.00",
         "room_type": 3
     }
@@ -126,7 +126,7 @@
     "fields": {
         "room_number": 204,
         "room_floor": 2,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "7500.00",
         "room_type": 4
     }
@@ -137,7 +137,7 @@
     "fields": {
         "room_number": 205,
         "room_floor": 2,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "4000.00",
         "room_type": 1
     }
@@ -148,7 +148,7 @@
     "fields": {
         "room_number": 206,
         "room_floor": 2,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "5000.00",
         "room_type": 2
     }
@@ -159,7 +159,7 @@
     "fields": {
         "room_number": 207,
         "room_floor": 2,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "6500.00",
         "room_type": 3
     }
@@ -170,7 +170,7 @@
     "fields": {
         "room_number": 208,
         "room_floor": 2,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "7500.00",
         "room_type": 4
     }
@@ -181,7 +181,7 @@
     "fields": {
         "room_number": 109,
         "room_floor": 1,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "3500.00",
         "room_type": 1
     }
@@ -192,7 +192,7 @@
     "fields": {
         "room_number": 110,
         "room_floor": 1,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "4000.00",
         "room_type": 2
     }
@@ -203,7 +203,7 @@
     "fields": {
         "room_number": 111,
         "room_floor": 1,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "5000.00",
         "room_type": 3
     }
@@ -214,7 +214,7 @@
     "fields": {
         "room_number": 112,
         "room_floor": 1,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "6000.00",
         "room_type": 4
     }
@@ -225,7 +225,7 @@
     "fields": {
         "room_number": 209,
         "room_floor": 2,
-        "detail": "3x3 meters",
+        "detail": "3x4.5 meters",
         "price": "4000.00",
         "room_type": 1
     }
@@ -236,7 +236,7 @@
     "fields": {
         "room_number": 210,
         "room_floor": 2,
-        "detail": "3.5x3.5 meters",
+        "detail": "4x5 meters",
         "price": "5000.00",
         "room_type": 2
     }
@@ -247,7 +247,7 @@
     "fields": {
         "room_number": 211,
         "room_floor": 2,
-        "detail": "4x4 meters",
+        "detail": "5x5 meters",
         "price": "6500.00",
         "room_type": 3
     }
@@ -258,7 +258,7 @@
     "fields": {
         "room_number": 212,
         "room_floor": 2,
-        "detail": "5x5 meters",
+        "detail": "6x6 meters",
         "price": "7500.00",
         "room_type": 4
     }

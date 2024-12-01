@@ -3,8 +3,10 @@
     "model": "renthub.renter",
     "pk": 2,
     "fields": {
-        "phone_number": "0987654321",
-        "thai_citizenship_id": "0987654321012"
+        "phone_number": "0234567891",
+        "thai_citizenship_id": "0987654321012",
+        "thai_citizenship_id_image": "",
+        "is_valid": false
     }
 },
 {
@@ -12,7 +14,9 @@
     "pk": 3,
     "fields": {
         "phone_number": "0123456789",
-        "thai_citizenship_id": "6655443322110"
+        "thai_citizenship_id": "6655443322110",
+        "thai_citizenship_id_image": "",
+        "is_valid": false
     }
 },
 {
@@ -20,7 +24,9 @@
     "pk": 4,
     "fields": {
         "phone_number": "0987654231",
-        "thai_citizenship_id": "0011223344556"
+        "thai_citizenship_id": "0011223344556",
+        "thai_citizenship_id_image": "",
+        "is_valid": false
     }
 },
 {
@@ -28,7 +34,9 @@
     "pk": 6,
     "fields": {
         "phone_number": "0123456789",
-        "thai_citizenship_id": "0123456789012"
+        "thai_citizenship_id": "0123456789012",
+        "thai_citizenship_id_image": "",
+        "is_valid": false
     }
 },
 {
@@ -36,7 +44,19 @@
     "pk": 14,
     "fields": {
         "phone_number": "0987654321",
-        "thai_citizenship_id": "1234567890123"
+        "thai_citizenship_id": "1234567890123",
+        "thai_citizenship_id_image": "",
+        "is_valid": false
+    }
+},
+{
+    "model": "renthub.renter",
+    "pk": 33,
+    "fields": {
+        "phone_number": "1234564342",
+        "thai_citizenship_id": "1213456789762",
+        "thai_citizenship_id_image": "renters/testuser/bigstock.webp",
+        "is_valid": false
     }
 }
 ]
