@@ -89,7 +89,7 @@ class PaymentListViewTests(TestCase):
 
     def test_no_rental_message_for_renter_without_rentals(self):
         """A renter without any rental sees that their payment list page is empty."""
-        browser1 = Browser.get_logged_in_browser(username='demo5', password='hackme55')
+        browser1 = Browser.get_logged_in_browser(username='testuser', password='strongpwd123')
 
         browser1.get(f"{settings.BASE_URL}{reverse('renthub:payment_list')}")
         page_source = browser1.page_source
