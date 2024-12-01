@@ -1,5 +1,5 @@
 """Tests of booking: DetailView changes related to booking feature."""
-
+from dateutil.relativedelta import relativedelta
 from django.test import TestCase
 from django.urls import reverse
 from renthub.models import Rental, Room, Renter
@@ -41,7 +41,7 @@ class RoomDetailViewTests(TestCase):
             room=self.room,
             price=self.room.price,
             start_date=date.today(),
-            end_date=date.today().replace(month=date.today().month + 1)
+            end_date=date.today() + relativedelta(months=1)
         )
 
         self.client.login(username='renter2', password='testpassword')

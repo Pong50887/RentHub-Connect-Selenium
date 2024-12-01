@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 
 from ..models import Renter
 
@@ -52,12 +53,18 @@ class RenterSignupForm(UserCreationForm):
         max_length=13,
         help_text="Enter your 13-digit Thai citizenship ID."
     )
+    thai_citizenship_id_image = forms.ImageField(
+        required=True,
+        label="Thai Citizenship ID Image",
+        help_text="Upload an image of your Thai citizenship ID for admin to approve your identity.",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+    )
 
     class Meta:
         model = Renter
         fields = [
             'username', 'email', 'first_name', 'last_name',
-            'phone_number', 'thai_citizenship_id',
+            'phone_number', 'thai_citizenship_id', 'thai_citizenship_id_image',
             'password1', 'password2'
         ]
 

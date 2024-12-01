@@ -18,7 +18,7 @@ class RenterSignupView(View):
 
     def post(self, request):
         """Process the submitted signup form."""
-        form = RenterSignupForm(request.POST)
+        form = RenterSignupForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             renter = form.save(commit=False)

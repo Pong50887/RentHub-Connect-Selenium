@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from mysite import settings
 
-from renthub.utils import Browser, kill_port
+from renthub.utils import Browser, kill_port, stop_django_server, start_django_server
 
 
 class RoomDetailViewTests(TestCase):
@@ -14,12 +14,12 @@ class RoomDetailViewTests(TestCase):
     def setUp(self):
         """Set up data for the tests."""
         kill_port()
-        Browser.start_django_server()
+        self.server_process = start_django_server()
         self.browser = Browser.get_logged_in_browser(username='demo4', password='hackme44')
 
     def tearDown(self):
         """Clean up after tests."""
-        Browser.stop_django_server()
+        stop_django_server(self.server_process)
         self.browser.quit()
         kill_port()
 

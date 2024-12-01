@@ -121,11 +121,13 @@
                         {% else %}
                             <a href="{% url 'renthub:payment' room.room_number %}" class="view-detail-btn">View Details</a>
                         {% endif %}
-
-                        {% if not room.rental_end_date %}
-                            <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#moveOutModal{{ room.room_number }}">
-                                Send Move-Out Notice
-                            </button>
+                    
+                        {% if room.status == 'approve' %}
+                            {% if not room.rental_end_date %}
+                                <button type="button" class="view-Notice-btn" data-bs-toggle="modal" data-bs-target="#moveOutModal{{ room.room_number }}">
+                                    Send Move-Out Notice
+                                </button>
+                            {% endif %}
                         {% endif %}
 
                         <!-- Modal -->
