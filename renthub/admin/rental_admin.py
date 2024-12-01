@@ -34,7 +34,7 @@ class RentalAdmin(admin.ModelAdmin):
             self.create_notification(obj.renter, "Rental Approved", f"Your rental for {obj.room} has been approved.")
 
         elif obj.status == "reject" and original_status != "reject":
-            self.create_notification(obj.renter, "Rental Rejected", f"Your rental for {obj.room} has been rejected.")
+            self.create_notification(obj.renter, "Rental Rejected", f"Your rental for {obj.room} has been rejected. Please contact admin.")
             obj.delete()
 
         latest_transaction = Transaction.objects.filter(
