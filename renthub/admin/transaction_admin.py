@@ -19,4 +19,3 @@ class TransactionAdmin(admin.ModelAdmin):
 
     renter_is_valid.boolean = True
     renter_is_valid.short_description = "Renter Validity"
-    
