@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from mysite import settings
 from mysite.settings import ADMIN_USERNAME, ADMIN_PASSWORD
-from renthub.utils import kill_port, Browser, admin_login
+from renthub.utils import kill_port, Browser, log_in, start_django_server, stop_django_server
 from django.test import TestCase
 
 
@@ -17,11 +17,11 @@ class RentingTests(TestCase):
         """Set up data for the tests."""
         kill_port()
         self.browser = Browser.get_browser()
-        Browser.start_django_server()
+        self.server_process = start_django_server()
 
     def tearDown(self) -> None:
         """Clean up after tests."""
-        Browser.stop_django_server()
+        stop_django_server(self.server_process)
         self.browser.quit()
         kill_port()
 
@@ -49,21 +49,21 @@ class RentingTests(TestCase):
 
     def test_logged_in_renter_renting(self):
         """A logged in renter can rent."""
-        Browser.log_in(driver=self.browser, username="demo4", password="hackme44")
+        log_in(driver=self.browser, username="demo4", password="hackme44")
         self.browser.get(f"{settings.BASE_URL}/room/210")
         self.renting()
         self.assertIn("payment", self.browser.current_url)
 
     def test_logged_in_admin_renting(self):
         """Any logged in user who are not renter can't rent : admin."""
-        Browser.log_in(driver=self.browser, username=ADMIN_USERNAME, password=ADMIN_PASSWORD)
+        log_in(driver=self.browser, username=ADMIN_USERNAME, password=ADMIN_PASSWORD)
         self.browser.get(f"{settings.BASE_URL}/room/210")
         self.renting()
         self.assertNotIn("payment", self.browser.current_url)
 
     def test_logged_in_property_owner_renting(self):
         """Any logged in user who are not renter can't rent : property owner."""
-        Browser.log_in(driver=self.browser, username="renthub1", password="owner123")
+        log_in(driver=self.browser, username="renthub1", password="owner123")
         self.browser.get(f"{settings.BASE_URL}/room/210")
         self.renting()
         self.assertNotIn("payment", self.browser.current_url)

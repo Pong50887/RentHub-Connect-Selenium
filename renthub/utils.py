@@ -11,7 +11,6 @@ import boto3
 from PIL import Image
 from botocore.exceptions import ClientError
 from django.conf import settings
-from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from promptpay import qrcode
@@ -132,56 +131,35 @@ def get_room_images(room_type: RoomType):
     return image_url_list
 
 
-class Browser:
-    """Provide access to an instance of a Selenium web driver."""
+def start_django_server():
+    """Start the Django server using the test database."""
+    server_command = ['python3', 'manage.py', 'runserver', '127.0.0.1:8000']
+    server_process = subprocess.Popen(server_command)
+    time.sleep(5)
+    return server_process
 
-    @classmethod
-    def get_browser(cls):
-        """Class method to initialize a headless Chrome WebDriver."""
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-        return driver
 
-    @classmethod
-    def start_django_server(cls):
-        """Start the Django server using the test database."""
-        server_command = ['python3', 'manage.py', 'runserver', '127.0.0.1:8000']
-        cls.server_process = subprocess.Popen(server_command)
-        time.sleep(5)
+def stop_django_server(server_process):
+    """Stop the Django development server."""
+    server_process.terminate()
 
-    @classmethod
-    def stop_django_server(cls):
-        """Stop the Django development server."""
-        cls.server_process.terminate()
 
-    @classmethod
-    def get_logged_in_browser(cls, username, password):
-        """Class method to initialize a headless browser and log in."""
-        driver = cls.get_browser()
-        cls.log_in(driver, username, password)
-        return driver
+def log_in(driver, username, password):
+    """Log in with username and password."""
+    try:
+        driver.get(f"{settings.BASE_URL}/accounts/login/?next=/")
+        username_field = driver.find_element(By.XPATH, '//td//input[@name="username"]')
+        password_field = driver.find_element(By.XPATH, '//td//input[@name="password"]')
+        login_button = driver.find_element(By.XPATH, '//form//button[@type="submit"]')
 
-    @classmethod
-    def log_in(cls, driver, username, password):
-        """Log in with username and password."""
-        try:
-            driver.get(f"{settings.BASE_URL}/accounts/login/?next=/")
-            username_field = driver.find_element(By.XPATH, '//td//input[@name="username"]')
-            password_field = driver.find_element(By.XPATH, '//td//input[@name="password"]')
-            login_button = driver.find_element(By.XPATH, '//form//button[@type="submit"]')
+        username_field.send_keys(username)
+        password_field.send_keys(password)
+        login_button.click()
 
-            username_field.send_keys(username)
-            password_field.send_keys(password)
-            login_button.click()
+        WebDriverWait(driver, 10).until(EC.url_to_be(f"{settings.BASE_URL}{reverse('renthub:home')}"))
 
-            WebDriverWait(driver, 10).until(EC.url_to_be(f"{settings.BASE_URL}{reverse('renthub:home')}"))
-
-        except Exception as e:
-            raise RuntimeError(f"An error occurred during login: {e}")
+    except Exception as e:
+        raise RuntimeError(f"An error occurred during login: {e}")
 
 
 def kill_port():
@@ -242,3 +220,25 @@ def create_temp_image_file():
 
     # Wrap the BytesIO content in a SimpleUploadedFile, simulating a real file upload
     return SimpleUploadedFile('temp_image.png', temp_file.read(), content_type='image/png')
+
+
+class Browser:
+    """Provide access to an instance of a Selenium web driver."""
+
+    @classmethod
+    def get_browser(cls):
+        """Class method to initialize a headless Chrome WebDriver."""
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        return driver
+
+    @classmethod
+    def get_logged_in_browser(cls, username, password):
+        """Class method to initialize a headless driver and log in."""
+        driver = cls.get_browser()
+        log_in(driver, username, password)
+        return driver

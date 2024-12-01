@@ -10,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from mysite import settings
-from renthub.utils import Browser, kill_port, admin_login
+from renthub.utils import Browser, kill_port, admin_login, start_django_server, stop_django_server
 
 
 class PaymentListViewTests(TestCase):
@@ -18,23 +18,31 @@ class PaymentListViewTests(TestCase):
 
     def setUp(self):
         """Set up data for the tests."""
+        self.room_number = "207"
+        self.renter = "demo4"
+        self.pwd = 'hackme44'
+
         kill_port()
-        Browser.start_django_server()
+        self.server_process = start_django_server()
         self.browser = Browser.get_browser()
 
         admin_login(self.browser)
 
         self.browser.get(f"{settings.BASE_URL}/admin/renthub/rental")
         try:
-            table_row = self.browser.find_element(By.CSS_SELECTOR, "#result_list tbody tr")
-            room = table_row.find_element(By.CSS_SELECTOR, '.field-room a').text
-            self.room_number = re.search(r"Room (\d+)", room).group(1)
-            self.renter = table_row.find_element(By.CSS_SELECTOR, '.field-renter').text
-            self.pwd = f"hackme{self.renter[-1]*2}"
+            table_rows = self.browser.find_elements(By.CSS_SELECTOR, "#result_list tbody tr")
+
+            for table_row in table_rows:
+                renter = table_row.find_element(By.CSS_SELECTOR, '.field-renter').text
+
+                # Check if renter's name matches the pattern "demo[1-5]"
+                if re.match(r"demo[1-5]", renter):
+                    room = table_row.find_element(By.CSS_SELECTOR, '.field-room a').text
+                    self.room_number = re.search(r"Room (\d+)", room).group(1)
+                    self.renter = renter
+                    self.pwd = f"hackme{self.renter[-1] * 2}"
+                    break
         except NoSuchElementException:
-            self.room_number = "207"
-            self.renter = "demo4"
-            self.pwd = 'hackme44'
             self.browser.get(f"{settings.BASE_URL}/admin/renthub/rental/add")
             room_select = Select(self.browser.find_element(By.ID, 'id_room'))
             for option in room_select.options:
@@ -72,7 +80,7 @@ class PaymentListViewTests(TestCase):
             )
             confirm_button.click()
 
-        Browser.stop_django_server()
+        stop_django_server(self.server_process)
         self.browser.quit()
         kill_port()
 
