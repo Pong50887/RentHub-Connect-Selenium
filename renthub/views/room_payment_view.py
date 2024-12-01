@@ -83,6 +83,7 @@ class RoomPaymentView(LoginRequiredMixin, DetailView):
                 rental.save()
 
                 if rental.check_overlapped():
+                    rental.delete()
                     transaction = Transaction.objects.create(
                         room=room,
                         renter=renter,
