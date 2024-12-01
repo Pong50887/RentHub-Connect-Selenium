@@ -4,8 +4,8 @@ from renthub.utils import Status
 
 
 class RentalPaymentAdmin(admin.ModelAdmin):
-    list_display = ('room', 'renter', 'price', 'status', 'image_tag')
-    readonly_fields = ('image_tag',)
+    list_display = ('room', 'renter', 'price', 'status', 'image_tag', 'renter_is_valid')
+    readonly_fields = ('image_tag', 'renter_is_valid')
 
     def image_tag(self, obj):
         if obj.image:
@@ -14,6 +14,13 @@ class RentalPaymentAdmin(admin.ModelAdmin):
 
     image_tag.allow_tags = True
     image_tag.short_description = 'Payment Slip Image'
+
+    def renter_is_valid(self, obj):
+        """Display the is_valid attribute from the associated renter."""
+        return obj.renter.is_valid if obj.renter else False
+
+    renter_is_valid.boolean = True
+    renter_is_valid.short_description = "Renter Validity"
 
     def save_model(self, request, obj, form, change):
 

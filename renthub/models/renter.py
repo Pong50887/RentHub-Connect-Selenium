@@ -27,6 +27,10 @@ class Renter(User):
                                            ], blank=True, null=True, unique=True)
     thai_citizenship_id_image = models.ImageField(upload_to=upload_to_renter_citizenship_directory, blank=True,
                                                   null=True)
+    is_valid = models.BooleanField(
+        default=False,
+        help_text="Is the renter's thai_citizenship_id_image valid?"
+    )
 
     class Meta:
         verbose_name = "Renter"
