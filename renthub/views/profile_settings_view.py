@@ -34,3 +34,13 @@ class ProfileSettingsView(LoginRequiredMixin, UpdateView):
             messages.error(request, "Only renter can view profiles.")
             return redirect("renthub:home")
         return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """
+        Set Renter.is_valid to False after a successful form submission.
+        """
+        response = super().form_valid(form)
+        renter = self.object
+        renter.is_valid = False
+        renter.save()
+        return response
