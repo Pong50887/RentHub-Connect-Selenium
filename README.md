@@ -4,6 +4,7 @@
 [![Run tests and upload coverage](https://github.com/Pong50887/RentHub-Connect/actions/workflows/test-coverage.yml/badge.svg)](https://github.com/Pong50887/RentHub-Connect/actions/workflows/test-coverage.yml)
 
 RentHub-Connect is an application designed to streamline apartment management by integrating booking and payments. 
+[Link to deployed web application.](https://renthubconnect.onrender.com/)
 
 # Existing demo users and passwords <br>
 
