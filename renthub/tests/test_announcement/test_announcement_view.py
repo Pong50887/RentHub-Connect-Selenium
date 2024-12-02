@@ -4,8 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
-
-import unittest
+from freezegun import freeze_time
 
 from renthub.models import Announcement
 
@@ -33,6 +32,7 @@ class AnnouncementDetailViewTest(TestCase):
         response = self.client.get(url)
         self.assertTemplateUsed(response, 'renthub/announcement.html')
 
+    @freeze_time("2024-12-01 15:00:00", tz_offset=7)
     def test_announcement_view_content(self):
         """Test if the announcement details are rendered correctly with Asia/Bangkok timezone."""
         url = reverse('renthub:announcement', kwargs={'pk': self.announcement.pk})
