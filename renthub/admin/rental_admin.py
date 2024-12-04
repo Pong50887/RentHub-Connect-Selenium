@@ -28,6 +28,10 @@ class RentalAdmin(admin.ModelAdmin):
         if change:
             original_status = Rental.objects.get(pk=obj.pk).status
 
+        if obj.status == "approve" and not obj.renter.is_valid:
+            self.message_user(request, "The renter is not valid. Approval cannot be granted.", level="error")
+            return
+
         super().save_model(request, obj, form, change)
 
         if obj.status == "approve" and original_status != "approve":
