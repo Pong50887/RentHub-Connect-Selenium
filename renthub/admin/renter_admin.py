@@ -13,7 +13,7 @@ class RenterAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         original_status = None
         if change:
-            original_status = Renter.objects.get(pk=obj.pk).status
+            original_status = Renter.objects.get(pk=obj.pk).is_valid
 
         super().save_model(request, obj, form, change)
 
