@@ -47,7 +47,9 @@
                         </div>
                         <div class="form-group">
                             <label for="thai_citizenship_id_image">Citizenship ID Image</label>
-                            <img class="form-control" src="{{ form.thai_citizenship_id_image.value.url }}" alt="Citizenship ID Image" style="max-width: 100%; height: auto;">
+                            {% if form.thai_citizenship_id_image.value %}
+                                <img class="form-control" src="{{ form.thai_citizenship_id_image.value.url }}" alt="Citizenship ID Image" style="max-width: 100%; height: auto;">
+                            {% endif %}
                             <div id="image-preview" style="display: inline-block; margin-top: 10px;">
                                 <!-- The preview image will be displayed here -->
                             </div>
