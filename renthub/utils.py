@@ -11,6 +11,7 @@ import boto3
 from PIL import Image
 from botocore.exceptions import ClientError
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from promptpay import qrcode
@@ -242,3 +243,18 @@ class Browser:
         driver = cls.get_browser()
         log_in(driver, username, password)
         return driver
+
+
+def checksum_thai_national_id(value):
+    """Validate the checksum of a Thai National ID."""
+    if len(value) != 13 or not value.isdigit():
+        raise ValidationError("Thai National ID must be exactly 13 digits.")
+
+    # Calculate checksum
+    weights = range(13, 1, -1)  # Weights from 13 down to 2
+    checksum = sum(int(value[i]) * weights[i] for i in range(12)) % 11
+    checksum = (11 - checksum) % 10  # Adjust checksum: if 10 -> 0, if 11 -> 1
+
+    # Compare with the last digit
+    if checksum != int(value[12]):
+        raise ValidationError("Invalid Thai National ID checksum.")
