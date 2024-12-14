@@ -51,7 +51,7 @@ class ProfileSettingsTests(TestCase):
             'phone_number': '0987654321',
             'first_name': 'Test',
             'last_name': 'User',
-            'thai_citizenship_id': '1234567890123',
+            'thai_citizenship_id': '2345632454324',
             'thai_citizenship_id_image': self.temp_image,
         }, format='multipart')
         self.assertEqual(response.status_code, 302)
@@ -70,7 +70,7 @@ class ProfileSettingsTests(TestCase):
             'phone_number': '0123456789',
             'first_name': 'Test',
             'last_name': 'User',
-            'thai_citizenship_id': '1234567890123',
+            'thai_citizenship_id': '2345632454324',
             'thai_citizenship_id_image': self.temp_image,
             'password': 'test_password123',
             'new_password1': 'newpassword456',

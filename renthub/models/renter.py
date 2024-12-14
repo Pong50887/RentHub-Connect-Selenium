@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import RegexValidator
 
+from renthub.utils import checksum_thai_national_id
+
 
 def upload_to_renter_citizenship_directory(instance, filename):
     return f'renters/{instance.username}/{filename}'
@@ -23,7 +25,8 @@ class Renter(User):
                                                RegexValidator(
                                                    regex=r'^\d+$',
                                                    message="Citizenship ID can only contain numbers."
-                                               )
+                                               ),
+                                               checksum_thai_national_id,
                                            ], blank=True, null=True, unique=True)
     thai_citizenship_id_image = models.ImageField(upload_to=upload_to_renter_citizenship_directory, blank=True,
                                                   null=True)
