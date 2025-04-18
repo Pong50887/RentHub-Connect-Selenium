@@ -1,80 +1,68 @@
-import unittest
-from selenium import webdriver
+
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 
+from mysite import settings
+from renthub.utils import kill_port, Browser, log_in, start_django_server, stop_django_server
+from django.test import TestCase
 
-class RentingValidationTest(unittest.TestCase):
+class RentingValidationTest(TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        self.driver.maximize_window()
-        self.driver.implicitly_wait(5)
+        kill_port()
+        self.browser = Browser.get_browser()
+        self.server_process = start_django_server()
 
     def test_renter_cannot_rent_same_room_twice(self):
-        driver = self.driver
-        driver.get("http://localhost:8000/accounts/login/")
-
         # Step 1: Login
-        driver.find_element(By.NAME, "username").send_keys("demo4")
-        driver.find_element(By.NAME, "password").send_keys("hackme44")
-        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+        log_in(driver=self.browser, username="demo4", password="hackme44")
 
         # Step 2: Try to rent a room already rented
-        driver.get("http://localhost:8000/room/105/")
+        self.browser.get(f"{settings.BASE_URL}/room/105/")
 
         # Step 3: Check for alert message instead of Rent button
-        alert = WebDriverWait(driver, 5).until(
+        alert = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.CLASS_NAME, "alert"))
         )
         self.assertIn("not available", alert.text.lower())
 
     def test_renting_requires_terms_checkbox(self):
-        driver = self.driver
-        driver.get("http://localhost:8000/accounts/login/")
-
         # Step 1: Login
-        driver.find_element(By.NAME, "username").send_keys("demo4")
-        driver.find_element(By.NAME, "password").send_keys("hackme44")
-        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+        log_in(driver=self.browser, username="demo4", password="hackme44")
 
         # Step 2: Click "Rooms" in navbar
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.LINK_TEXT, "Rooms"))
         ).click()
 
         # Step 3: Click "View Details" for the first available room
-        view_btn = WebDriverWait(driver, 10).until(
+        view_btn = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "//a[contains(text(), 'View Details')]"))
         )
-        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'})", view_btn)
+        self.browser.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'})", view_btn)
         view_btn.click()
 
         # Step 4: Click "Proceed with Rental" without ticking the checkbox
-        proceed_btn = WebDriverWait(driver, 10).until(
+        proceed_btn = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Proceed with Rental')]"))
         )
-        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'})", proceed_btn)
-        driver.execute_script("arguments[0].click();", proceed_btn)
+        self.browser.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'})", proceed_btn)
+        self.browser.execute_script("arguments[0].click();", proceed_btn)
 
         # Step 5: Try to click "Confirm Agreement" without agreeing to terms
-        confirm_btn = WebDriverWait(driver, 10).until(
+        confirm_btn = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Confirm Agreement')]"))
         )
         confirm_btn.click()
 
         # Step 6: Assert checkbox shows red border or error
-        error_label = WebDriverWait(driver, 5).until(
+        error_label = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, "//label[contains(text(), 'agree to the terms')]"))
         )
         self.assertIn("agree", error_label.text.lower())
 
     def tearDown(self):
-        self.driver.quit()
-
-
-if __name__ == "__main__":
-    unittest.main()
+        stop_django_server(self.server_process)
+        self.browser.quit()
+        kill_port()

@@ -1,23 +1,24 @@
-import unittest
 import os
-from selenium import webdriver
+
+from django.test import TestCase
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+
+from mysite import settings
+from renthub.utils import Browser, kill_port, admin_login, start_django_server, stop_django_server
 
 
-class PaymentValidationTest(unittest.TestCase):
+class PaymentValidationTest(TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        self.driver.maximize_window()
-        self.driver.implicitly_wait(5)
+        kill_port()
+        self.server_process = start_django_server()
+        self.browser = Browser.get_browser()
 
     def test_upload_non_image_slip(self):
-        driver = self.driver
-        driver.get("http://localhost:8000/accounts/login/")
+        driver = self.browser
+        driver.get(f"{settings.BASE_URL}/accounts/login/")
 
         # Step 1: Login
         driver.find_element(By.NAME, "username").send_keys("demo3")
@@ -41,7 +42,7 @@ class PaymentValidationTest(unittest.TestCase):
         upload_input = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "payment_slip"))
         )
-        non_image_path = r"D:\Users\picha\Desktop\Github\RentHub-Connect\media\profile_images\seed.txt"
+        non_image_path = os.path.abspath("renthub/E2E/test_assets/example.txt")
         upload_input.send_keys(non_image_path)
 
         # Step 5: Scroll to and click Send using JS
@@ -59,8 +60,6 @@ class PaymentValidationTest(unittest.TestCase):
         self.assertIn("no payment slip uploaded", error_message.lower())
 
     def tearDown(self):
-        self.driver.quit()
-
-
-if __name__ == "__main__":
-    unittest.main()
+        stop_django_server(self.server_process)
+        self.browser.quit()
+        kill_port()
