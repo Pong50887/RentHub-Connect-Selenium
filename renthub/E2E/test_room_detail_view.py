@@ -31,5 +31,7 @@ class RoomDetailViewTests(TestCase):
 
     def test_renter_can_rent_available_room(self):
         """A renter can access an available room."""
-        self.browser.get(f'{settings.BASE_URL}{reverse("renthub:room", kwargs={"room_number": 208})}')
+        self.browser.get(f'{settings.BASE_URL}'
+                         f'{reverse("renthub:room", 
+                                    kwargs={"room_number": 208})}')
         self.assertIn("Proceed with Rental", self.browser.page_source)

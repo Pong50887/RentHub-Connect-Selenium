@@ -28,7 +28,9 @@ class RentingTests(TestCase):
     def renting(self):
         """A user renting from room details page."""
         proceed_button = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-bs-target='#exampleModalLong']")))
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR,
+                 "button[data-bs-target='#exampleModalLong']")))
         ActionChains(self.browser).move_to_element(proceed_button).perform()
 
         proceed_button.click()
