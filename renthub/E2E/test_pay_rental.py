@@ -1,6 +1,6 @@
 import unittest
 import os
-
+import time
 from django.template.defaultfilters import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -71,8 +71,8 @@ class PaymentFlowTest(unittest.TestCase):
         driver.get("http://localhost:8000/accounts/login/")
 
         # Step 1: Login
-        driver.find_element(By.NAME, "username").send_keys("demo4")
-        driver.find_element(By.NAME, "password").send_keys("hackme44")
+        driver.find_element(By.NAME, "username").send_keys("demo2")
+        driver.find_element(By.NAME, "password").send_keys("hackme22")
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
         # Step 2: Click "My Rentals" (wait + locate + click separately)
@@ -92,8 +92,8 @@ class PaymentFlowTest(unittest.TestCase):
     def test_user_cannot_submit_without_slip(self):
         driver = self.driver
         driver.get("http://localhost:8000/accounts/login/")
-        driver.find_element(By.NAME, "username").send_keys("demo4")
-        driver.find_element(By.NAME, "password").send_keys("hackme44")
+        driver.find_element(By.NAME, "username").send_keys("demo1")
+        driver.find_element(By.NAME, "password").send_keys("hackme11")
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
         # Step 1: Go to My Rentals
@@ -120,6 +120,72 @@ class PaymentFlowTest(unittest.TestCase):
         ).text
         print("Validation Message:", alert_message)
         self.assertIn("no payment slip uploaded", alert_message.lower())
+
+    def test_user_can_view_payment_history(self):
+        driver = self.driver
+        driver.get("http://localhost:8000/accounts/login/")
+
+        # Step 1: Login
+        driver.find_element(By.NAME, "username").send_keys("demo4")
+        driver.find_element(By.NAME, "password").send_keys("hackme44")
+        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+
+        # Step 2: Go to My Rentals
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "My Rentals"))
+        ).click()
+
+        # Step 3: Scroll to 'Rental History' heading
+        rental_history_heading = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Rental History')]"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'})",
+                              rental_history_heading)
+
+        # Step 4: Wait for View Details buttons (indicate transactions)
+        view_buttons = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//a[contains(text(), 'View Details')]"))
+        )
+        self.assertGreater(len(view_buttons), 0, "Expected at least one 'View Details' button under Rental History.")
+
+    def test_user_can_revisit_rental_payment_detail(self):
+        driver = self.driver
+        driver.get("http://localhost:8000/accounts/login/")
+
+        # Step 1: Login
+        driver.find_element(By.NAME, "username").send_keys("demo4")
+        driver.find_element(By.NAME, "password").send_keys("hackme44")
+        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+
+        # Step 2: Go to My Rentals
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "My Rentals"))
+        ).click()
+
+        # Step 3: Scroll to bottom (rental history section)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Step 4: Wait for and find the View Details button under Rental History
+        rental_history = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Rental History')]"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView(true);", rental_history)
+
+        # Narrow down to View Details that appears after Rental History
+        view_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH,
+                                        "(//*[contains(text(), 'Rental History')]/following::a[contains(text(), 'View Details')])[1]"))
+        )
+        driver.execute_script("arguments[0].click();", view_button)
+
+        # Step 5: Assert Payment Details is visible
+        payment_heading = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Payment Details')]"))
+        )
+        self.assertIn("Payment Details", payment_heading.text)
+
+        room_number = driver.find_element(By.XPATH, "//h5[contains(text(), 'Room Number')]").text
+        self.assertIn("Room Number", room_number)
 
     def tearDown(self):
         self.driver.quit()
